@@ -1,6 +1,118 @@
 $(function(){
+	var form = $('.splitForm.registration').splitForm('get');
 
+	form.$actions.find('.splitForm__action').off('click');
+	form.$actions.find('.splitForm__action').on('click',function(){
+		
+		// Retrieve the active step
+		var activeStep = form.$sections.filter('.active').attr('data-step');
+
+		form.log('action click', this);
+		var checkStep = utils.checkForm(form.$sections.filter('.active'),form.renderErrors);
+
+		if($(this).attr('data-dir') != 'prev'){ // action is either next or final
+		  if (checkStep.valid === false) {
+		      form.$sections.filter('.active').removeClass('complete');
+		      form.$wrapper.removeClass('isComplete');
+		  } else { 
+		      form.$sections.filter('.active').addClass('complete');
+		  }
+		}
+
+		if($(this).attr('data-dir') != 'final'){ // action is either prev or next
+		  utils.registration.saveStep(form.$sections.filter('.active'))
+		  	.then(r => {
+		  		form.switchStep($(this).attr('data-dir'));
+		  		notif_fade[r.status](r.msg);
+		  	})
+		  	.catch(err => {
+		  		notif_fade.error(err);
+		  	});
+		}
+
+		else if($(this).attr('data-dir') == 'final' && form.$sections.filter('.active').hasClass('complete')){ // action is final, and form is valid
+		  if(checkStep.valid){
+		      // do the final thing
+		      form.$nav.find('.splitForm__navitem.active').addClass('complete');
+		      form.$wrapper.addClass('isComplete');
+		      form.onFinal();
+		  }
+		}
+  	});
+
+	if (form.enableNav === true) {
+        form.$nav.find('.splitForm__navitem').off('click');
+        form.$nav.find('.splitForm__navitem').on('click',function(){
+			// Retrieve the active step
+			var activeStep = form.$sections.filter('.active').attr('data-step');
+			
+            form.log('nav item click', this)
+            if (!$(this).hasClass('complete') && !$(this).prev().hasClass('complete'))
+                return false;
+            var posNext = $(this).index() - form.$nav.find('.splitForm__navitem.active').index();
+            if (posNext < 0)
+                for (var i = 0; i > posNext; i--) {
+                	utils.registration.saveStep(form.$sections.filter('.active'))
+				  	.then(r => {
+				  		fform.switchStep('prev');
+				  		notif_fade[r.status](r.msg);
+				  	})
+				  	.catch(err => {
+				  		notif_fade.error(err);
+				  	});                    
+                }
+            else{
+                var checkStep = utils.checkForm(form.$sections.filter('.active'),form.renderErrors);
+                if (checkStep.valid === true) {
+                    form.$sections.filter('.active').addClass('complete');
+                    for (var i = 0; i < posNext; i++) {
+                    	utils.registration.saveStep(form.$sections.filter('.active'))
+					  	.then(r => {
+					  		fform.switchStep('next');
+					  		notif_fade[r.status](r.msg);
+					  	})
+					  	.catch(err => {
+					  		notif_fade.error(err);
+					  	});        
+                    }
+                } else {
+                    form.$sections.filter('.active').removeClass('complete');
+                    form.$wrapper.removeClass('isComplete');
+                }
+            } 
+        });
+    }
 });
+
+/** REGISTRATION **/
+utils.registration = {};
+utils.registration.saveStep = function saveStep(step){
+	var form = utils.checkForm(step);
+	var objFields = {
+		'REQUEST_TOKEN': rt,
+		'module': 'acqpa_company_edit_registration',
+		'action': 'saveRegistration',
+	};
+
+	var data = {};
+	for (var i in form.inputs) {
+		objFields[form.inputs[i].name] = form.inputs[i].value;
+	}
+
+	return new Promise(function (resolve, reject) {
+		utils.postData(objFields)
+		.then(r => {
+			if("error" == r.status) {
+				reject(r.msg);
+			} else {
+				resolve(r);
+			}
+		})
+	    .catch(err => {
+	        reject(err);
+	    });
+	});
+}
 
 /** UTILITIES **/
 utils.postData = async function postData(data, url = "", method = "POST") {
