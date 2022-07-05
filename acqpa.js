@@ -3,7 +3,7 @@ $(function(){
 
 	if(form) {
 		form.$actions.find('.splitForm__action').off('click');
-		form.$actions.find('.splitForm__action').on('click',function(){
+		form.$actions.find('.splitForm__action').on('click',function() {
 			
 			// Retrieve the active step
 			var activeStep = form.$sections.filter('.active').attr('data-step');
@@ -13,10 +13,10 @@ $(function(){
 
 			if($(this).attr('data-dir') != 'prev'){ // action is either next or final
 			  if (checkStep.valid === false) {
-			      form.$sections.filter('.active').removeClass('complete');
-			      form.$wrapper.removeClass('isComplete');
+			    form.$sections.filter('.active').removeClass('complete');
+			    form.$wrapper.removeClass('isComplete');
 			  } else { 
-			      form.$sections.filter('.active').addClass('complete');
+			    form.$sections.filter('.active').addClass('complete');
 			  }
 			}
 
@@ -30,62 +30,77 @@ $(function(){
 			  		notif_fade.error(err);
 			  	});
 			}
-
 			else if($(this).attr('data-dir') == 'final' && form.$sections.filter('.active').hasClass('complete')){ // action is final, and form is valid
 			  if(checkStep.valid){
-			      // do the final thing
-			      form.$nav.find('.splitForm__navitem.active').addClass('complete');
-			      form.$wrapper.addClass('isComplete');
-			      form.onFinal();
+			  	utils.registration.validateRegistration()
+				  	.then(r => {
+				  		form.$nav.find('.splitForm__navitem.active').addClass('complete');
+				  		form.$wrapper.addClass('isComplete');
+				  		var modal = new app.ModalFW({
+								name: 'modal--registration--confirm',
+								content: r.html,
+								width: '1200px',
+								onClose: () => {
+									modal.destroy();
+								},
+							});
+							modal.open();
+				  	})
+				  	.catch(err => {
+				  		notif_fade.error(err);
+				  	});
 			  }
 			}
-	  	});
+	  });
 
 		if (form.enableNav === true) {
-	        form.$nav.find('.splitForm__navitem').off('click');
-	        form.$nav.find('.splitForm__navitem').on('click',function(){
+      form.$nav.find('.splitForm__navitem').off('click');
+      form.$nav.find('.splitForm__navitem').on('click',function(){
+			
 				// Retrieve the active step
 				var activeStep = form.$sections.filter('.active').attr('data-step');
-				
-	            form.log('nav item click', this)
-	            if (!$(this).hasClass('complete') && !$(this).prev().hasClass('complete'))
-	                return false;
-	            var posNext = $(this).index() - form.$nav.find('.splitForm__navitem.active').index();
-	            if (posNext < 0)
-	                for (var i = 0; i > posNext; i--) {
-	                	utils.registration.saveStep(form.$sections.filter('.active'))
+        form.log('nav item click', this)
+        
+        if (!$(this).hasClass('complete') && !$(this).prev().hasClass('complete'))
+          return false;
+        
+        var posNext = $(this).index() - form.$nav.find('.splitForm__navitem.active').index();
+        
+        if (posNext < 0) {
+          for (var i = 0; i > posNext; i--) {
+           	utils.registration.saveStep(form.$sections.filter('.active'))
 					  	.then(r => {
-					  		fform.switchStep('prev');
+					  		form.switchStep('prev');
 					  		notif_fade[r.status](r.msg);
 					  	})
 					  	.catch(err => {
 					  		notif_fade.error(err);
 					  	});                    
-	                }
-	            else{
-	                var checkStep = utils.checkForm(form.$sections.filter('.active'),form.renderErrors);
-	                if (checkStep.valid === true) {
-	                    form.$sections.filter('.active').addClass('complete');
-	                    for (var i = 0; i < posNext; i++) {
-	                    	utils.registration.saveStep(form.$sections.filter('.active'))
+          }
+        } else {
+          var checkStep = utils.checkForm(form.$sections.filter('.active'),form.renderErrors);
+	        if (checkStep.valid === true) {
+	          form.$sections.filter('.active').addClass('complete');
+	          for (var i = 0; i < posNext; i++) {
+	           	utils.registration.saveStep(form.$sections.filter('.active'))
 						  	.then(r => {
-						  		fform.switchStep('next');
+						  		form.switchStep('next');
 						  		notif_fade[r.status](r.msg);
 						  	})
 						  	.catch(err => {
 						  		notif_fade.error(err);
 						  	});        
-	                    }
-	                } else {
-	                    form.$sections.filter('.active').removeClass('complete');
-	                    form.$wrapper.removeClass('isComplete');
-	                }
-	            } 
-	        });
-	    }
+            }
+          } else {
+            form.$sections.filter('.active').removeClass('complete');
+            form.$wrapper.removeClass('isComplete');
+          }
+        } 
+      });
+    }
 	}
 
-	$('body').on('click','.table-list__action[data-ajax]',function(e){
+	$('body').on('click','*[data-ajax]',function(e){
 	    e.preventDefault();
 	    var blnRequest = true;
 	    var method = 'POST';
@@ -144,7 +159,7 @@ utils.registration.saveStep = function saveStep(step){
 	var form = utils.checkForm(step);
 	var objFields = {
 		'REQUEST_TOKEN': rt,
-		'module': 'acqpa_company_edit_registration',
+		'module_type': 'acqpa_company_edit_registration',
 		'action': 'saveRegistration',
 	};
 
@@ -162,9 +177,137 @@ utils.registration.saveStep = function saveStep(step){
 				resolve(r);
 			}
 		})
+	  .catch(err => {
+	    reject(err);
+	  });
+	});
+}
+utils.registration.refreshRegistrationOperators = function refreshRegistrationOperators(){
+	$('.operators .table-list__line').remove();
+
+	utils.registration.getRegistrationOperators()
+	.then(r => {
+		if("error" == r.status) {
+			notif_fade.error(r.msg);
+		} else {
+			notif_fade.success(r.msg);
+			$('.operators .table-list__container').append(r.html);
+		}
+	})
+  .catch(err => {
+    notif_fade.error(err);
+  });
+}
+utils.registration.getRegistrationOperators = function getRegistrationOperators(){
+	var objFields = {
+		'REQUEST_TOKEN': rt,
+		'module_type': 'acqpa_company_edit_registration',
+		'action': 'getOperators',
+	};
+
+	return new Promise(function (resolve, reject) {
+		utils.postData(objFields)
+		.then(r => {
+			if("error" == r.status) {
+				reject(r.msg);
+			} else {
+				resolve(r);
+			}
+		})
 	    .catch(err => {
 	        reject(err);
 	    });
+	});
+}
+utils.registration.getOperatorData = function getOperatorData(id){
+	var objFields = {
+		'REQUEST_TOKEN': rt,
+		'module_type': 'acqpa_company_edit_registration',
+		'action': 'getOperatorData',
+		'id': id,
+	};
+
+	return new Promise(function (resolve, reject) {
+		utils.postData(objFields)
+		.then(r => {
+			if("error" == r.status) {
+				reject(r.msg);
+			} else {
+				resolve(r);
+			}
+		})
+	    .catch(err => {
+	        reject(err);
+	    });
+	});
+}
+utils.registration.saveRegistrationOperator = function saveRegistrationOperator(modal){
+	var form = utils.checkForm(modal);
+	var objFields = {
+		'REQUEST_TOKEN': rt,
+		'module_type': 'acqpa_company_edit_registration',
+		'action': 'saveRegistrationOperator',
+	};
+
+	var data = {};
+	for (var i in form.inputs) {
+		objFields[form.inputs[i].name] = form.inputs[i].value;
+	}
+
+	return new Promise(function (resolve, reject) {
+		utils.postData(objFields)
+		.then(r => {
+			if("error" == r.status) {
+				reject(r.msg);
+			} else {
+				resolve(r);
+			}
+		})
+	  .catch(err => {
+	    reject(err);
+	  });
+	});
+}
+utils.registration.validateRegistration = function validateRegistration(modal){
+	var objFields = {
+		'REQUEST_TOKEN': rt,
+		'module_type': 'acqpa_company_edit_registration',
+		'action': 'validateRegistration',
+	};
+
+	return new Promise(function (resolve, reject) {
+		utils.postData(objFields)
+		.then(r => {
+			if("error" == r.status) {
+				reject(r.msg);
+			} else {
+				resolve(r);
+			}
+		})
+	  .catch(err => {
+	    reject(err);
+	  });
+	});
+}
+utils.registration.confirmRegistration = function confirmRegistration(modal){
+	var objFields = {
+		'REQUEST_TOKEN': rt,
+		'module_type': 'acqpa_company_edit_registration',
+		'action': 'confirmRegistration',
+	};
+
+	return new Promise(function (resolve, reject) {
+		utils.postData(objFields)
+		.then(r => {
+			if("error" == r.status) {
+				reject(r.msg);
+			} else {
+				resolve(r);
+			}
+		})
+	  .catch(err => {
+	    reject(err);
+	  });
 	});
 }
 
@@ -208,10 +351,28 @@ utils.callbacks = {};
 utils.callbacks.reload = function reloadPage(wait = 600) {
 	setTimeout(() => { window.location.reload(false) }, wait);
 }
+utils.callbacks.redirect = function redirect(url, wait = 600) {
+	setTimeout(() => { window.location.replace(url) }, wait);
+}
 utils.callbacks.openModal = function openModal(args) {
+	var modal = new app.ModalFW(args);
+	modal.open();
+}
+utils.callbacks.openRegistrationOperatorModal = function openRegistrationOperatorModal(args) {
 	var modal = new app.ModalFW({
-	  name : args[0],
-	  content: args[1],
+		name: args.name,
+		content: args.content,
+		width: args.width,
+		onOpen: () => {
+			$('.registration_exam_level').trigger('change');
+		},
+		onClose: () => {
+			utils.registration.refreshRegistrationOperators();
+			modal.destroy();
+		},
 	});
 	modal.open();
+}
+utils.callbacks.refreshRegistrationOperators = function refreshRegistrationOperators() {
+	utils.registration.refreshRegistrationOperators();
 }
