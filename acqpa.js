@@ -253,6 +253,19 @@ utils.registration.saveRegistrationOperator = function saveRegistrationOperator(
 	for (var i in form.inputs) {
 		objFields[form.inputs[i].name] = form.inputs[i].value;
 	}
+	
+	// retrieve uploaded files if any 
+	// and add them to objFields 
+	// additionnal AJAX options to provide :  {contentType: false,processData: false}
+	if(0 !== $('input[name="operator[identity_picture]"]').length){
+		objFields['operator[identity_picture]'] = $('input[name="operator[identity_picture]"]')[0].value;
+	}
+	if(0 !== $('input[name="operator[identity_piece]"]').length){
+		objFields['operator[identity_piece]'] = $('input[name="operator[identity_piece]"]')[0].value;
+	}
+	if(0 !== $('input[name="operator[cv]"]').length){
+		objFields['operator[cv]'] = $('input[name="operator[cv]"]')[0].value;
+	}
 
 	return new Promise(function (resolve, reject) {
 		utils.postData(objFields)
