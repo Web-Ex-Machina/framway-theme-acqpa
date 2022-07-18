@@ -324,6 +324,74 @@ utils.registration.confirmRegistration = function confirmRegistration(modal){
 	});
 }
 
+/** SESSION **/
+utils.session = {};
+utils.session.refreshSessionTranslators = function refreshSessionTranslators(){
+	$('.translators .table-list__line').remove();
+
+	utils.session.getSessionTranslators()
+	.then(r => {
+		if("error" == r.status) {
+			notif_fade.error(r.msg);
+		} else {
+			notif_fade.success(r.msg);
+			$('.translators .table-list__container').append(r.html);
+		}
+	})
+  .catch(err => {
+    notif_fade.error(err);
+  });
+}
+utils.session.getSessionTranslators = function getSessionTranslators(){
+	var objFields = {
+		'REQUEST_TOKEN': rt,
+		'module_type': 'acqpa_exam_session_edit',
+		'action': 'getTranslators',
+	};
+
+	return new Promise(function (resolve, reject) {
+		utils.postData(objFields)
+		.then(r => {
+			if("error" == r.status) {
+				reject(r.msg);
+			} else {
+				resolve(r);
+			}
+		})
+    .catch(err => {
+        reject(err);
+    });
+	});
+}
+utils.session.saveExamSessionTranslator = function saveExamSessionTranslator(modal){
+	var form = utils.checkForm(modal);
+	var objFields = {
+		'REQUEST_TOKEN': rt,
+		'module_type': 'acqpa_exam_session_edit',
+		'action': 'saveExamSessionTranslator',
+	};
+
+	var data = {};
+	for (var i in form.inputs) {
+		objFields[form.inputs[i].name] = form.inputs[i].value;
+	}
+
+	return new Promise(function (resolve, reject) {
+		utils.postData(objFields)
+		.then(r => {
+			if("error" == r.status) {
+				reject(r.msg);
+			} else {
+				resolve(r);
+			}
+		})
+	  .catch(err => {
+	    reject(err);
+	  });
+	});
+}
+
+
 /** UTILITIES **/
 utils.postData = async function postData(data, url = "", method = "POST") {
 	var request = new FormData();
@@ -388,4 +456,20 @@ utils.callbacks.openRegistrationOperatorModal = function openRegistrationOperato
 }
 utils.callbacks.refreshRegistrationOperators = function refreshRegistrationOperators() {
 	utils.registration.refreshRegistrationOperators();
+}
+
+utils.callbacks.openRegistrationTranslatorModal = function openRegistrationTranslatorModal(args) {
+	var modal = new app.ModalFW({
+		name: args.name,
+		content: args.content,
+		width: args.width,
+		onOpen: () => {
+			// $('.registration_exam_level').trigger('change');
+		},
+		onClose: () => {
+			utils.session.refreshSessionTranslators();
+			modal.destroy();
+		},
+	});
+	modal.open();
 }
