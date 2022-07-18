@@ -241,6 +241,46 @@ utils.registration.getOperatorData = function getOperatorData(id){
 	    });
 	});
 }
+
+utils.registration.refreshRegistrationOperatorExamLevels = function refreshRegistrationOperatorExamLevels(level, previouslySelectedSession){
+	$('.registration_session option').remove();
+
+	utils.registration.getRegistrationOperatorExamSessionByLevel(level, previouslySelectedSession)
+	.then(r => {
+		if("error" == r.status) {
+			notif_fade.error(r.msg);
+		} else {
+			notif_fade.success(r.msg);
+			$('.registration_session').append(r.html);
+		}
+	})
+  .catch(err => {
+    notif_fade.error(err);
+  });
+}
+utils.registration.getRegistrationOperatorExamSessionByLevel = function getRegistrationOperatorExamSessionByLevel(level, previouslySelectedSession){
+	var objFields = {
+		'REQUEST_TOKEN': rt,
+		'module_type': 'acqpa_company_edit_registration',
+		'action': 'getExamSessionByLevel',
+		'level': level,
+		'previouslySelectedSession': previouslySelectedSession,
+	};
+
+	return new Promise(function (resolve, reject) {
+		utils.postData(objFields)
+		.then(r => {
+			if("error" == r.status) {
+				reject(r.msg);
+			} else {
+				resolve(r);
+			}
+		})
+    .catch(err => {
+        reject(err);
+    });
+	});
+}
 utils.registration.saveRegistrationOperator = function saveRegistrationOperator(modal){
 	var form = utils.checkForm(modal);
 	var objFields = {
