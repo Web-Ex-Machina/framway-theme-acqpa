@@ -157,6 +157,11 @@ $(function(){
 utils.registration = {};
 utils.registration.saveStep = function saveStep(step){
 	var form = utils.checkForm(step);
+	if(!form.valid){
+		return new Promise(function (resolve, reject) {
+			reject('Veuillez remplir le formulaire');
+		});
+	}
 	var objFields = {
 		'REQUEST_TOKEN': rt,
 		'module_type': 'acqpa_company_edit_registration',
@@ -283,6 +288,11 @@ utils.registration.getRegistrationOperatorExamSessionByLevel = function getRegis
 }
 utils.registration.saveRegistrationOperator = function saveRegistrationOperator(modal){
 	var form = utils.checkForm(modal);
+	if(!form.valid){
+		return new Promise(function (resolve, reject) {
+			reject('Veuillez remplir le formulaire');
+		});
+	}
 	var objFields = {
 		'REQUEST_TOKEN': rt,
 		'module_type': 'acqpa_company_edit_registration',
@@ -405,6 +415,11 @@ utils.session.getSessionTranslators = function getSessionTranslators(){
 }
 utils.session.saveExamSessionTranslator = function saveExamSessionTranslator(modal){
 	var form = utils.checkForm(modal);
+	if(!form.valid){
+		return new Promise(function (resolve, reject) {
+			reject('Veuillez remplir le formulaire');
+		});
+	}
 	var objFields = {
 		'REQUEST_TOKEN': rt,
 		'module_type': 'acqpa_exam_session_edit',
