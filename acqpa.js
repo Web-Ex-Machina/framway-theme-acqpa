@@ -482,6 +482,16 @@ utils.check403 = function(jqXHR, textStatus){
   }
 }
 
+utils.formatDate = function(date, format){
+	return format
+    .replace('d',date.getDate() < 10 ? "0" + date.getDate() : date.getDate())
+    .replace('m',date.getMonth()+1 < 10 ? "0" + (date.getMonth()+1) : date.getMonth()+1)
+    .replace('Y',date.getFullYear())
+    .replace('H',date.getHours() < 10 ? "0" + date.getHours() : date.getHours())
+    .replace('i',date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes())
+  ;
+}
+
 /** CALLBACKS **/
 utils.callbacks = {};
 utils.callbacks.reload = function reloadPage(wait = 600) {
