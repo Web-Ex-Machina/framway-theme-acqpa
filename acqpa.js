@@ -449,6 +449,43 @@ utils.session.saveExamSessionTranslator = function saveExamSessionTranslator(mod
 	});
 }
 
+utils.session.refreshSessionOperators = function refreshSessionOperators(){
+	$('.operators .table-list__line').remove();
+
+	utils.session.getSessionOperators()
+	.then(r => {
+		if("error" == r.status) {
+			notif_fade.error(r.msg);
+		} else {
+			notif_fade.success(r.msg);
+			$('.operators .table-list__container').append(r.html);
+		}
+	})
+  .catch(err => {
+    notif_fade.error(err);
+  });
+}
+utils.session.getSessionOperators = function getSessionOperators(){
+	var objFields = {
+		'REQUEST_TOKEN': rt,
+		'module_type': 'acqpa_exam_session_edit',
+		'action': 'getOperators',
+	};
+
+	return new Promise(function (resolve, reject) {
+		utils.postData(objFields)
+		.then(r => {
+			if("error" == r.status) {
+				reject(r.msg);
+			} else {
+				resolve(r);
+			}
+		})
+	    .catch(err => {
+	        reject(err);
+	    });
+	});
+}
 
 /** UTILITIES **/
 utils.postData = async function postData(data, url = "", method = "POST") {
@@ -516,7 +553,11 @@ utils.callbacks.openRegistrationOperatorModal = function openRegistrationOperato
 			$('.registration_exam_level').trigger('change');
 		},
 		onClose: () => {
-			utils.registration.refreshRegistrationOperators();
+			if('registration' === args.source){
+				utils.registration.refreshRegistrationOperators();
+			}else if('session' === args.source){
+				utils.session.refreshSessionOperators();
+			}
 			modal.destroy();
 		},
 	});
@@ -524,6 +565,9 @@ utils.callbacks.openRegistrationOperatorModal = function openRegistrationOperato
 }
 utils.callbacks.refreshRegistrationOperators = function refreshRegistrationOperators() {
 	utils.registration.refreshRegistrationOperators();
+}
+utils.callbacks.refreshSessionOperators = function refreshSessionOperators() {
+	utils.session.refreshSessionOperators();
 }
 
 utils.callbacks.openRegistrationTranslatorModal = function openRegistrationTranslatorModal(args) {
