@@ -316,6 +316,9 @@ utils.registration.saveRegistrationOperator = function saveRegistrationOperator(
 	if(0 !== $('input[name="operator[cv]"]').length){
 		objFields['operator[cv]'] = $('input[name="operator[cv]"]')[0].value;
 	}
+	if(0 !== $('input[name="registration[employer_certificate]"]').length){
+		objFields['registration[employer_certificate]'] = $('input[name="registration[employer_certificate]"]')[0].value;
+	}
 
 	return new Promise(function (resolve, reject) {
 		utils.postData(objFields)
