@@ -448,11 +448,79 @@ utils.session.saveExamSessionTranslator = function saveExamSessionTranslator(mod
 	  });
 	});
 }
+utils.session.refreshSessionExaminers = function refreshSessionExaminers(){
+	$('.examiners .table-list__line').remove();
 
+	utils.session.getSessionExaminers()
+	.then(r => {
+		if("error" == r.status) {
+			notif_fade.error(r.msg);
+		} else {
+			notif_fade.success(r.msg);
+			$('.examiners .table-list__container').append(r.html);
+		}
+	})
+  .catch(err => {
+    notif_fade.error(err);
+  });
+}
+utils.session.getSessionExaminers = function getSessionExaminers(){
+	var objFields = {
+		'REQUEST_TOKEN': rt,
+		'module_type': 'acqpa_exam_session_edit',
+		'action': 'getExaminers',
+	};
+
+	return new Promise(function (resolve, reject) {
+		utils.postData(objFields)
+		.then(r => {
+			if("error" == r.status) {
+				reject(r.msg);
+			} else {
+				resolve(r);
+			}
+		})
+    .catch(err => {
+        reject(err);
+    });
+	});
+}
+utils.session.saveExamSessionExaminer = function saveExamSessionExaminer(modal){
+	var form = utils.checkForm(modal);
+	if(!form.valid){
+		return new Promise(function (resolve, reject) {
+			reject('Veuillez remplir le formulaire');
+		});
+	}
+	var objFields = {
+		'REQUEST_TOKEN': rt,
+		'module_type': 'acqpa_exam_session_edit',
+		'action': 'saveExamSessionExaminer',
+	};
+
+	var data = {};
+	for (var i in form.inputs) {
+		objFields[form.inputs[i].name] = form.inputs[i].value;
+	}
+
+	return new Promise(function (resolve, reject) {
+		utils.postData(objFields)
+		.then(r => {
+			if("error" == r.status) {
+				reject(r.msg);
+			} else {
+				resolve(r);
+			}
+		})
+	  .catch(err => {
+	    reject(err);
+	  });
+	});
+}
 utils.session.refreshSessionOperators = function refreshSessionOperators(){
 	$('.operators .table-list__line').remove();
 
-	utils.session.getSessionOperators()
+	utils.session.getRegistrationOperators()
 	.then(r => {
 		if("error" == r.status) {
 			notif_fade.error(r.msg);
@@ -465,7 +533,7 @@ utils.session.refreshSessionOperators = function refreshSessionOperators(){
     notif_fade.error(err);
   });
 }
-utils.session.getSessionOperators = function getSessionOperators(){
+utils.session.getRegistrationOperators = function getRegistrationOperators(){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
 		'module_type': 'acqpa_exam_session_edit',
@@ -570,7 +638,7 @@ utils.callbacks.refreshSessionOperators = function refreshSessionOperators() {
 	utils.session.refreshSessionOperators();
 }
 
-utils.callbacks.openRegistrationTranslatorModal = function openRegistrationTranslatorModal(args) {
+utils.callbacks.openSessionTranslatorModal = function openSessionTranslatorModal(args) {
 	var modal = new app.ModalFW({
 		name: args.name,
 		content: args.content,
@@ -580,6 +648,22 @@ utils.callbacks.openRegistrationTranslatorModal = function openRegistrationTrans
 		},
 		onClose: () => {
 			utils.session.refreshSessionTranslators();
+			modal.destroy();
+		},
+	});
+	modal.open();
+}
+
+utils.callbacks.openSessionExaminerModal = function openSessionExaminerModal(args) {
+	var modal = new app.ModalFW({
+		name: args.name,
+		content: args.content,
+		width: args.width,
+		onOpen: () => {
+			// $('.registration_exam_level').trigger('change');
+		},
+		onClose: () => {
+			utils.session.refreshSessionExaminers();
 			modal.destroy();
 		},
 	});
