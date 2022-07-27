@@ -637,6 +637,12 @@ utils.callbacks.refreshRegistrationOperators = function refreshRegistrationOpera
 utils.callbacks.refreshSessionOperators = function refreshSessionOperators() {
 	utils.session.refreshSessionOperators();
 }
+utils.callbacks.refreshSessionTranslators = function refreshSessionTranslators() {
+	utils.session.refreshSessionTranslators();
+}
+utils.callbacks.refreshSessionExaminers = function refreshSessionExaminers() {
+	utils.session.refreshSessionExaminers();
+}
 
 utils.callbacks.openSessionTranslatorModal = function openSessionTranslatorModal(args) {
 	var modal = new app.ModalFW({
