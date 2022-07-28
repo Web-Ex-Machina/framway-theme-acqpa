@@ -307,14 +307,45 @@ utils.registration.saveRegistrationOperator = function saveRegistrationOperator(
 	// retrieve uploaded files if any 
 	// and add them to objFields 
 	// additionnal AJAX options to provide :  {contentType: false,processData: false}
+	if("undefined" != typeof $('input[data-name="operator[identity_picture]"]').attr('required')
+	&& 0 === $('input[name="operator[identity_picture]"]').length
+	){
+		return new Promise(function (resolve, reject) {
+			reject('La photo d\'identité n\'a pas été fournie');
+		});
+	}
 	if(0 !== $('input[name="operator[identity_picture]"]').length){
 		objFields['operator[identity_picture]'] = $('input[name="operator[identity_picture]"]')[0].value;
+	}
+
+	if("undefined" != typeof $('input[data-name="operator[identity_piece]"]').attr('required')
+	&& 0 === $('input[name="operator[identity_piece]"]').length
+	){
+		return new Promise(function (resolve, reject) {
+			reject('La pièce d\'identité n\'a pas été fournie');
+		});
 	}
 	if(0 !== $('input[name="operator[identity_piece]"]').length){
 		objFields['operator[identity_piece]'] = $('input[name="operator[identity_piece]"]')[0].value;
 	}
+
+	if("undefined" != typeof $('input[data-name="operator[cv]"]').attr('required')
+	&& 0 === $('input[name="operator[cv]"]').length
+	){
+		return new Promise(function (resolve, reject) {
+			reject('Le certificat employeur n\'a pas été fourni');
+		});
+	}
 	if(0 !== $('input[name="operator[cv]"]').length){
 		objFields['operator[cv]'] = $('input[name="operator[cv]"]')[0].value;
+	}
+
+	if("undefined" != typeof $('input[data-name="registration[employer_certificate]"]').attr('required')
+	&& 0 === $('input[name="registration[employer_certificate]"]').length
+	){
+		return new Promise(function (resolve, reject) {
+			reject('Le certificat employeur n\'a pas été fourni');
+		});
 	}
 	if(0 !== $('input[name="registration[employer_certificate]"]').length){
 		objFields['registration[employer_certificate]'] = $('input[name="registration[employer_certificate]"]')[0].value;
