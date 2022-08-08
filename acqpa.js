@@ -706,3 +706,19 @@ utils.callbacks.openSessionExaminerModal = function openSessionExaminerModal(arg
 	});
 	modal.open();
 }
+
+utils.callbacks.openSendDocumentsModal = function openSendDocumentsModal(args) {
+	var modal = new app.ModalFW({
+		name: args.name,
+		content: args.content,
+		width: args.width,
+		onOpen: () => {
+			// $('.registration_exam_level').trigger('change');
+		},
+		onClose: () => {
+			// utils.session.refreshSessionExaminers();
+			modal.destroy();
+		},
+	});
+	modal.open();
+}
