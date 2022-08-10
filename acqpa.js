@@ -74,7 +74,8 @@ $(function(){
 				var activeStep = form.$sections.filter('.active').attr('data-step');
 
 				if(isReadMode){
-					var posNext = $(this).index() - form.$nav.find('.splitForm__navitem.active').index();
+					var posNext = form.$nav.find(this).index('.splitForm__navitem:not(.hide)') - form.$nav.find('.active').index('.splitForm__navitem:not(.hide)');
+                
 					if (posNext < 0) {
 	          for (var i = 0; i > posNext; i--) {
 						  form.switchStep('prev');
@@ -91,7 +92,7 @@ $(function(){
         if (!$(this).hasClass('complete') && !$(this).prev().hasClass('complete'))
           return false;
         
-        var posNext = $(this).index() - form.$nav.find('.splitForm__navitem.active').index();
+        var posNext = form.$nav.find(this).index('.splitForm__navitem:not(.hide)') - form.$nav.find('.active').index('.splitForm__navitem:not(.hide)');
         
         if (posNext < 0) {
           for (var i = 0; i > posNext; i--) {
