@@ -2,6 +2,14 @@ $(function(){
 	var form = $('.splitForm.registration').splitForm('get');
 
 	if(form) {
+		var isReadMode = 'show' == $('.splitForm.registration').data('mode');
+		if(isReadMode){
+			form.$sections.addClass('complete');
+			form.$actions.addClass('hidden');
+			form.$el.find('input,textarea,select').each(function(){
+				$(this).attr('readonly',true).attr('disabled',true);
+			});
+		}
 		form.$actions.find('.splitForm__action').off('click');
 		form.$actions.find('.splitForm__action').on('click',function() {
 			
@@ -54,12 +62,31 @@ $(function(){
 	  });
 
 		if (form.enableNav === true) {
+			if(isReadMode){
+				form.$nav.find('.splitForm__navitem.deactivate').removeClass('deactivate');
+			}
+
       form.$nav.find('.splitForm__navitem').off('click');
       form.$nav.find('.splitForm__navitem').on('click',function(){
+        form.log('nav item click', this);
 			
 				// Retrieve the active step
 				var activeStep = form.$sections.filter('.active').attr('data-step');
-        form.log('nav item click', this)
+
+				if(isReadMode){
+					var posNext = $(this).index() - form.$nav.find('.splitForm__navitem.active').index();
+					if (posNext < 0) {
+	          for (var i = 0; i > posNext; i--) {
+						  form.switchStep('prev');
+	          }
+	        } else {
+	          for (var i = 0; i < posNext; i++) {
+							form.switchStep('next');
+	        	} 
+					}
+
+					return;
+				}
         
         if (!$(this).hasClass('complete') && !$(this).prev().hasClass('complete'))
           return false;
