@@ -31,7 +31,10 @@ $(function(){
 			if($(this).attr('data-dir') != 'final'){ // action is either prev or next
 			  utils.registration.saveStep(form.$sections.filter('.active'))
 			  	.then(r => {
-			  		form.switchStep($(this).attr('data-dir'));
+			  		form.switchStep($(this).attr('data-dir'))
+			  		.then(r => {
+			  			utils.registration.saveCurrentStepIndex();
+			  		});
 			  		notif_fade[r.status](r.msg);
 			  	})
 			  	.catch(err => {
@@ -98,7 +101,10 @@ $(function(){
           for (var i = 0; i > posNext; i--) {
            	utils.registration.saveStep(form.$sections.filter('.active'))
 					  	.then(r => {
-					  		form.switchStep('prev');
+					  		form.switchStep('prev')
+					  		.then(r => {
+					  			utils.registration.saveCurrentStepIndex();
+					  		});
 					  		notif_fade[r.status](r.msg);
 					  	})
 					  	.catch(err => {
@@ -112,7 +118,10 @@ $(function(){
 	          for (var i = 0; i < posNext; i++) {
 	           	utils.registration.saveStep(form.$sections.filter('.active'))
 						  	.then(r => {
-						  		form.switchStep('next');
+						  		form.switchStep('next')
+						  		.then(r => {
+						  			utils.registration.saveCurrentStepIndex();
+						  		});
 						  		notif_fade[r.status](r.msg);
 						  	})
 						  	.catch(err => {
@@ -194,12 +203,37 @@ utils.registration.saveStep = function saveStep(step){
 		'REQUEST_TOKEN': rt,
 		'module_type': 'acqpa_company_edit_registration',
 		'action': 'saveRegistration',
+		// 'registration[step]': step.data('step'),
 	};
 
 	var data = {};
 	for (var i in form.inputs) {
 		objFields[form.inputs[i].name] = form.inputs[i].value;
 	}
+
+	return new Promise(function (resolve, reject) {
+		utils.postData(objFields)
+		.then(r => {
+			if("error" == r.status) {
+				reject(r.msg);
+			} else {
+				resolve(r);
+			}
+		})
+	  .catch(err => {
+	    reject(err);
+	  });
+	});
+}
+utils.registration.saveCurrentStepIndex = function saveCurrentStepIndex(){
+	var form = $('.splitForm.registration').splitForm('get');
+  var current = form.$sections.toArray().indexOf(form.$sections.filter('.active').get(0));
+	var objFields = {
+		'REQUEST_TOKEN': rt,
+		'module_type': 'acqpa_company_edit_registration',
+		'action': 'saveRegistration',
+		'registration[step]': current,
+	};
 
 	return new Promise(function (resolve, reject) {
 		utils.postData(objFields)
