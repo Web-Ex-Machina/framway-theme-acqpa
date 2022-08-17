@@ -257,7 +257,9 @@ utils.registration.refreshRegistrationOperators = function refreshRegistrationOp
 		if("error" == r.status) {
 			notif_fade.error(r.msg);
 		} else {
-			notif_fade.success(r.msg);
+			if(r.msg){
+				notif_fade.success(r.msg);
+			}
 			$('.operators .table-list__container').append(r.html);
 		}
 	})
@@ -317,7 +319,9 @@ utils.registration.refreshRegistrationOperatorExamLevels = function refreshRegis
 		if("error" == r.status) {
 			notif_fade.error(r.msg);
 		} else {
-			notif_fade.success(r.msg);
+			if(r.msg){
+				notif_fade.success(r.msg);
+			}
 			$('.registration_session').append(r.html);
 		}
 	})
@@ -488,7 +492,9 @@ utils.session.refreshSessionTranslators = function refreshSessionTranslators(){
 		if("error" == r.status) {
 			notif_fade.error(r.msg);
 		} else {
-			notif_fade.success(r.msg);
+			if(r.msg){
+				notif_fade.success(r.msg);
+			}
 			$('.translators .table-list__container').append(r.html);
 		}
 	})
@@ -557,7 +563,9 @@ utils.session.refreshSessionExaminers = function refreshSessionExaminers(){
 		if("error" == r.status) {
 			notif_fade.error(r.msg);
 		} else {
-			notif_fade.success(r.msg);
+			if(r.msg){
+				notif_fade.success(r.msg);
+			}
 			$('.examiners .table-list__container').append(r.html);
 		}
 	})
@@ -626,7 +634,9 @@ utils.session.refreshSessionOperators = function refreshSessionOperators(){
 		if("error" == r.status) {
 			notif_fade.error(r.msg);
 		} else {
-			notif_fade.success(r.msg);
+			if(r.msg){
+				notif_fade.success(r.msg);
+			}
 			$('.operators .table-list__container').append(r.html);
 		}
 	})
