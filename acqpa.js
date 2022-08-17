@@ -395,7 +395,7 @@ utils.registration.saveRegistrationOperator = function saveRegistrationOperator(
 	&& 0 === $('input[name="operator[cv]"]').length
 	){
 		return new Promise(function (resolve, reject) {
-			reject('Le certificat employeur n\'a pas été fourni');
+			reject('Le CV n\'a pas été fourni');
 		});
 	}
 	if(0 !== $('input[name="operator[cv]"]').length){
@@ -411,6 +411,14 @@ utils.registration.saveRegistrationOperator = function saveRegistrationOperator(
 	}
 	if(0 !== $('input[name="registration[employer_certificate]"]').length){
 		objFields['registration[employer_certificate]'] = $('input[name="registration[employer_certificate]"]')[0].value;
+	}
+
+	if((1 == objFields['registration[exam_level]'] || 2 == objFields['registration[exam_level]'])
+		&& 0 == objFields['registration[exam_options]'].length
+	){
+		return new Promise(function (resolve, reject) {
+			reject('Veuillez sélectionner au moins une option');
+		});
 	}
 
 	return new Promise(function (resolve, reject) {
