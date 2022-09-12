@@ -1,0 +1,5 @@
+.no-item__container{
+	background-color: $info;
+	color: contrastFW(color(white),$info);
+	padding: 1rem;
+}
