@@ -567,6 +567,13 @@ utils.session.refreshSessionExaminers = function refreshSessionExaminers(){
 				notif_fade.success(r.msg);
 			}
 			$('.examiners .table-list__container').append(r.html);
+			if(0 == r.html.length){
+				$('#exam-session-no-examiner').removeClass('hidden');
+				$('.examiners .table-list__headline').addClass('hidden');
+			}else{
+				$('#exam-session-no-examiner').addClass('hidden');
+				$('.examiners .table-list__headline').removeClass('hidden');
+			}
 		}
 	})
   .catch(err => {
