@@ -838,4 +838,16 @@ utils.callbacks.openOperatorCompanyModal = function openOperatorCompanyModal(arg
 	modal.open();
 }
 
-
+utils.callbacks.openOperatorDeduplicationModal = function openOperatorDeduplicationModal(args) {
+	var modal = new app.ModalFW({
+		name: args.name,
+		content: args.content,
+		width: args.width,
+		onOpen: () => {
+		},
+		onClose: () => {
+			modal.destroy();
+		},
+	});
+	modal.open();
+}
