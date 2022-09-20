@@ -865,3 +865,17 @@ utils.callbacks.openCancelExamSessionOperatorModal = function openCancelExamSess
 	});
 	modal.open();
 }
+
+utils.callbacks.openRevokeCertificateModal = function openRevokeCertificateModal(args) {
+	var modal = new app.ModalFW({
+		name: args.name,
+		content: args.content,
+		width: args.width,
+		onOpen: () => {
+		},
+		onClose: () => {
+			modal.destroy();
+		},
+	});
+	modal.open();
+}
