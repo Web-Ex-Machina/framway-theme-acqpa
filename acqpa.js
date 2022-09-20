@@ -740,6 +740,15 @@ utils.callbacks.reload = function reloadPage(wait = 600) {
 utils.callbacks.redirect = function redirect(url, wait = 600) {
 	setTimeout(() => { window.location.replace(url) }, wait);
 }
+utils.callbacks.openInNewTab = function openInNewTab(url) {
+	const a = document.createElement('a');
+	a.style.display = 'none';
+	a.href = url;
+	a.target = "_blank";
+	document.body.appendChild(a);
+	a.click();
+	a.remove();
+}
 utils.callbacks.openModal = function openModal(args) {
 	var modal = new app.ModalFW(args);
 	modal.open();
@@ -867,6 +876,20 @@ utils.callbacks.openCancelExamSessionOperatorModal = function openCancelExamSess
 }
 
 utils.callbacks.openRevokeCertificateModal = function openRevokeCertificateModal(args) {
+	var modal = new app.ModalFW({
+		name: args.name,
+		content: args.content,
+		width: args.width,
+		onOpen: () => {
+		},
+		onClose: () => {
+			modal.destroy();
+		},
+	});
+	modal.open();
+}
+
+utils.callbacks.openSendCertificateModal = function openSendCertificateModal(args) {
 	var modal = new app.ModalFW({
 		name: args.name,
 		content: args.content,
