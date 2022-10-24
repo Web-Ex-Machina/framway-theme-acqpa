@@ -902,3 +902,17 @@ utils.callbacks.openSendCertificateModal = function openSendCertificateModal(arg
 	});
 	modal.open();
 }
+
+utils.callbacks.openExamSessionOperatorDetailModal = function openExamSessionOperatorDetailModal(args) {
+	var modal = new app.ModalFW({
+		name: args.name,
+		content: args.content,
+		width: args.width,
+		onOpen: () => {
+		},
+		onClose: () => {
+			modal.destroy();
+		},
+	});
+	modal.open();
+}
