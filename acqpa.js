@@ -503,6 +503,7 @@ utils.session.refreshSessionTranslators = function refreshSessionTranslators(){
 				$('.translators .no-item__container').addClass('hidden');
 				$('.translators .table-list__headline').removeClass('hidden');
 			}
+			window.dispatchEvent(new Event('resize'));
 		}
 	})
   .catch(err => {
@@ -581,6 +582,7 @@ utils.session.refreshSessionExaminers = function refreshSessionExaminers(){
 				$('.examiners .no-item__container').addClass('hidden');
 				$('.examiners .table-list__headline').removeClass('hidden');
 			}
+			window.dispatchEvent(new Event('resize'));
 		}
 	})
   .catch(err => {
