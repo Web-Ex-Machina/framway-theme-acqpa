@@ -104,6 +104,7 @@ $(function(){
 					  		form.switchStep('prev')
 					  		.then(r => {
 					  			utils.registration.saveCurrentStepIndex();
+					  			window.dispatchEvent(new Event('resize'));
 					  		});
 					  		notif_fade[r.status](r.msg);
 					  	})
@@ -121,6 +122,7 @@ $(function(){
 						  		form.switchStep('next')
 						  		.then(r => {
 						  			utils.registration.saveCurrentStepIndex();
+						  			window.dispatchEvent(new Event('resize'));
 						  		});
 						  		notif_fade[r.status](r.msg);
 						  	})
@@ -132,7 +134,7 @@ $(function(){
             form.$sections.filter('.active').removeClass('complete');
             form.$wrapper.removeClass('isComplete');
           }
-        } 
+        }
       });
     }
 	}
