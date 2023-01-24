@@ -765,6 +765,10 @@ utils.callbacks.openRegistrationOperatorModal = function openRegistrationOperato
 		blnDismiss: args.dismiss,
 		onOpen: () => {
 			$('.registration_exam_level').trigger('change');
+
+			setTimeout(function() {
+				window.dispatchEvent(new Event('resize'));
+			}, 1000);
 		},
 		onClose: () => {
 			if('registration' === args.source){
