@@ -313,10 +313,12 @@ utils.registration.getOperatorData = function getOperatorData(id){
 	});
 }
 
-utils.registration.refreshRegistrationOperatorExamLevels = function refreshRegistrationOperatorExamLevels(level, previouslySelectedSession){
+utils.registration.refreshRegistrationOperatorExamLevels = function refreshRegistrationOperatorExamLevels(level, options, previouslySelectedSession){
 	$('.registration_session option').remove();
+	$('.registration_session').parent().hide();
+	$('.registration_session_no_sessions').hide();
 
-	utils.registration.getRegistrationOperatorExamSessionByLevel(level, previouslySelectedSession)
+	utils.registration.getRegistrationOperatorExamSessionByLevelAndOptions(level, options, previouslySelectedSession)
 	.then(r => {
 		if("error" == r.status) {
 			notif_fade.error(r.msg);
@@ -324,19 +326,26 @@ utils.registration.refreshRegistrationOperatorExamLevels = function refreshRegis
 			if(r.msg){
 				notif_fade.success(r.msg);
 			}
-			$('.registration_session').append(r.html);
+
+			if (null === r.html) {
+				$('.registration_session_no_sessions').show();
+			} else {
+				$('.registration_session').parent().show();
+				$('.registration_session').append(r.html);
+			}
 		}
 	})
   .catch(err => {
     notif_fade.error(err);
   });
 }
-utils.registration.getRegistrationOperatorExamSessionByLevel = function getRegistrationOperatorExamSessionByLevel(level, previouslySelectedSession){
+utils.registration.getRegistrationOperatorExamSessionByLevelAndOptions = function getRegistrationOperatorExamSessionByLevelAndOptions(level, options, previouslySelectedSession){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
 		'module_type': 'acqpa_company_edit_registration',
-		'action': 'getExamSessionByLevel',
+		'action': 'getExamSessionByLevelAndOptions',
 		'level': level,
+		'options': options,
 		'previouslySelectedSession': previouslySelectedSession,
 	};
 
