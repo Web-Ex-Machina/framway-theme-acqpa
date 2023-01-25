@@ -318,6 +318,11 @@ utils.registration.refreshRegistrationOperatorExamLevels = function refreshRegis
 	$('.registration_session').parent().hide();
 	$('.registration_session_no_sessions').hide();
 
+	// If there is no levels or no options, just hide stuff
+	if (!level || ((1 === level || 2 === level) && !options)) {
+		return;
+	}
+
 	utils.registration.getRegistrationOperatorExamSessionByLevelAndOptions(level, options, previouslySelectedSession)
 	.then(r => {
 		if("error" == r.status) {
