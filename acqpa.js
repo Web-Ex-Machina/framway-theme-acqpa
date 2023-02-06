@@ -344,6 +344,7 @@ utils.registration.refreshRegistrationOperatorExamLevels = function refreshRegis
     notif_fade.error(err);
   });
 }
+
 utils.registration.getRegistrationOperatorExamSessionByLevelAndOptions = function getRegistrationOperatorExamSessionByLevelAndOptions(level, options, previouslySelectedSession){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
