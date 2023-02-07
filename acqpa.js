@@ -369,6 +369,64 @@ utils.registration.getRegistrationOperatorExamSessionByLevelAndOptions = functio
     });
 	});
 }
+///////////
+utils.registration.refreshRegistrationOperatorSessionDates = function refreshRegistrationOperatorSessionDates(session, previouslySelectedDate){
+	$('.registration_present_at input').remove();
+	$('.registration_present_at label').remove();
+	$('.registration_present_at').parent().hide();
+	$('.registration_present_at_no_dates').hide();
+
+	// If there is no session, just hide stuff
+	if (!session) {
+		return;
+	}
+
+	utils.registration.getRegistrationOperatorExamSessionDatesById(session, previouslySelectedDate)
+	.then(r => {
+		if("error" == r.status) {
+			notif_fade.error(r.msg);
+		} else {
+			if(r.msg){
+				notif_fade.success(r.msg);
+			}
+
+			if (null === r.html) {
+				$('.registration_present_at_no_dates').show();
+			} else {
+				$('.registration_present_at').parent().show();
+				$('.registration_present_at').append(r.html);
+			}
+		}
+	})
+  .catch(err => {
+    notif_fade.error(err);
+  });
+}
+
+utils.registration.getRegistrationOperatorExamSessionDatesById = function getRegistrationOperatorExamSessionDatesById(session, previouslySelectedDate){
+	var objFields = {
+		'REQUEST_TOKEN': rt,
+		'module_type': 'acqpa_company_edit_registration',
+		'action': 'getExamSessionDatesById',
+		'session': session,
+		'previouslySelectedDate': previouslySelectedDate,
+	};
+
+	return new Promise(function (resolve, reject) {
+		utils.postData(objFields)
+		.then(r => {
+			if("error" == r.status) {
+				reject(r.msg);
+			} else {
+				resolve(r);
+			}
+		})
+    .catch(err => {
+        reject(err);
+    });
+	});
+}
+///////////
 utils.registration.saveRegistrationOperator = function saveRegistrationOperator(modal){
 	var form = utils.checkForm(modal);
 	if(!form.valid){
