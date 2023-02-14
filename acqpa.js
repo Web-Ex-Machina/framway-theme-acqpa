@@ -764,6 +764,101 @@ utils.session.getRegistrationOperators = function getRegistrationOperators(){
 	});
 }
 
+utils.session.refreshSessionExaminersMissingOptionsAndLevels = function refreshSessionExaminersMissingOptionsAndLevels(){
+	$('#exam-session-examiners-missing').html('');
+
+	utils.session.getSessionExaminersMissingOptionsAndLevels()
+	.then(r => {
+		if("error" == r.status) {
+			notif_fade.error(r.msg);
+		} else {
+			if(r.msg){
+				notif_fade.success(r.msg);
+			}
+			$('#exam-session-examiners-missing').append(r.html);
+			if(0 == r.html.length){
+				$('#exam-session-examiners-missing').addClass('hidden');
+			}else{
+				$('#exam-session-examiners-missing').removeClass('hidden');
+			}
+			window.dispatchEvent(new Event('resize'));
+		}
+	})
+  .catch(err => {
+    notif_fade.error(err);
+  });
+}
+utils.session.getSessionExaminersMissingOptionsAndLevels = function getSessionExaminersMissingOptionsAndLevels(){
+	var objFields = {
+		'REQUEST_TOKEN': rt,
+		'module_type': 'acqpa_exam_session_edit',
+		'action': 'getSessionExaminersMissingOptionsAndLevels',
+	};
+
+	return new Promise(function (resolve, reject) {
+		utils.postData(objFields)
+		.then(r => {
+			if("error" == r.status) {
+				reject(r.msg);
+			} else {
+				resolve(r);
+			}
+		})
+    .catch(err => {
+        reject(err);
+    });
+	});
+}
+
+
+
+
+utils.session.refreshSessionTranslatorsMissingLanguages = function refreshSessionTranslatorsMissingLanguages(){
+	$('#exam-session-translators-missing').html('');
+
+	utils.session.getSessionTranslatorsMissingLanguages()
+	.then(r => {
+		if("error" == r.status) {
+			notif_fade.error(r.msg);
+		} else {
+			if(r.msg){
+				notif_fade.success(r.msg);
+			}
+			$('#exam-session-translators-missing').append(r.html);
+			if(0 == r.html.length){
+				$('#exam-session-translators-missing').addClass('hidden');
+			}else{
+				$('#exam-session-translators-missing').removeClass('hidden');
+			}
+			window.dispatchEvent(new Event('resize'));
+		}
+	})
+  .catch(err => {
+    notif_fade.error(err);
+  });
+}
+utils.session.getSessionTranslatorsMissingLanguages = function getSessionTranslatorsMissingLanguages(){
+	var objFields = {
+		'REQUEST_TOKEN': rt,
+		'module_type': 'acqpa_exam_session_edit',
+		'action': 'getSessionTranslatorsMissingLanguages',
+	};
+
+	return new Promise(function (resolve, reject) {
+		utils.postData(objFields)
+		.then(r => {
+			if("error" == r.status) {
+				reject(r.msg);
+			} else {
+				resolve(r);
+			}
+		})
+    .catch(err => {
+        reject(err);
+    });
+	});
+}
+
 /** UTILITIES **/
 utils.postData = async function postData(data, url = "", method = "POST") {
 	var request = new FormData();
@@ -865,6 +960,12 @@ utils.callbacks.refreshSessionTranslators = function refreshSessionTranslators()
 }
 utils.callbacks.refreshSessionExaminers = function refreshSessionExaminers() {
 	utils.session.refreshSessionExaminers();
+}
+utils.callbacks.refreshSessionTranslatorsMissingLanguages = function refreshSessionTranslatorsMissingLanguages() {
+	utils.session.refreshSessionTranslatorsMissingLanguages();
+}
+utils.callbacks.refreshSessionExaminersMissingOptionsAndLevels = function refreshSessionExaminersMissingOptionsAndLevels() {
+	utils.session.refreshSessionExaminersMissingOptionsAndLevels();
 }
 
 utils.callbacks.openSessionTranslatorModal = function openSessionTranslatorModal(args) {
