@@ -810,7 +810,51 @@ utils.session.getSessionExaminersMissingOptionsAndLevels = function getSessionEx
 	});
 }
 
+utils.session.refreshSessionExaminersSpareOptionsAndLevels = function refreshSessionExaminersSpareOptionsAndLevels(){
+	$('#exam-session-examiners-spare').html('');
 
+	utils.session.getSessionExaminersSpareOptionsAndLevels()
+	.then(r => {
+		if("error" == r.status) {
+			notif_fade.error(r.msg);
+		} else {
+			if(r.msg){
+				notif_fade.success(r.msg);
+			}
+			$('#exam-session-examiners-spare').append(r.html);
+			if(0 == r.html.length){
+				$('#exam-session-examiners-spare').addClass('hidden');
+			}else{
+				$('#exam-session-examiners-spare').removeClass('hidden');
+			}
+			window.dispatchEvent(new Event('resize'));
+		}
+	})
+  .catch(err => {
+    notif_fade.error(err);
+  });
+}
+utils.session.getSessionExaminersSpareOptionsAndLevels = function getSessionExaminersSpareOptionsAndLevels(){
+	var objFields = {
+		'REQUEST_TOKEN': rt,
+		'module_type': 'acqpa_exam_session_edit',
+		'action': 'getSessionExaminersSpareOptionsAndLevels',
+	};
+
+	return new Promise(function (resolve, reject) {
+		utils.postData(objFields)
+		.then(r => {
+			if("error" == r.status) {
+				reject(r.msg);
+			} else {
+				resolve(r);
+			}
+		})
+    .catch(err => {
+        reject(err);
+    });
+	});
+}
 
 
 utils.session.refreshSessionTranslatorsMissingLanguages = function refreshSessionTranslatorsMissingLanguages(){
@@ -842,6 +886,51 @@ utils.session.getSessionTranslatorsMissingLanguages = function getSessionTransla
 		'REQUEST_TOKEN': rt,
 		'module_type': 'acqpa_exam_session_edit',
 		'action': 'getSessionTranslatorsMissingLanguages',
+	};
+
+	return new Promise(function (resolve, reject) {
+		utils.postData(objFields)
+		.then(r => {
+			if("error" == r.status) {
+				reject(r.msg);
+			} else {
+				resolve(r);
+			}
+		})
+    .catch(err => {
+        reject(err);
+    });
+	});
+}
+utils.session.refreshSessionTranslatorsSpareLanguages = function refreshSessionTranslatorsSpareLanguages(){
+	$('#exam-session-translators-spare').html('');
+
+	utils.session.getSessionTranslatorsSpareLanguages()
+	.then(r => {
+		if("error" == r.status) {
+			notif_fade.error(r.msg);
+		} else {
+			if(r.msg){
+				notif_fade.success(r.msg);
+			}
+			$('#exam-session-translators-spare').append(r.html);
+			if(0 == r.html.length){
+				$('#exam-session-translators-spare').addClass('hidden');
+			}else{
+				$('#exam-session-translators-spare').removeClass('hidden');
+			}
+			window.dispatchEvent(new Event('resize'));
+		}
+	})
+  .catch(err => {
+    notif_fade.error(err);
+  });
+}
+utils.session.getSessionTranslatorsSpareLanguages = function getSessionTranslatorsSpareLanguages(){
+	var objFields = {
+		'REQUEST_TOKEN': rt,
+		'module_type': 'acqpa_exam_session_edit',
+		'action': 'getSessionTranslatorsSpareLanguages',
 	};
 
 	return new Promise(function (resolve, reject) {
@@ -966,6 +1055,12 @@ utils.callbacks.refreshSessionTranslatorsMissingLanguages = function refreshSess
 }
 utils.callbacks.refreshSessionExaminersMissingOptionsAndLevels = function refreshSessionExaminersMissingOptionsAndLevels() {
 	utils.session.refreshSessionExaminersMissingOptionsAndLevels();
+}
+utils.callbacks.refreshSessionTranslatorsSpareLanguages = function refreshSessionTranslatorsSpareLanguages() {
+	utils.session.refreshSessionTranslatorsSpareLanguages();
+}
+utils.callbacks.refreshSessionExaminersSpareOptionsAndLevels = function refreshSessionExaminersSpareOptionsAndLevels() {
+	utils.session.refreshSessionExaminersSpareOptionsAndLevels();
 }
 
 utils.callbacks.openSessionTranslatorModal = function openSessionTranslatorModal(args) {
