@@ -1194,3 +1194,18 @@ utils.callbacks.openExamSessionOperatorDetailModal = function openExamSessionOpe
 	});
 	modal.open();
 }
+
+utils.callbacks.openExamQuestionsSummaryModal = function openExamQuestionsSummaryModal(args) {
+	var modal = new app.ModalFW({
+		name: args.name,
+		content: args.content,
+		width: args.width,
+		onOpen: () => {
+		},
+		onClose: () => {
+			modal.destroy();
+		},
+	});
+	modal.open();
+}
+
