@@ -1208,4 +1208,7 @@ utils.callbacks.openExamQuestionsSummaryModal = function openExamQuestionsSummar
 	});
 	modal.open();
 }
+utils.callbacks.redirectAfterSign = function redirectAfterSign(args) {
+	utils.callbacks.redirect(args.url, args.wait ?? 600);
+}
 
