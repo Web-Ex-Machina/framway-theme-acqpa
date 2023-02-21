@@ -166,6 +166,8 @@ $(function(){
 	    
 	    if (action.indexOf('delete') != -1) {
 	      blnRequest = confirm('Voulez vous vraiment supprimer ceci ?');
+	    }else if('undefined' !== typeof button.data('confirm')){
+	      blnRequest = confirm(button.data('confirm'));
 	    }
 
 	    if(blnRequest) {
