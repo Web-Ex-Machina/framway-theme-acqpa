@@ -339,6 +339,7 @@ utils.registration.refreshRegistrationOperatorExamLevels = function refreshRegis
 			} else {
 				$('.registration_session').parent().show();
 				$('.registration_session').append(r.html);
+				$('.registration_session').trigger('change');
 			}
 		}
 	})
