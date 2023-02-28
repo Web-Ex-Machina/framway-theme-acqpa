@@ -398,6 +398,7 @@ utils.registration.refreshRegistrationOperatorSessionDates = function refreshReg
 			} else {
 				$('.registration_present_at').parent().show();
 				$('.registration_present_at').append(r.html);
+				window.dispatchEvent(new Event('resize'));
 			}
 		}
 	})
