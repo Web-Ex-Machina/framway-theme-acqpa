@@ -1298,3 +1298,10 @@ utils.callbacks.redirectAfterSign = function redirectAfterSign(args) {
 	utils.callbacks.redirect(args.url, args.wait ?? 600);
 }
 
+utils.callbacks.downloadFile = function downloadFile(args) {
+	var link=document.createElement('a');
+  link.href=args.url;
+  link.download=args.filename;
+  link.click();
+}
+
