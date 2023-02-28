@@ -503,6 +503,23 @@ utils.registration.saveRegistrationOperator = function saveRegistrationOperator(
 			reject('Veuillez sélectionner au moins une option');
 		});
 	}
+	// operator must be 18+
+	var birthDate = new Date(objFields['operator[date_of_birth]']).getTime(); // Y-m-d format to timestamp
+	var currentDate = new Date();
+	var eighteenYearsFromNowDate = new Date(
+		(currentDate.getFullYear()-18)
+		+'-'
+		+(currentDate.getMonth() < 10 ? '0'+currentDate.getMonth() : currentDate.getMonth())
+		+'-'
+		+(currentDate.getDate() < 10 ? '0'+currentDate.getDate() : currentDate.getDate())
+	).getTime();
+	if(birthDate < eighteenYearsFromNowDate){
+		return new Promise(function (resolve, reject) {
+			reject('L \'opérateur doit être majeur pour être inscrit.');
+		});
+	}
+
+
 
 	return new Promise(function (resolve, reject) {
 		utils.postData(objFields)
