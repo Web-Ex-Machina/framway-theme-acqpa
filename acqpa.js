@@ -1139,6 +1139,7 @@ utils.callbacks.openSessionTranslatorModal = function openSessionTranslatorModal
 		name: args.name,
 		content: args.content,
 		width: args.width,
+		title: args.title ?? '',
 		onOpen: () => {
 			// $('.registration_exam_level').trigger('change');
 		},
@@ -1155,6 +1156,7 @@ utils.callbacks.openSessionExaminerModal = function openSessionExaminerModal(arg
 		name: args.name,
 		content: args.content,
 		width: args.width,
+		title: args.title ?? '',
 		onOpen: () => {
 			// $('.registration_exam_level').trigger('change');
 		},
@@ -1171,6 +1173,7 @@ utils.callbacks.openSendDocumentsModal = function openSendDocumentsModal(args) {
 		name: args.name,
 		content: args.content,
 		width: args.width,
+		title: args.title ?? '',
 		onOpen: () => {
 			// $('.registration_exam_level').trigger('change');
 		},
@@ -1187,6 +1190,7 @@ utils.callbacks.openOperatorCompanyModal = function openOperatorCompanyModal(arg
 		name: args.name,
 		content: args.content,
 		width: args.width,
+		title: args.title ?? '',
 		onOpen: () => {
 		},
 		onClose: () => {
@@ -1201,6 +1205,7 @@ utils.callbacks.openOperatorDeduplicationModal = function openOperatorDeduplicat
 		name: args.name,
 		content: args.content,
 		width: args.width,
+		title: args.title ?? '',
 		onOpen: () => {
 		},
 		onClose: () => {
@@ -1215,6 +1220,7 @@ utils.callbacks.openCancelExamSessionOperatorModal = function openCancelExamSess
 		name: args.name,
 		content: args.content,
 		width: args.width,
+		title: args.title ?? '',
 		onOpen: () => {
 		},
 		onClose: () => {
@@ -1229,6 +1235,7 @@ utils.callbacks.openRevokeCertificateModal = function openRevokeCertificateModal
 		name: args.name,
 		content: args.content,
 		width: args.width,
+		title: args.title ?? '',
 		onOpen: () => {
 		},
 		onClose: () => {
@@ -1243,6 +1250,7 @@ utils.callbacks.openSendCertificateModal = function openSendCertificateModal(arg
 		name: args.name,
 		content: args.content,
 		width: args.width,
+		title: args.title ?? '',
 		onOpen: () => {
 		},
 		onClose: () => {
@@ -1257,6 +1265,7 @@ utils.callbacks.openExamSessionOperatorDetailModal = function openExamSessionOpe
 		name: args.name,
 		content: args.content,
 		width: args.width,
+		title: args.title ?? '',
 		onOpen: () => {
 		},
 		onClose: () => {
@@ -1271,6 +1280,7 @@ utils.callbacks.openExamQuestionsSummaryModal = function openExamQuestionsSummar
 		name: args.name,
 		content: args.content,
 		width: args.width,
+		title: args.title ?? '',
 		onOpen: () => {
 		},
 		onClose: () => {
@@ -1285,6 +1295,7 @@ utils.callbacks.openPracticalExamModal = function openPracticalExamModal(args) {
 		name: args.name,
 		content: args.content,
 		width: args.width,
+		title: args.title ?? '',
 		onOpen: () => {
 		},
 		onClose: () => {
