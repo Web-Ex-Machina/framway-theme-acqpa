@@ -513,7 +513,7 @@ utils.registration.saveRegistrationOperator = function saveRegistrationOperator(
 		+'-'
 		+(currentDate.getDate() < 10 ? '0'+currentDate.getDate() : currentDate.getDate())
 	).getTime();
-	if(birthDate < eighteenYearsFromNowDate){
+	if(birthDate > eighteenYearsFromNowDate){
 		return new Promise(function (resolve, reject) {
 			reject('L \'opérateur doit être majeur pour être inscrit.');
 		});
