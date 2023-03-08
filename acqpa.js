@@ -1305,6 +1305,36 @@ utils.callbacks.openPracticalExamModal = function openPracticalExamModal(args) {
 	modal.open();
 }
 
+utils.callbacks.openChangeOperatorPresentAtModal = function openChangeOperatorPresentAtModal(args) {
+	var modal = new app.ModalFW({
+		name: args.name,
+		content: args.content,
+		width: args.width,
+		title: args.title ?? '',
+		onOpen: () => {
+		},
+		onClose: () => {
+			modal.destroy();
+		},
+	});
+	modal.open();
+}
+
+utils.callbacks.openCorrectTheoricalExamModal = function openCorrectTheoricalExamModal(args) {
+	var modal = new app.ModalFW({
+		name: args.name,
+		content: args.content,
+		width: args.width,
+		title: args.title ?? '',
+		onOpen: () => {
+		},
+		onClose: () => {
+			modal.destroy();
+		},
+	});
+	modal.open();
+}
+
 utils.callbacks.redirectAfterSign = function redirectAfterSign(args) {
 	utils.callbacks.redirect(args.url, args.wait ?? 600);
 }
