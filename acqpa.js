@@ -1100,6 +1100,8 @@ utils.callbacks.openRegistrationOperatorModal = function openRegistrationOperato
 				utils.registration.refreshRegistrationOperators();
 			}else if('session' === args.source){
 				utils.session.refreshSessionOperators();
+			}else if('session-manage' === args.source){
+				utils.session.refreshSessionOperatorsForManage();
 			}
 			modal.destroy();
 		},
