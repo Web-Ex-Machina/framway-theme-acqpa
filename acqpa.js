@@ -969,6 +969,52 @@ utils.session.getSessionTranslatorsSpareLanguages = function getSessionTranslato
 	});
 }
 
+utils.session.refreshSessionOperatorsMissingConfigurations = function refreshSessionOperatorsMissingConfigurations(){
+	$('#exam-session-operator-configuration-missing').html('');
+
+	utils.session.getSessionOperatorsMissingConfigurations()
+	.then(r => {
+		if("error" == r.status) {
+			notif_fade.error(r.msg);
+		} else {
+			if(r.msg){
+				notif_fade.success(r.msg);
+			}
+			$('#exam-session-operator-configuration-missing').append(r.html);
+			if(0 == r.html.length){
+				$('#exam-session-operator-configuration-missing').addClass('hidden');
+			}else{
+				$('#exam-session-operator-configuration-missing').removeClass('hidden');
+			}
+			window.dispatchEvent(new Event('resize'));
+		}
+	})
+  .catch(err => {
+    notif_fade.error(err);
+  });
+}
+utils.session.getSessionOperatorsMissingConfigurations = function getSessionOperatorsMissingConfigurations(){
+	var objFields = {
+		'REQUEST_TOKEN': rt,
+		'module_type': 'acqpa_exam_session_edit',
+		'action': 'getSessionOperatorsMissingConfigurations',
+	};
+
+	return new Promise(function (resolve, reject) {
+		utils.postData(objFields)
+		.then(r => {
+			if("error" == r.status) {
+				reject(r.msg);
+			} else {
+				resolve(r);
+			}
+		})
+    .catch(err => {
+        reject(err);
+    });
+	});
+}
+
 utils.session.refreshSessionOperatorsForManage = function refreshSessionOperatorsForManage(){
 	$('.operators .table-list__line').remove();
 
@@ -1013,6 +1059,54 @@ utils.session.getRegistrationOperatorsForManage = function getRegistrationOperat
 	    .catch(err => {
 	        reject(err);
 	    });
+	});
+}
+
+
+
+utils.session.refreshSessionOperatorsMissingConfigurationsForManage = function refreshSessionOperatorsMissingConfigurationsForManage(){
+	$('#exam-session-operator-configuration-missing').html('');
+
+	utils.session.getSessionOperatorsMissingConfigurationsForManage()
+	.then(r => {
+		if("error" == r.status) {
+			notif_fade.error(r.msg);
+		} else {
+			if(r.msg){
+				notif_fade.success(r.msg);
+			}
+			$('#exam-session-operator-configuration-missing').append(r.html);
+			if(0 == r.html.length){
+				$('#exam-session-operator-configuration-missing').addClass('hidden');
+			}else{
+				$('#exam-session-operator-configuration-missing').removeClass('hidden');
+			}
+			window.dispatchEvent(new Event('resize'));
+		}
+	})
+  .catch(err => {
+    notif_fade.error(err);
+  });
+}
+utils.session.getSessionOperatorsMissingConfigurationsForManage = function getSessionOperatorsMissingConfigurationsForManage(){
+	var objFields = {
+		'REQUEST_TOKEN': rt,
+		'module_type': 'acqpa_exam_session_manage',
+		'action': 'getSessionOperatorsMissingConfigurations',
+	};
+
+	return new Promise(function (resolve, reject) {
+		utils.postData(objFields)
+		.then(r => {
+			if("error" == r.status) {
+				reject(r.msg);
+			} else {
+				resolve(r);
+			}
+		})
+    .catch(err => {
+        reject(err);
+    });
 	});
 }
 
@@ -1100,8 +1194,10 @@ utils.callbacks.openRegistrationOperatorModal = function openRegistrationOperato
 				utils.registration.refreshRegistrationOperators();
 			}else if('session' === args.source){
 				utils.session.refreshSessionOperators();
+				utils.session.refreshSessionOperatorsMissingConfigurations();
 			}else if('session-manage' === args.source){
 				utils.session.refreshSessionOperatorsForManage();
+				utils.session.refreshSessionOperatorsMissingConfigurationsForManage();
 			}
 			modal.destroy();
 		},
@@ -1132,8 +1228,14 @@ utils.callbacks.refreshSessionTranslatorsSpareLanguages = function refreshSessio
 utils.callbacks.refreshSessionExaminersSpareOptionsAndLevels = function refreshSessionExaminersSpareOptionsAndLevels() {
 	utils.session.refreshSessionExaminersSpareOptionsAndLevels();
 }
+utils.callbacks.refreshSessionOperatorsMissingConfigurations = function refreshSessionOperatorsMissingConfigurations() {
+	utils.session.refreshSessionOperatorsMissingConfigurations();
+}
 utils.callbacks.refreshSessionOperatorsForManage = function refreshSessionOperatorsForManage() {
 	utils.session.refreshSessionOperatorsForManage();
+}
+utils.callbacks.refreshSessionOperatorsMissingConfigurationsForManage = function refreshSessionOperatorsMissingConfigurationsForManage() {
+	utils.session.refreshSessionOperatorsMissingConfigurationsForManage();
 }
 
 utils.callbacks.openSessionTranslatorModal = function openSessionTranslatorModal(args) {
