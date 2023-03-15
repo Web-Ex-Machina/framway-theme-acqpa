@@ -1439,6 +1439,21 @@ utils.callbacks.openCorrectTheoricalExamModal = function openCorrectTheoricalExa
 	modal.open();
 }
 
+utils.callbacks.openApplyFinalCorrectionStatusModal = function openApplyFinalCorrectionStatusModal(args) {
+	var modal = new app.ModalFW({
+		name: args.name,
+		content: args.content,
+		width: args.width,
+		title: args.title ?? '',
+		onOpen: () => {
+		},
+		onClose: () => {
+			modal.destroy();
+		},
+	});
+	modal.open();
+}
+
 utils.callbacks.redirectAfterSign = function redirectAfterSign(args) {
 	utils.callbacks.redirect(args.url, args.wait ?? 600);
 }
