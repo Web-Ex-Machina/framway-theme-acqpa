@@ -12,7 +12,8 @@ h1,.h1{text-transform: none;}
 
 div[class*="mod_acqpa_"][class*="_list"]{width: 100vw; position: relative; left: 50%; transform: translateX(-50%); padding: 0 $spacing;}
 
-.mod_acqpa_headline{@extend .sep-bottom-primary !optional; margin-bottom: 0; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
-	&:after{margin-top: 1rem; margin-bottom: 2rem; opacity: 0.45;}
+.mod_acqpa_headline{@extend .sep-bottom-primary !optional; margin-bottom: 0; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1em;
+	&:after{margin-top: 0; margin-bottom: 2rem; opacity: 0.45;}
+	>*:last-child{margin-left: auto;}
 	.ce_headline{margin: 0;}
 }
