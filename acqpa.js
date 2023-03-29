@@ -178,15 +178,32 @@ $(function(){
 	        }
 
 	        // Apply callbacks
-			if('success' === r.status && r.callbacks) {
-				for(var i in r.callbacks) {
-					// i is the function name in utils
-					// r.callbacks[i] is an optional array of arguments
-					utils.callbacks[i](r.callbacks[i]);
-				}
-			}
-
-			button.closest('.table-list__line').removeClass('loading');
+					if('success' === r.status && r.callbacks) {
+						for(var i in r.callbacks) {
+							// i is the function name in utils
+							// r.callbacks[i] is an optional array of arguments
+							switch(i){
+								case 'refreshLine':
+									data['action'] = 'refreshLine';
+									utils.postData(data, url, method).then(function(r){
+										// Display a toastr if there is a status & a msg
+						        if (r.status && r.msg) 
+						        	notif_fade[r.status](r.msg);
+						        if (r.html && r.status=='success')
+						        	button.closest('.table-list__line').replaceWith(r.html);
+                		button.closest('.table-list__line').removeClass('loading');
+									});
+									break;
+								case 'deleteLine':
+                	button.closest('.table-list__line').remove();
+									break;
+								default: 
+									utils.callbacks[i](r.callbacks[i]);
+									break;
+							}
+						}
+					}
+					button.closest('.table-list__line').removeClass('loading');
 	      });
 	    } else {
 	      button.closest('.table-list__line').removeClass('loading');
