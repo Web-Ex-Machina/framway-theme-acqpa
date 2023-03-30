@@ -9,9 +9,10 @@ h1,.h1{text-transform: none;}
 }
 
 .no-item__container{
-	background-color: $info;
+	background-color: rgba($info,0.75);
 	color: contrastFW(color(white),$info);
-	padding: 1rem;
+	padding: 0.65em 1em 0.75em;
+	text-align: center;
 }
 
 
@@ -27,3 +28,9 @@ h1,.h1{text-transform: none;}
 	a.disabled{opacity: 0.35;}
 }
 .mod_acqpa_edit_submit{text-align: right; margin-top: 1em;}
+
+
+.table-list__cell{
+	&[data-name*="date_start"],
+	&[data-name*="date_end"]{white-space: nowrap;}
+}
