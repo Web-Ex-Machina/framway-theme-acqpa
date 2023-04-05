@@ -34,3 +34,9 @@ h1,.h1{text-transform: none;}
 	&[data-name*="date_start"],
 	&[data-name*="date_end"]{white-space: nowrap;}
 }
+
+.splitForm__section{
+	.accordionFW:not([class*=m-bottom]):not([class*=m-y]){margin-bottom: 0;}
+	.error-container:empty{display: none;}
+	.d-grid .form-group .select2FW-wrapper{min-width: 0;}
+}
