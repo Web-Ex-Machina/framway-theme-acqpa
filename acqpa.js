@@ -333,8 +333,8 @@ utils.registration.getOperatorData = function getOperatorData(id){
 }
 
 utils.registration.refreshRegistrationOperatorExamLevels = function refreshRegistrationOperatorExamLevels(level, options, previouslySelectedSession){
-	$('.registration_session option').remove();
-	$('.registration_session').parent().hide();
+	$('select.registration_session option').remove();
+	$('select.registration_session').parent().hide();
 	$('.registration_session_no_sessions').hide();
 
 	// If there is no levels or no options, just hide stuff
@@ -354,9 +354,9 @@ utils.registration.refreshRegistrationOperatorExamLevels = function refreshRegis
 			if (null === r.html) {
 				$('.registration_session_no_sessions').show();
 			} else {
-				$('.registration_session').parent().show();
-				$('.registration_session').append(r.html);
-				$('.registration_session').trigger('change');
+				$('select.registration_session').parent().show();
+				$('select.registration_session').append(r.html);
+				$('select.registration_session').trigger('change');
 			}
 		}
 	})
