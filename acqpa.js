@@ -1033,8 +1033,6 @@ utils.session.getSessionOperatorsMissingConfigurations = function getSessionOper
 }
 
 utils.session.refreshSessionOperatorsForManage = function refreshSessionOperatorsForManage(){
-	$('.operators .table-list__line').remove();
-
 	utils.session.getRegistrationOperatorsForManage()
 	.then(r => {
 		if("error" == r.status) {
@@ -1043,6 +1041,7 @@ utils.session.refreshSessionOperatorsForManage = function refreshSessionOperator
 			if(r.msg){
 				notif_fade.success(r.msg);
 			}
+			$('.operators .table-list__line').remove();
 			$('.operators .table-list__container').append(r.html);
 			if(0 == r.html.length){
 				$('.operators .no-item__container').removeClass('hidden');
@@ -1403,6 +1402,7 @@ utils.callbacks.openExamQuestionsSummaryModal = function openExamQuestionsSummar
 		width: args.width,
 		title: args.title ?? '',
 		onOpen: () => {
+			$(window).resize();
 		},
 		onClose: () => {
 			modal.destroy();
