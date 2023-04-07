@@ -8,18 +8,19 @@ h1,.h1{text-transform: none;}
   @include media-max(xs){gap: 1em; }
 }
 
+.bg-info{ color: contrastFW(color(white),$info);}
+
 .no-item__container{
-	background-color: rgba($info,0.75);
+	background-color: $info;
 	color: contrastFW(color(white),$info);
 	padding: 0.65em 1em 0.75em;
 	text-align: center;
 }
 
-
 .mod_acqpa_headline{@extend .sep-bottom-primary !optional; margin-bottom: 0; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.75em;
 	&:after{margin-top: 0; margin-bottom: 1.5rem; opacity: 0.45;}
 	>*:last-child:not(:only-child){margin-left: auto;}
-	.ce_headline{margin: 0;}
+	h1,h2,.ce_headline{margin: 0;}
 }
 
 
