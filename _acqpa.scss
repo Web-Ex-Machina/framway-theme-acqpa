@@ -57,3 +57,12 @@ h1,.h1{text-transform: none;}
 	.error-container:empty{display: none;}
 	.d-grid .form-group .select2FW-wrapper{min-width: 0;}
 }
+
+// questions
+body.exam #container{transform: translateZ(0px);}
+.question__answer{margin-bottom: 5em;}
+.question__tracknumber{font-size: 1.5em; margin-bottom: 1.5em;}
+.question__answer__block{}
+.question__answer__buttons{display: flex; justify-content: space-between; margin-top: 2em; position: fixed; bottom: 1em; white-space: nowrap; left: 0; right: 0; margin: auto; 
+	>div{display: flex;gap: 5px;}
+}
