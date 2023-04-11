@@ -1396,20 +1396,46 @@ utils.callbacks.openExamSessionOperatorDetailModal = function openExamSessionOpe
 }
 
 utils.callbacks.openExamQuestionsSummaryModal = function openExamQuestionsSummaryModal(args) {
-	var modal = new app.ModalFW({
+	var modal;
+	modal = new app.ModalFW({
 		name: args.name,
 		content: args.content,
 		width: args.width,
 		title: args.title ?? '',
+		intervalRefresh: setInterval(() => {
+			var objFields = {
+				'REQUEST_TOKEN': rt,
+				'module': args.ajaxParams.module,
+				'id': args.ajaxParams.id,
+				'action': 'refreshModalSeeExam',
+			};
+			utils.postData(objFields)
+			.then(r => {
+				if("error" == r.status) {
+					console.log(r.msg);
+				} else {
+					modal.content = r.content;
+					modal.setContent().then(()=>{
+						$(window).resize();
+						// console.log('modal updated')
+					});
+				}
+			})
+		  .catch(err => {
+		    console.log(err);
+		  });
+		},5000),
 		onOpen: () => {
 			$(window).resize();
 		},
 		onClose: () => {
+			clearInterval(modal.intervalRefresh);
 			modal.destroy();
 		},
 	});
 	modal.open();
 }
+
 
 utils.callbacks.openPracticalExamModal = function openPracticalExamModal(args) {
 	var modal = new app.ModalFW({
