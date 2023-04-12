@@ -1199,7 +1199,12 @@ utils.callbacks.openRegistrationOperatorModal = function openRegistrationOperato
 		width: args.width,
 		blnDismiss: args.dismiss,
 		onOpen: () => {
-			$('.registration_exam_level').trigger('change');
+			$('.registration_exam_level').first().trigger('change');
+			// Useful only if the first option isn't "New operator" anymore
+			// var $select = $('.select__operator').first();
+			// if(!$('[name="operator[lastname]"]').val()){
+			// 	$select.val($select.find('option:selected').first().val()).trigger('change');
+			// }
 
 			setTimeout(function() {
 				window.dispatchEvent(new Event('resize'));
