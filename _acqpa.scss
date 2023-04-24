@@ -50,6 +50,9 @@ h1,.h1{text-transform: none;}
 		// &[data-name*="question"],
 		&[data-name*="answers_possible"]{flex-grow: 1;}
 	}
+	.mode--block.alt--grid &:not([data-name*="no"]){display: grid; grid-template-columns: 15ch auto;
+		&[data-label]:before{grid-row: span 10;}
+	}
 }
 
 .splitForm__section{
