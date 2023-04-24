@@ -1317,6 +1317,7 @@ utils.callbacks.openOperatorCompanyModal = function openOperatorCompanyModal(arg
 		width: args.width,
 		title: args.title ?? '',
 		onOpen: () => {
+			$(window).resize();
 		},
 		onClose: () => {
 			modal.destroy();
@@ -1332,6 +1333,7 @@ utils.callbacks.openOperatorDeduplicationModal = function openOperatorDeduplicat
 		width: args.width,
 		title: args.title ?? '',
 		onOpen: () => {
+			$(window).resize();
 		},
 		onClose: () => {
 			modal.destroy();
@@ -1347,6 +1349,7 @@ utils.callbacks.openCancelExamSessionOperatorModal = function openCancelExamSess
 		width: args.width,
 		title: args.title ?? '',
 		onOpen: () => {
+			$(window).resize();
 		},
 		onClose: () => {
 			modal.destroy();
@@ -1362,6 +1365,7 @@ utils.callbacks.openRevokeCertificateModal = function openRevokeCertificateModal
 		width: args.width,
 		title: args.title ?? '',
 		onOpen: () => {
+			$(window).resize();
 		},
 		onClose: () => {
 			modal.destroy();
@@ -1377,6 +1381,7 @@ utils.callbacks.openSendCertificateModal = function openSendCertificateModal(arg
 		width: args.width,
 		title: args.title ?? '',
 		onOpen: () => {
+			$(window).resize();
 		},
 		onClose: () => {
 			modal.destroy();
@@ -1392,6 +1397,7 @@ utils.callbacks.openExamSessionOperatorDetailModal = function openExamSessionOpe
 		width: args.width,
 		title: args.title ?? '',
 		onOpen: () => {
+			$(window).resize();
 		},
 		onClose: () => {
 			modal.destroy();
@@ -1449,6 +1455,7 @@ utils.callbacks.openPracticalExamModal = function openPracticalExamModal(args) {
 		width: args.width,
 		title: args.title ?? '',
 		onOpen: () => {
+			$(window).resize();
 		},
 		onClose: () => {
 			modal.destroy();
@@ -1464,6 +1471,7 @@ utils.callbacks.openChangeOperatorPresentAtModal = function openChangeOperatorPr
 		width: args.width,
 		title: args.title ?? '',
 		onOpen: () => {
+			$(window).resize();
 		},
 		onClose: () => {
 			modal.destroy();
@@ -1479,6 +1487,7 @@ utils.callbacks.openCorrectTheoricalExamModal = function openCorrectTheoricalExa
 		width: args.width,
 		title: args.title ?? '',
 		onOpen: () => {
+			$(window).resize();
 		},
 		onClose: () => {
 			modal.destroy();
@@ -1494,6 +1503,7 @@ utils.callbacks.openApplyFinalCorrectionStatusModal = function openApplyFinalCor
 		width: args.width,
 		title: args.title ?? '',
 		onOpen: () => {
+			$(window).resize();
 		},
 		onClose: () => {
 			modal.destroy();
