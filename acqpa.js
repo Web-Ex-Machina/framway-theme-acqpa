@@ -1050,6 +1050,8 @@ utils.session.refreshSessionOperatorsForManage = function refreshSessionOperator
 				$('.operators .no-item__container').addClass('hidden');
 				$('.operators .table-list__headline').removeClass('hidden');
 			}
+			if ($('.operators')['table-list']('get')  !== undefined)
+				$('.operators')['table-list']('get').convertTooltips();
 		}
 	})
   .catch(err => {
