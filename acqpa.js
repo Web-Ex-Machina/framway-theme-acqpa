@@ -1427,7 +1427,7 @@ utils.callbacks.openExamQuestionsSummaryModal = function openExamQuestionsSummar
 				} else {
 					modal.content = r.content;
 					modal.setContent().then(()=>{
-						$(window).resize();
+						if (!$('body').hasClass('firefox')) $(window).resize();
 						// console.log('modal updated')
 					});
 				}
