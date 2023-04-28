@@ -1514,6 +1514,23 @@ utils.callbacks.openApplyFinalCorrectionStatusModal = function openApplyFinalCor
 	modal.open();
 }
 
+utils.callbacks.openManagePracticalExamRedoModal = function openManagePracticalExamRedoModal(args) {
+	var modal = new app.ModalFW({
+		name: args.name,
+		content: args.content,
+		width: args.width,
+		title: args.title ?? '',
+		blnDismiss: false,
+		onOpen: () => {
+			$(window).resize();
+		},
+		onClose: () => {
+			modal.destroy();
+		},
+	});
+	modal.open();
+}
+
 utils.callbacks.redirectAfterSign = function redirectAfterSign(args) {
 	utils.callbacks.redirect(args.url, args.wait ?? 600);
 }
