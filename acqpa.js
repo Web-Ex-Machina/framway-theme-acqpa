@@ -343,6 +343,7 @@ utils.registration.refreshRegistrationOperatorExamLevels = function refreshRegis
 	}
 
 	utils.registration.getRegistrationOperatorExamSessionByLevelAndOptions(level, options, previouslySelectedSession)
+
 	.then(r => {
 		if("error" == r.status) {
 			notif_fade.error(r.msg);
