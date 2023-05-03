@@ -53,6 +53,11 @@ h1,.h1{text-transform: none;}
 	.mode--block.alt--grid &:not([data-name*="no"]){display: grid; grid-template-columns: 15ch auto;
 		&[data-label]:before{grid-row: span 10;}
 	}
+	&[data-name*="copy"]{
+		min-width: 0;
+		max-width: 50px;
+		text-align: center;
+	}
 }
 
 .splitForm__section{
