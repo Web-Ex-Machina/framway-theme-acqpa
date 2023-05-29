@@ -537,13 +537,11 @@ utils.registration.saveRegistrationOperator = function saveRegistrationOperator(
 		});
 	}
 
-
-
 	return new Promise(function (resolve, reject) {
 		utils.postData(objFields)
 		.then(r => {
 			if("error" == r.status) {
-				reject(r.msg);
+				reject(r);
 			} else {
 				resolve(r);
 			}
@@ -1129,6 +1127,50 @@ utils.session.getSessionOperatorsMissingConfigurationsForManage = function getSe
 	});
 }
 
+/** attachments */
+
+utils.attachments.refreshAttachmentLines = function refreshAttachmentLines(ptable, pid){
+	$('.attachments[data-pid="'+pid+'"][data-ptable="'+ptable+'"] .table-list__line').remove();
+
+	utils.attachments.getAttachmentLines()
+	.then(r => {
+		if("error" == r.status) {
+			notif_fade.error(r.msg);
+		} else {
+			if(r.msg){
+				notif_fade.success(r.msg);
+			}
+			$('.attachments .table-list__container').append(r.html);
+		}
+	})
+  .catch(err => {
+    notif_fade.error(err);
+  });
+}
+utils.attachments.getAttachmentLines = function getAttachmentLines(ptable, pid){
+	var objFields = {
+		'REQUEST_TOKEN': rt,
+		'module-type': 'attachements-service',
+		'ptable': ptable,
+		'pid': pid,
+		'action': 'getAttachmentLines',
+	};
+
+	return new Promise(function (resolve, reject) {
+		utils.postData(objFields)
+		.then(r => {
+			if("error" == r.status) {
+				reject(r.msg);
+			} else {
+				resolve(r);
+			}
+		})
+	    .catch(err => {
+	        reject(err);
+	    });
+	});
+}
+
 /** UTILITIES **/
 utils.postData = async function postData(data, url = "", method = "POST") {
 	var request = new FormData();
@@ -1260,6 +1302,9 @@ utils.callbacks.refreshSessionOperatorsForManage = function refreshSessionOperat
 }
 utils.callbacks.refreshSessionOperatorsMissingConfigurationsForManage = function refreshSessionOperatorsMissingConfigurationsForManage() {
 	utils.session.refreshSessionOperatorsMissingConfigurationsForManage();
+}
+utils.callbacks.refreshAttachmentLines = function refreshAttachmentLines(args) {
+	utils.attachments.refreshAttachmentLines(args.ptable,args.pid);
 }
 
 utils.callbacks.openSessionTranslatorModal = function openSessionTranslatorModal(args) {
@@ -1516,6 +1561,23 @@ utils.callbacks.openApplyFinalCorrectionStatusModal = function openApplyFinalCor
 }
 
 utils.callbacks.openManagePracticalExamRedoModal = function openManagePracticalExamRedoModal(args) {
+	var modal = new app.ModalFW({
+		name: args.name,
+		content: args.content,
+		width: args.width,
+		title: args.title ?? '',
+		blnDismiss: false,
+		onOpen: () => {
+			$(window).resize();
+		},
+		onClose: () => {
+			modal.destroy();
+		},
+	});
+	modal.open();
+}
+
+utils.callbacks.openAttachmentsModal = function openAttachmentsModal(args) {
 	var modal = new app.ModalFW({
 		name: args.name,
 		content: args.content,
