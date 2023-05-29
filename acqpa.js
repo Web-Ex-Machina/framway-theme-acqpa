@@ -140,79 +140,86 @@ $(function(){
 	}
 
 	$('body').on('click','*[data-ajax]',function(e){
-	    e.preventDefault();
-	    var blnRequest = true;
-	    var method = 'POST';
-	    var url = '';
-	    var action = '';
-	    var data = {};
-	    var button = $(this);
+		e.preventDefault();
+    var blnRequest = true;
+    var method = 'POST';
+    var url = '';
+    var action = '';
+    var data = {};
+    var button = $(this);
 
-	    url = button.attr('href');
-	    action = button.data('ajax');
+    url = button.attr('href');
+    action = button.data('ajax');
 
-	    data['action'] = action;
-	    data['REQUEST_TOKEN'] = rt;
-	    var strParams = button.data('params');
-	    if (strParams) {
-	    	var params = strParams.split(",");
-	    	for (var i in params) {
-	    		var param = params[i].split('=');
-	    		data[param[0]] = param[1];
-	    	}
-	    }
+    data['action'] = action;
+    data['REQUEST_TOKEN'] = rt;
+    var strParams = button.data('params');
+    if (strParams) {
+    	var params = strParams.split(",");
+    	for (var i in params) {
+    		var param = params[i].split('=');
+    		data[param[0]] = param[1];
+    	}
+    }
 
-	    button.closest('.table-list__line').addClass('loading');
-	    
-	    if (action.indexOf('delete') != -1) {
-	      blnRequest = confirm('Voulez vous vraiment supprimer ceci ?');
-	    }else if('undefined' !== typeof button.data('confirm')){
-	      blnRequest = confirm(button.data('confirm'));
-	    }
+    button.closest('.table-list__line').addClass('loading');
+    
+    if (action.indexOf('delete') != -1) {
+      blnRequest = confirm('Voulez vous vraiment supprimer ceci ?');
+    }else if('undefined' !== typeof button.data('confirm')){
+      blnRequest = confirm(button.data('confirm'));
+    }
 
-	    if(blnRequest) {
-	      acqpa.utils.postData(data, url, method).then(function(r){
-	        // Display a toastr if there is a status & a msg
-	        if (r.status && r.msg) {
-	        	notif_fade[r.status](r.msg);
-	        }
+    if(blnRequest) {
+      acqpa.utils.postData(data, url, method).then(function(r){
+        // Display a toastr if there is a status & a msg
+        if (r.status && r.msg) {
+        	notif_fade[r.status](r.msg);
+        }
 
-	        // Apply callbacks
-					if('success' === r.status && r.callbacks) {
-						for(var i in r.callbacks) {
-							// i is the function name in utils
-							// r.callbacks[i] is an optional array of arguments
-							switch(i){
-								case 'refreshLine':
-									data['action'] = 'refreshLine';
-									acqpa.utils.postData(data, url, method).then(function(r){
-										// Display a toastr if there is a status & a msg
-						        if (r.status && r.msg) 
-						        	notif_fade[r.status](r.msg);
-						        if (r.html && r.status=='success')
-						        	button.closest('.table-list__line').replaceWith(r.html);
-                		button.closest('.table-list__line').removeClass('loading');
-									});
-									break;
-								case 'deleteLine':
-                	button.closest('.table-list__line').remove();
-									break;
-								default: 
-									acqpa.utils.callbacks[i](r.callbacks[i]);
-									break;
-							}
+        // Apply callbacks
+				if('success' === r.status && r.callbacks) {
+					for(var i in r.callbacks) {
+						// i is the function name in utils
+						// r.callbacks[i] is an optional array of arguments
+						switch(i){
+							case 'refreshLine':
+								data['action'] = 'refreshLine';
+								acqpa.utils.postData(data, url, method).then(function(r){
+									// Display a toastr if there is a status & a msg
+					        if (r.status && r.msg) 
+					        	notif_fade[r.status](r.msg);
+					        if (r.html && r.status=='success')
+					        	button.closest('.table-list__line').replaceWith(r.html);
+              		button.closest('.table-list__line').removeClass('loading');
+								});
+								break;
+							case 'deleteLine':
+              	button.closest('.table-list__line').remove();
+								break;
+							default: 
+								acqpa.utils.callbacks[i](r.callbacks[i]);
+								break;
 						}
 					}
-					button.closest('.table-list__line').removeClass('loading');
-	      });
-	    } else {
-	      button.closest('.table-list__line').removeClass('loading');
-	    }
+				}
+				button.closest('.table-list__line').removeClass('loading');
+      });
+    } else {
+      button.closest('.table-list__line').removeClass('loading');
+    }
 	});
 });
 
-/** REGISTRATION **/
+var acqpa = {};
+acqpa.utils = {};
+acqpa.utils.callbacks = {};
 acqpa.utils.registration = {};
+acqpa.utils.session =  {};
+acqpa.utils.attachments = {};
+
+/** REGISTRATION **/
+// acqpa.utils.registration = {};
 acqpa.utils.registration.saveStep = function saveStep(step){
 	var form = utils.checkForm(step);
 	if(!form.valid){
@@ -595,7 +602,7 @@ acqpa.utils.registration.confirmRegistration = function confirmRegistration(moda
 }
 
 /** SESSION **/
-acqpa.utils.session = {};
+// acqpa.utils.session = {};
 acqpa.utils.session.refreshSessionTranslators = function refreshSessionTranslators(){
 	$('.translators .table-list__line').remove();
 
@@ -1128,10 +1135,10 @@ acqpa.utils.session.getSessionOperatorsMissingConfigurationsForManage = function
 }
 
 /** attachments */
-acqpa.utils.attachments.refreshAttachmentLines = function refreshAttachmentLines(ptable, pid){
+acqpa.utils.attachments.refreshAttachmentLines = function refreshAttachmentLines(module,ptable, pid){
 	$('.attachments[data-pid="'+pid+'"][data-ptable="'+ptable+'"] .table-list__line').remove();
 
-	acqpa.utils.attachments.getAttachmentLines()
+	acqpa.utils.attachments.getAttachmentLines(module,ptable,pid)
 	.then(r => {
 		if("error" == r.status) {
 			notif_fade.error(r.msg);
@@ -1146,12 +1153,13 @@ acqpa.utils.attachments.refreshAttachmentLines = function refreshAttachmentLines
     notif_fade.error(err);
   });
 }
-acqpa.utils.attachments.getAttachmentLines = function getAttachmentLines(ptable, pid){
+acqpa.utils.attachments.getAttachmentLines = function getAttachmentLines(module,ptable, pid){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
-		'module-type': 'attachements-service',
+		'module-type': 'attachments-service',
 		'ptable': ptable,
 		'pid': pid,
+		'module': module,
 		'action': 'getAttachmentLines',
 	};
 
@@ -1216,7 +1224,7 @@ acqpa.utils.formatDate = function(date, format){
 }
 
 /** CALLBACKS **/
-acqpa.utils.callbacks = {};
+// acqpa.utils.callbacks = {};
 acqpa.utils.callbacks.reload = function reloadPage(wait = 600) {
 	setTimeout(() => { window.location.reload(false) }, wait);
 }
@@ -1303,7 +1311,7 @@ acqpa.utils.callbacks.refreshSessionOperatorsMissingConfigurationsForManage = fu
 	acqpa.utils.session.refreshSessionOperatorsMissingConfigurationsForManage();
 }
 acqpa.utils.callbacks.refreshAttachmentLines = function refreshAttachmentLines(args) {
-	acqpa.utils.attachments.refreshAttachmentLines(args.ptable,args.pid);
+	acqpa.utils.attachments.refreshAttachmentLines(args.module,args.ptable,args.pid);
 }
 
 acqpa.utils.callbacks.openSessionTranslatorModal = function openSessionTranslatorModal(args) {
@@ -1604,3 +1612,4 @@ acqpa.utils.callbacks.downloadFile = function downloadFile(args) {
   link.click();
 }
 
+global.acqpa = acqpa;
