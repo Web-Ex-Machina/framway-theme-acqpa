@@ -29,11 +29,11 @@ $(function(){
 			}
 
 			if($(this).attr('data-dir') != 'final'){ // action is either prev or next
-			  utils.registration.saveStep(form.$sections.filter('.active'))
+			  acqpa.utils.registration.saveStep(form.$sections.filter('.active'))
 			  	.then(r => {
 			  		form.switchStep($(this).attr('data-dir'))
 			  		.then(r => {
-			  			utils.registration.saveCurrentStepIndex();
+			  			acqpa.utils.registration.saveCurrentStepIndex();
 			  		});
 			  		notif_fade[r.status](r.msg);
 			  	})
@@ -43,7 +43,7 @@ $(function(){
 			}
 			else if($(this).attr('data-dir') == 'final' && form.$sections.filter('.active').hasClass('complete')){ // action is final, and form is valid
 			  if(checkStep.valid){
-			  	utils.registration.validateRegistration()
+			  	acqpa.utils.registration.validateRegistration()
 				  	.then(r => {
 				  		form.$nav.find('.splitForm__navitem.active').addClass('complete');
 				  		form.$wrapper.addClass('isComplete');
@@ -99,11 +99,11 @@ $(function(){
         
         if (posNext < 0) {
           for (var i = 0; i > posNext; i--) {
-           	utils.registration.saveStep(form.$sections.filter('.active'))
+           	acqpa.utils.registration.saveStep(form.$sections.filter('.active'))
 					  	.then(r => {
 					  		form.switchStep('prev')
 					  		.then(r => {
-					  			utils.registration.saveCurrentStepIndex();
+					  			acqpa.utils.registration.saveCurrentStepIndex();
 					  			window.dispatchEvent(new Event('resize'));
 					  		});
 					  		notif_fade[r.status](r.msg);
@@ -117,11 +117,11 @@ $(function(){
 	        if (checkStep.valid === true) {
 	          form.$sections.filter('.active').addClass('complete');
 	          for (var i = 0; i < posNext; i++) {
-	           	utils.registration.saveStep(form.$sections.filter('.active'))
+	           	acqpa.utils.registration.saveStep(form.$sections.filter('.active'))
 						  	.then(r => {
 						  		form.switchStep('next')
 						  		.then(r => {
-						  			utils.registration.saveCurrentStepIndex();
+						  			acqpa.utils.registration.saveCurrentStepIndex();
 						  			window.dispatchEvent(new Event('resize'));
 						  		});
 						  		notif_fade[r.status](r.msg);
@@ -171,7 +171,7 @@ $(function(){
 	    }
 
 	    if(blnRequest) {
-	      utils.postData(data, url, method).then(function(r){
+	      acqpa.utils.postData(data, url, method).then(function(r){
 	        // Display a toastr if there is a status & a msg
 	        if (r.status && r.msg) {
 	        	notif_fade[r.status](r.msg);
@@ -185,7 +185,7 @@ $(function(){
 							switch(i){
 								case 'refreshLine':
 									data['action'] = 'refreshLine';
-									utils.postData(data, url, method).then(function(r){
+									acqpa.utils.postData(data, url, method).then(function(r){
 										// Display a toastr if there is a status & a msg
 						        if (r.status && r.msg) 
 						        	notif_fade[r.status](r.msg);
@@ -198,7 +198,7 @@ $(function(){
                 	button.closest('.table-list__line').remove();
 									break;
 								default: 
-									utils.callbacks[i](r.callbacks[i]);
+									acqpa.utils.callbacks[i](r.callbacks[i]);
 									break;
 							}
 						}
@@ -212,8 +212,8 @@ $(function(){
 });
 
 /** REGISTRATION **/
-utils.registration = {};
-utils.registration.saveStep = function saveStep(step){
+acqpa.utils.registration = {};
+acqpa.utils.registration.saveStep = function saveStep(step){
 	var form = utils.checkForm(step);
 	if(!form.valid){
 		return new Promise(function (resolve, reject) {
@@ -233,7 +233,7 @@ utils.registration.saveStep = function saveStep(step){
 	}
 
 	return new Promise(function (resolve, reject) {
-		utils.postData(objFields)
+		acqpa.utils.postData(objFields)
 		.then(r => {
 			if("error" == r.status) {
 				reject(r.msg);
@@ -246,7 +246,7 @@ utils.registration.saveStep = function saveStep(step){
 	  });
 	});
 }
-utils.registration.saveCurrentStepIndex = function saveCurrentStepIndex(){
+acqpa.utils.registration.saveCurrentStepIndex = function saveCurrentStepIndex(){
 	var form = $('.splitForm.registration').splitForm('get');
   var current = form.$sections.toArray().indexOf(form.$sections.filter('.active').get(0));
 	var objFields = {
@@ -257,7 +257,7 @@ utils.registration.saveCurrentStepIndex = function saveCurrentStepIndex(){
 	};
 
 	return new Promise(function (resolve, reject) {
-		utils.postData(objFields)
+		acqpa.utils.postData(objFields)
 		.then(r => {
 			if("error" == r.status) {
 				reject(r.msg);
@@ -270,10 +270,10 @@ utils.registration.saveCurrentStepIndex = function saveCurrentStepIndex(){
 	  });
 	});
 }
-utils.registration.refreshRegistrationOperators = function refreshRegistrationOperators(){
+acqpa.utils.registration.refreshRegistrationOperators = function refreshRegistrationOperators(){
 	$('.operators .table-list__line').remove();
 
-	utils.registration.getRegistrationOperators()
+	acqpa.utils.registration.getRegistrationOperators()
 	.then(r => {
 		if("error" == r.status) {
 			notif_fade.error(r.msg);
@@ -288,7 +288,7 @@ utils.registration.refreshRegistrationOperators = function refreshRegistrationOp
     notif_fade.error(err);
   });
 }
-utils.registration.getRegistrationOperators = function getRegistrationOperators(){
+acqpa.utils.registration.getRegistrationOperators = function getRegistrationOperators(){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
 		'module_type': 'acqpa_company_edit_registration',
@@ -296,7 +296,7 @@ utils.registration.getRegistrationOperators = function getRegistrationOperators(
 	};
 
 	return new Promise(function (resolve, reject) {
-		utils.postData(objFields)
+		acqpa.utils.postData(objFields)
 		.then(r => {
 			if("error" == r.status) {
 				reject(r.msg);
@@ -309,7 +309,7 @@ utils.registration.getRegistrationOperators = function getRegistrationOperators(
 	    });
 	});
 }
-utils.registration.getOperatorData = function getOperatorData(id){
+acqpa.utils.registration.getOperatorData = function getOperatorData(id){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
 		'module_type': 'acqpa_company_edit_registration',
@@ -318,7 +318,7 @@ utils.registration.getOperatorData = function getOperatorData(id){
 	};
 
 	return new Promise(function (resolve, reject) {
-		utils.postData(objFields)
+		acqpa.utils.postData(objFields)
 		.then(r => {
 			if("error" == r.status) {
 				reject(r.msg);
@@ -332,7 +332,7 @@ utils.registration.getOperatorData = function getOperatorData(id){
 	});
 }
 
-utils.registration.refreshRegistrationOperatorExamLevels = function refreshRegistrationOperatorExamLevels(level, options, previouslySelectedSession){
+acqpa.utils.registration.refreshRegistrationOperatorExamLevels = function refreshRegistrationOperatorExamLevels(level, options, previouslySelectedSession){
 	$('select.registration_session option').remove();
 	$('select.registration_session').parent().hide();
 	$('.registration_session_no_sessions').hide();
@@ -342,7 +342,7 @@ utils.registration.refreshRegistrationOperatorExamLevels = function refreshRegis
 		return;
 	}
 
-	utils.registration.getRegistrationOperatorExamSessionByLevelAndOptions(level, options, previouslySelectedSession)
+	acqpa.utils.registration.getRegistrationOperatorExamSessionByLevelAndOptions(level, options, previouslySelectedSession)
 
 	.then(r => {
 		if("error" == r.status) {
@@ -366,7 +366,7 @@ utils.registration.refreshRegistrationOperatorExamLevels = function refreshRegis
   });
 }
 
-utils.registration.getRegistrationOperatorExamSessionByLevelAndOptions = function getRegistrationOperatorExamSessionByLevelAndOptions(level, options, previouslySelectedSession){
+acqpa.utils.registration.getRegistrationOperatorExamSessionByLevelAndOptions = function getRegistrationOperatorExamSessionByLevelAndOptions(level, options, previouslySelectedSession){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
 		'module_type': 'acqpa_company_edit_registration',
@@ -377,7 +377,7 @@ utils.registration.getRegistrationOperatorExamSessionByLevelAndOptions = functio
 	};
 
 	return new Promise(function (resolve, reject) {
-		utils.postData(objFields)
+		acqpa.utils.postData(objFields)
 		.then(r => {
 			if("error" == r.status) {
 				reject(r.msg);
@@ -391,7 +391,7 @@ utils.registration.getRegistrationOperatorExamSessionByLevelAndOptions = functio
 	});
 }
 ///////////
-utils.registration.refreshRegistrationOperatorSessionDates = function refreshRegistrationOperatorSessionDates(session, previouslySelectedDate){
+acqpa.utils.registration.refreshRegistrationOperatorSessionDates = function refreshRegistrationOperatorSessionDates(session, previouslySelectedDate){
 	$('.registration_present_at input').remove();
 	$('.registration_present_at label').remove();
 	$('.registration_present_at').parent().hide();
@@ -402,7 +402,7 @@ utils.registration.refreshRegistrationOperatorSessionDates = function refreshReg
 		return;
 	}
 
-	utils.registration.getRegistrationOperatorExamSessionDatesById(session, previouslySelectedDate)
+	acqpa.utils.registration.getRegistrationOperatorExamSessionDatesById(session, previouslySelectedDate)
 	.then(r => {
 		if("error" == r.status) {
 			notif_fade.error(r.msg);
@@ -425,7 +425,7 @@ utils.registration.refreshRegistrationOperatorSessionDates = function refreshReg
   });
 }
 
-utils.registration.getRegistrationOperatorExamSessionDatesById = function getRegistrationOperatorExamSessionDatesById(session, previouslySelectedDate){
+acqpa.utils.registration.getRegistrationOperatorExamSessionDatesById = function getRegistrationOperatorExamSessionDatesById(session, previouslySelectedDate){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
 		'module_type': 'acqpa_company_edit_registration',
@@ -435,7 +435,7 @@ utils.registration.getRegistrationOperatorExamSessionDatesById = function getReg
 	};
 
 	return new Promise(function (resolve, reject) {
-		utils.postData(objFields)
+		acqpa.utils.postData(objFields)
 		.then(r => {
 			if("error" == r.status) {
 				reject(r.msg);
@@ -449,7 +449,7 @@ utils.registration.getRegistrationOperatorExamSessionDatesById = function getReg
 	});
 }
 ///////////
-utils.registration.saveRegistrationOperator = function saveRegistrationOperator(modal){
+acqpa.utils.registration.saveRegistrationOperator = function saveRegistrationOperator(modal){
 	var form = utils.checkForm(modal);
 	if(!form.valid){
 		return new Promise(function (resolve, reject) {
@@ -538,7 +538,7 @@ utils.registration.saveRegistrationOperator = function saveRegistrationOperator(
 	}
 
 	return new Promise(function (resolve, reject) {
-		utils.postData(objFields)
+		acqpa.utils.postData(objFields)
 		.then(r => {
 			if("error" == r.status) {
 				reject(r);
@@ -551,7 +551,7 @@ utils.registration.saveRegistrationOperator = function saveRegistrationOperator(
 	  });
 	});
 }
-utils.registration.validateRegistration = function validateRegistration(modal){
+acqpa.utils.registration.validateRegistration = function validateRegistration(modal){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
 		'module_type': 'acqpa_company_edit_registration',
@@ -559,7 +559,7 @@ utils.registration.validateRegistration = function validateRegistration(modal){
 	};
 
 	return new Promise(function (resolve, reject) {
-		utils.postData(objFields)
+		acqpa.utils.postData(objFields)
 		.then(r => {
 			if("error" == r.status) {
 				reject(r.msg);
@@ -572,7 +572,7 @@ utils.registration.validateRegistration = function validateRegistration(modal){
 	  });
 	});
 }
-utils.registration.confirmRegistration = function confirmRegistration(modal){
+acqpa.utils.registration.confirmRegistration = function confirmRegistration(modal){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
 		'module_type': 'acqpa_company_edit_registration',
@@ -580,7 +580,7 @@ utils.registration.confirmRegistration = function confirmRegistration(modal){
 	};
 
 	return new Promise(function (resolve, reject) {
-		utils.postData(objFields)
+		acqpa.utils.postData(objFields)
 		.then(r => {
 			if("error" == r.status) {
 				reject(r.msg);
@@ -595,11 +595,11 @@ utils.registration.confirmRegistration = function confirmRegistration(modal){
 }
 
 /** SESSION **/
-utils.session = {};
-utils.session.refreshSessionTranslators = function refreshSessionTranslators(){
+acqpa.utils.session = {};
+acqpa.utils.session.refreshSessionTranslators = function refreshSessionTranslators(){
 	$('.translators .table-list__line').remove();
 
-	utils.session.getSessionTranslators()
+	acqpa.utils.session.getSessionTranslators()
 	.then(r => {
 		if("error" == r.status) {
 			notif_fade.error(r.msg);
@@ -622,7 +622,7 @@ utils.session.refreshSessionTranslators = function refreshSessionTranslators(){
     notif_fade.error(err);
   });
 }
-utils.session.getSessionTranslators = function getSessionTranslators(){
+acqpa.utils.session.getSessionTranslators = function getSessionTranslators(){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
 		'module_type': 'acqpa_exam_session_edit',
@@ -630,7 +630,7 @@ utils.session.getSessionTranslators = function getSessionTranslators(){
 	};
 
 	return new Promise(function (resolve, reject) {
-		utils.postData(objFields)
+		acqpa.utils.postData(objFields)
 		.then(r => {
 			if("error" == r.status) {
 				reject(r.msg);
@@ -643,7 +643,7 @@ utils.session.getSessionTranslators = function getSessionTranslators(){
     });
 	});
 }
-utils.session.saveExamSessionTranslator = function saveExamSessionTranslator(modal){
+acqpa.utils.session.saveExamSessionTranslator = function saveExamSessionTranslator(modal){
 	var form = utils.checkForm(modal);
 	if(!form.valid){
 		return new Promise(function (resolve, reject) {
@@ -662,7 +662,7 @@ utils.session.saveExamSessionTranslator = function saveExamSessionTranslator(mod
 	}
 
 	return new Promise(function (resolve, reject) {
-		utils.postData(objFields)
+		acqpa.utils.postData(objFields)
 		.then(r => {
 			if("error" == r.status) {
 				reject(r.msg);
@@ -675,10 +675,10 @@ utils.session.saveExamSessionTranslator = function saveExamSessionTranslator(mod
 	  });
 	});
 }
-utils.session.refreshSessionExaminers = function refreshSessionExaminers(){
+acqpa.utils.session.refreshSessionExaminers = function refreshSessionExaminers(){
 	$('.examiners .table-list__line').remove();
 
-	utils.session.getSessionExaminers()
+	acqpa.utils.session.getSessionExaminers()
 	.then(r => {
 		if("error" == r.status) {
 			notif_fade.error(r.msg);
@@ -701,7 +701,7 @@ utils.session.refreshSessionExaminers = function refreshSessionExaminers(){
     notif_fade.error(err);
   });
 }
-utils.session.getSessionExaminers = function getSessionExaminers(){
+acqpa.utils.session.getSessionExaminers = function getSessionExaminers(){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
 		'module_type': 'acqpa_exam_session_edit',
@@ -709,7 +709,7 @@ utils.session.getSessionExaminers = function getSessionExaminers(){
 	};
 
 	return new Promise(function (resolve, reject) {
-		utils.postData(objFields)
+		acqpa.utils.postData(objFields)
 		.then(r => {
 			if("error" == r.status) {
 				reject(r.msg);
@@ -722,7 +722,7 @@ utils.session.getSessionExaminers = function getSessionExaminers(){
     });
 	});
 }
-utils.session.saveExamSessionExaminer = function saveExamSessionExaminer(modal){
+acqpa.utils.session.saveExamSessionExaminer = function saveExamSessionExaminer(modal){
 	var form = utils.checkForm(modal);
 	if(!form.valid){
 		return new Promise(function (resolve, reject) {
@@ -741,7 +741,7 @@ utils.session.saveExamSessionExaminer = function saveExamSessionExaminer(modal){
 	}
 
 	return new Promise(function (resolve, reject) {
-		utils.postData(objFields)
+		acqpa.utils.postData(objFields)
 		.then(r => {
 			if("error" == r.status) {
 				reject(r.msg);
@@ -754,10 +754,10 @@ utils.session.saveExamSessionExaminer = function saveExamSessionExaminer(modal){
 	  });
 	});
 }
-utils.session.refreshSessionOperators = function refreshSessionOperators(){
+acqpa.utils.session.refreshSessionOperators = function refreshSessionOperators(){
 	$('.operators .table-list__line').remove();
 
-	utils.session.getRegistrationOperators()
+	acqpa.utils.session.getRegistrationOperators()
 	.then(r => {
 		if("error" == r.status) {
 			notif_fade.error(r.msg);
@@ -779,7 +779,7 @@ utils.session.refreshSessionOperators = function refreshSessionOperators(){
     notif_fade.error(err);
   });
 }
-utils.session.getRegistrationOperators = function getRegistrationOperators(){
+acqpa.utils.session.getRegistrationOperators = function getRegistrationOperators(){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
 		'module_type': 'acqpa_exam_session_edit',
@@ -787,7 +787,7 @@ utils.session.getRegistrationOperators = function getRegistrationOperators(){
 	};
 
 	return new Promise(function (resolve, reject) {
-		utils.postData(objFields)
+		acqpa.utils.postData(objFields)
 		.then(r => {
 			if("error" == r.status) {
 				reject(r.msg);
@@ -801,10 +801,10 @@ utils.session.getRegistrationOperators = function getRegistrationOperators(){
 	});
 }
 
-utils.session.refreshSessionExaminersMissingOptionsAndLevels = function refreshSessionExaminersMissingOptionsAndLevels(){
+acqpa.utils.session.refreshSessionExaminersMissingOptionsAndLevels = function refreshSessionExaminersMissingOptionsAndLevels(){
 	$('#exam-session-examiners-missing').html('');
 
-	utils.session.getSessionExaminersMissingOptionsAndLevels()
+	acqpa.utils.session.getSessionExaminersMissingOptionsAndLevels()
 	.then(r => {
 		if("error" == r.status) {
 			notif_fade.error(r.msg);
@@ -825,7 +825,7 @@ utils.session.refreshSessionExaminersMissingOptionsAndLevels = function refreshS
     notif_fade.error(err);
   });
 }
-utils.session.getSessionExaminersMissingOptionsAndLevels = function getSessionExaminersMissingOptionsAndLevels(){
+acqpa.utils.session.getSessionExaminersMissingOptionsAndLevels = function getSessionExaminersMissingOptionsAndLevels(){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
 		'module_type': 'acqpa_exam_session_edit',
@@ -833,7 +833,7 @@ utils.session.getSessionExaminersMissingOptionsAndLevels = function getSessionEx
 	};
 
 	return new Promise(function (resolve, reject) {
-		utils.postData(objFields)
+		acqpa.utils.postData(objFields)
 		.then(r => {
 			if("error" == r.status) {
 				reject(r.msg);
@@ -847,10 +847,10 @@ utils.session.getSessionExaminersMissingOptionsAndLevels = function getSessionEx
 	});
 }
 
-utils.session.refreshSessionExaminersSpareOptionsAndLevels = function refreshSessionExaminersSpareOptionsAndLevels(){
+acqpa.utils.session.refreshSessionExaminersSpareOptionsAndLevels = function refreshSessionExaminersSpareOptionsAndLevels(){
 	$('#exam-session-examiners-spare').html('');
 
-	utils.session.getSessionExaminersSpareOptionsAndLevels()
+	acqpa.utils.session.getSessionExaminersSpareOptionsAndLevels()
 	.then(r => {
 		if("error" == r.status) {
 			notif_fade.error(r.msg);
@@ -871,7 +871,7 @@ utils.session.refreshSessionExaminersSpareOptionsAndLevels = function refreshSes
     notif_fade.error(err);
   });
 }
-utils.session.getSessionExaminersSpareOptionsAndLevels = function getSessionExaminersSpareOptionsAndLevels(){
+acqpa.utils.session.getSessionExaminersSpareOptionsAndLevels = function getSessionExaminersSpareOptionsAndLevels(){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
 		'module_type': 'acqpa_exam_session_edit',
@@ -879,7 +879,7 @@ utils.session.getSessionExaminersSpareOptionsAndLevels = function getSessionExam
 	};
 
 	return new Promise(function (resolve, reject) {
-		utils.postData(objFields)
+		acqpa.utils.postData(objFields)
 		.then(r => {
 			if("error" == r.status) {
 				reject(r.msg);
@@ -894,10 +894,10 @@ utils.session.getSessionExaminersSpareOptionsAndLevels = function getSessionExam
 }
 
 
-utils.session.refreshSessionTranslatorsMissingLanguages = function refreshSessionTranslatorsMissingLanguages(){
+acqpa.utils.session.refreshSessionTranslatorsMissingLanguages = function refreshSessionTranslatorsMissingLanguages(){
 	$('#exam-session-translators-missing').html('');
 
-	utils.session.getSessionTranslatorsMissingLanguages()
+	acqpa.utils.session.getSessionTranslatorsMissingLanguages()
 	.then(r => {
 		if("error" == r.status) {
 			notif_fade.error(r.msg);
@@ -918,7 +918,7 @@ utils.session.refreshSessionTranslatorsMissingLanguages = function refreshSessio
     notif_fade.error(err);
   });
 }
-utils.session.getSessionTranslatorsMissingLanguages = function getSessionTranslatorsMissingLanguages(){
+acqpa.utils.session.getSessionTranslatorsMissingLanguages = function getSessionTranslatorsMissingLanguages(){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
 		'module_type': 'acqpa_exam_session_edit',
@@ -926,7 +926,7 @@ utils.session.getSessionTranslatorsMissingLanguages = function getSessionTransla
 	};
 
 	return new Promise(function (resolve, reject) {
-		utils.postData(objFields)
+		acqpa.utils.postData(objFields)
 		.then(r => {
 			if("error" == r.status) {
 				reject(r.msg);
@@ -939,10 +939,10 @@ utils.session.getSessionTranslatorsMissingLanguages = function getSessionTransla
     });
 	});
 }
-utils.session.refreshSessionTranslatorsSpareLanguages = function refreshSessionTranslatorsSpareLanguages(){
+acqpa.utils.session.refreshSessionTranslatorsSpareLanguages = function refreshSessionTranslatorsSpareLanguages(){
 	$('#exam-session-translators-spare').html('');
 
-	utils.session.getSessionTranslatorsSpareLanguages()
+	acqpa.utils.session.getSessionTranslatorsSpareLanguages()
 	.then(r => {
 		if("error" == r.status) {
 			notif_fade.error(r.msg);
@@ -963,7 +963,7 @@ utils.session.refreshSessionTranslatorsSpareLanguages = function refreshSessionT
     notif_fade.error(err);
   });
 }
-utils.session.getSessionTranslatorsSpareLanguages = function getSessionTranslatorsSpareLanguages(){
+acqpa.utils.session.getSessionTranslatorsSpareLanguages = function getSessionTranslatorsSpareLanguages(){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
 		'module_type': 'acqpa_exam_session_edit',
@@ -971,7 +971,7 @@ utils.session.getSessionTranslatorsSpareLanguages = function getSessionTranslato
 	};
 
 	return new Promise(function (resolve, reject) {
-		utils.postData(objFields)
+		acqpa.utils.postData(objFields)
 		.then(r => {
 			if("error" == r.status) {
 				reject(r.msg);
@@ -985,10 +985,10 @@ utils.session.getSessionTranslatorsSpareLanguages = function getSessionTranslato
 	});
 }
 
-utils.session.refreshSessionOperatorsMissingConfigurations = function refreshSessionOperatorsMissingConfigurations(){
+acqpa.utils.session.refreshSessionOperatorsMissingConfigurations = function refreshSessionOperatorsMissingConfigurations(){
 	$('#exam-session-operator-configuration-missing').html('');
 
-	utils.session.getSessionOperatorsMissingConfigurations()
+	acqpa.utils.session.getSessionOperatorsMissingConfigurations()
 	.then(r => {
 		if("error" == r.status) {
 			notif_fade.error(r.msg);
@@ -1009,7 +1009,7 @@ utils.session.refreshSessionOperatorsMissingConfigurations = function refreshSes
     notif_fade.error(err);
   });
 }
-utils.session.getSessionOperatorsMissingConfigurations = function getSessionOperatorsMissingConfigurations(){
+acqpa.utils.session.getSessionOperatorsMissingConfigurations = function getSessionOperatorsMissingConfigurations(){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
 		'module_type': 'acqpa_exam_session_edit',
@@ -1017,7 +1017,7 @@ utils.session.getSessionOperatorsMissingConfigurations = function getSessionOper
 	};
 
 	return new Promise(function (resolve, reject) {
-		utils.postData(objFields)
+		acqpa.utils.postData(objFields)
 		.then(r => {
 			if("error" == r.status) {
 				reject(r.msg);
@@ -1031,8 +1031,8 @@ utils.session.getSessionOperatorsMissingConfigurations = function getSessionOper
 	});
 }
 
-utils.session.refreshSessionOperatorsForManage = function refreshSessionOperatorsForManage(){
-	utils.session.getRegistrationOperatorsForManage()
+acqpa.utils.session.refreshSessionOperatorsForManage = function refreshSessionOperatorsForManage(){
+	acqpa.utils.session.getRegistrationOperatorsForManage()
 	.then(r => {
 		if("error" == r.status) {
 			notif_fade.error(r.msg);
@@ -1057,7 +1057,7 @@ utils.session.refreshSessionOperatorsForManage = function refreshSessionOperator
     notif_fade.error(err);
   });
 }
-utils.session.getRegistrationOperatorsForManage = function getRegistrationOperatorsForManage(){
+acqpa.utils.session.getRegistrationOperatorsForManage = function getRegistrationOperatorsForManage(){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
 		'module_type': 'acqpa_exam_session_manage',
@@ -1065,7 +1065,7 @@ utils.session.getRegistrationOperatorsForManage = function getRegistrationOperat
 	};
 
 	return new Promise(function (resolve, reject) {
-		utils.postData(objFields)
+		acqpa.utils.postData(objFields)
 		.then(r => {
 			if("error" == r.status) {
 				reject(r.msg);
@@ -1081,10 +1081,10 @@ utils.session.getRegistrationOperatorsForManage = function getRegistrationOperat
 
 
 
-utils.session.refreshSessionOperatorsMissingConfigurationsForManage = function refreshSessionOperatorsMissingConfigurationsForManage(){
+acqpa.utils.session.refreshSessionOperatorsMissingConfigurationsForManage = function refreshSessionOperatorsMissingConfigurationsForManage(){
 	$('#exam-session-operator-configuration-missing').html('');
 
-	utils.session.getSessionOperatorsMissingConfigurationsForManage()
+	acqpa.utils.session.getSessionOperatorsMissingConfigurationsForManage()
 	.then(r => {
 		if("error" == r.status) {
 			notif_fade.error(r.msg);
@@ -1105,7 +1105,7 @@ utils.session.refreshSessionOperatorsMissingConfigurationsForManage = function r
     notif_fade.error(err);
   });
 }
-utils.session.getSessionOperatorsMissingConfigurationsForManage = function getSessionOperatorsMissingConfigurationsForManage(){
+acqpa.utils.session.getSessionOperatorsMissingConfigurationsForManage = function getSessionOperatorsMissingConfigurationsForManage(){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
 		'module_type': 'acqpa_exam_session_manage',
@@ -1113,7 +1113,7 @@ utils.session.getSessionOperatorsMissingConfigurationsForManage = function getSe
 	};
 
 	return new Promise(function (resolve, reject) {
-		utils.postData(objFields)
+		acqpa.utils.postData(objFields)
 		.then(r => {
 			if("error" == r.status) {
 				reject(r.msg);
@@ -1128,11 +1128,10 @@ utils.session.getSessionOperatorsMissingConfigurationsForManage = function getSe
 }
 
 /** attachments */
-
-utils.attachments.refreshAttachmentLines = function refreshAttachmentLines(ptable, pid){
+acqpa.utils.attachments.refreshAttachmentLines = function refreshAttachmentLines(ptable, pid){
 	$('.attachments[data-pid="'+pid+'"][data-ptable="'+ptable+'"] .table-list__line').remove();
 
-	utils.attachments.getAttachmentLines()
+	acqpa.utils.attachments.getAttachmentLines()
 	.then(r => {
 		if("error" == r.status) {
 			notif_fade.error(r.msg);
@@ -1147,7 +1146,7 @@ utils.attachments.refreshAttachmentLines = function refreshAttachmentLines(ptabl
     notif_fade.error(err);
   });
 }
-utils.attachments.getAttachmentLines = function getAttachmentLines(ptable, pid){
+acqpa.utils.attachments.getAttachmentLines = function getAttachmentLines(ptable, pid){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
 		'module-type': 'attachements-service',
@@ -1157,7 +1156,7 @@ utils.attachments.getAttachmentLines = function getAttachmentLines(ptable, pid){
 	};
 
 	return new Promise(function (resolve, reject) {
-		utils.postData(objFields)
+		acqpa.utils.postData(objFields)
 		.then(r => {
 			if("error" == r.status) {
 				reject(r.msg);
@@ -1172,7 +1171,7 @@ utils.attachments.getAttachmentLines = function getAttachmentLines(ptable, pid){
 }
 
 /** UTILITIES **/
-utils.postData = async function postData(data, url = "", method = "POST") {
+acqpa.utils.postData = async function postData(data, url = "", method = "POST") {
 	var request = new FormData();
 	request.append('TL_AJAX', 1);
 
@@ -1193,7 +1192,7 @@ utils.postData = async function postData(data, url = "", method = "POST") {
 	return response.json();
 };
 
-utils.check403 = function(jqXHR, textStatus){
+acqpa.utils.check403 = function(jqXHR, textStatus){
   if("timeout" == textStatus) {
     notif_fade.error("Erreur de communication avec le serveur.");
   }
@@ -1206,7 +1205,7 @@ utils.check403 = function(jqXHR, textStatus){
   }
 }
 
-utils.formatDate = function(date, format){
+acqpa.utils.formatDate = function(date, format){
 	return format
     .replace('d',date.getDate() < 10 ? "0" + date.getDate() : date.getDate())
     .replace('m',date.getMonth()+1 < 10 ? "0" + (date.getMonth()+1) : date.getMonth()+1)
@@ -1217,14 +1216,14 @@ utils.formatDate = function(date, format){
 }
 
 /** CALLBACKS **/
-utils.callbacks = {};
-utils.callbacks.reload = function reloadPage(wait = 600) {
+acqpa.utils.callbacks = {};
+acqpa.utils.callbacks.reload = function reloadPage(wait = 600) {
 	setTimeout(() => { window.location.reload(false) }, wait);
 }
-utils.callbacks.redirect = function redirect(url, wait = 600) {
+acqpa.utils.callbacks.redirect = function redirect(url, wait = 600) {
 	setTimeout(() => { window.location.replace(url) }, wait);
 }
-utils.callbacks.openInNewTab = function openInNewTab(url) {
+acqpa.utils.callbacks.openInNewTab = function openInNewTab(url) {
 	const a = document.createElement('a');
 	a.style.display = 'none';
 	a.href = url;
@@ -1233,11 +1232,11 @@ utils.callbacks.openInNewTab = function openInNewTab(url) {
 	a.click();
 	a.remove();
 }
-utils.callbacks.openModal = function openModal(args) {
+acqpa.utils.callbacks.openModal = function openModal(args) {
 	var modal = new app.ModalFW(args);
 	modal.open();
 }
-utils.callbacks.openRegistrationOperatorModal = function openRegistrationOperatorModal(args) {
+acqpa.utils.callbacks.openRegistrationOperatorModal = function openRegistrationOperatorModal(args) {
 	var modal = new app.ModalFW({
 		name: args.name,
 		content: args.content,
@@ -1257,57 +1256,57 @@ utils.callbacks.openRegistrationOperatorModal = function openRegistrationOperato
 		},
 		onClose: () => {
 			if('registration' === args.source){
-				utils.registration.refreshRegistrationOperators();
+				acqpa.utils.registration.refreshRegistrationOperators();
 			}else if('session' === args.source){
-				utils.session.refreshSessionOperators();
-				utils.session.refreshSessionOperatorsMissingConfigurations();
+				acqpa.utils.session.refreshSessionOperators();
+				acqpa.utils.session.refreshSessionOperatorsMissingConfigurations();
 			}else if('session-manage' === args.source){
-				utils.session.refreshSessionOperatorsForManage();
-				utils.session.refreshSessionOperatorsMissingConfigurationsForManage();
+				acqpa.utils.session.refreshSessionOperatorsForManage();
+				acqpa.utils.session.refreshSessionOperatorsMissingConfigurationsForManage();
 			}
 			modal.destroy();
 		},
 	});
 	modal.open();
 }
-utils.callbacks.refreshRegistrationOperators = function refreshRegistrationOperators() {
-	utils.registration.refreshRegistrationOperators();
+acqpa.utils.callbacks.refreshRegistrationOperators = function refreshRegistrationOperators() {
+	acqpa.utils.registration.refreshRegistrationOperators();
 }
-utils.callbacks.refreshSessionOperators = function refreshSessionOperators() {
-	utils.session.refreshSessionOperators();
+acqpa.utils.callbacks.refreshSessionOperators = function refreshSessionOperators() {
+	acqpa.utils.session.refreshSessionOperators();
 }
-utils.callbacks.refreshSessionTranslators = function refreshSessionTranslators() {
-	utils.session.refreshSessionTranslators();
+acqpa.utils.callbacks.refreshSessionTranslators = function refreshSessionTranslators() {
+	acqpa.utils.session.refreshSessionTranslators();
 }
-utils.callbacks.refreshSessionExaminers = function refreshSessionExaminers() {
-	utils.session.refreshSessionExaminers();
+acqpa.utils.callbacks.refreshSessionExaminers = function refreshSessionExaminers() {
+	acqpa.utils.session.refreshSessionExaminers();
 }
-utils.callbacks.refreshSessionTranslatorsMissingLanguages = function refreshSessionTranslatorsMissingLanguages() {
-	utils.session.refreshSessionTranslatorsMissingLanguages();
+acqpa.utils.callbacks.refreshSessionTranslatorsMissingLanguages = function refreshSessionTranslatorsMissingLanguages() {
+	acqpa.utils.session.refreshSessionTranslatorsMissingLanguages();
 }
-utils.callbacks.refreshSessionExaminersMissingOptionsAndLevels = function refreshSessionExaminersMissingOptionsAndLevels() {
-	utils.session.refreshSessionExaminersMissingOptionsAndLevels();
+acqpa.utils.callbacks.refreshSessionExaminersMissingOptionsAndLevels = function refreshSessionExaminersMissingOptionsAndLevels() {
+	acqpa.utils.session.refreshSessionExaminersMissingOptionsAndLevels();
 }
-utils.callbacks.refreshSessionTranslatorsSpareLanguages = function refreshSessionTranslatorsSpareLanguages() {
-	utils.session.refreshSessionTranslatorsSpareLanguages();
+acqpa.utils.callbacks.refreshSessionTranslatorsSpareLanguages = function refreshSessionTranslatorsSpareLanguages() {
+	acqpa.utils.session.refreshSessionTranslatorsSpareLanguages();
 }
-utils.callbacks.refreshSessionExaminersSpareOptionsAndLevels = function refreshSessionExaminersSpareOptionsAndLevels() {
-	utils.session.refreshSessionExaminersSpareOptionsAndLevels();
+acqpa.utils.callbacks.refreshSessionExaminersSpareOptionsAndLevels = function refreshSessionExaminersSpareOptionsAndLevels() {
+	acqpa.utils.session.refreshSessionExaminersSpareOptionsAndLevels();
 }
-utils.callbacks.refreshSessionOperatorsMissingConfigurations = function refreshSessionOperatorsMissingConfigurations() {
-	utils.session.refreshSessionOperatorsMissingConfigurations();
+acqpa.utils.callbacks.refreshSessionOperatorsMissingConfigurations = function refreshSessionOperatorsMissingConfigurations() {
+	acqpa.utils.session.refreshSessionOperatorsMissingConfigurations();
 }
-utils.callbacks.refreshSessionOperatorsForManage = function refreshSessionOperatorsForManage() {
-	utils.session.refreshSessionOperatorsForManage();
+acqpa.utils.callbacks.refreshSessionOperatorsForManage = function refreshSessionOperatorsForManage() {
+	acqpa.utils.session.refreshSessionOperatorsForManage();
 }
-utils.callbacks.refreshSessionOperatorsMissingConfigurationsForManage = function refreshSessionOperatorsMissingConfigurationsForManage() {
-	utils.session.refreshSessionOperatorsMissingConfigurationsForManage();
+acqpa.utils.callbacks.refreshSessionOperatorsMissingConfigurationsForManage = function refreshSessionOperatorsMissingConfigurationsForManage() {
+	acqpa.utils.session.refreshSessionOperatorsMissingConfigurationsForManage();
 }
-utils.callbacks.refreshAttachmentLines = function refreshAttachmentLines(args) {
-	utils.attachments.refreshAttachmentLines(args.ptable,args.pid);
+acqpa.utils.callbacks.refreshAttachmentLines = function refreshAttachmentLines(args) {
+	acqpa.utils.attachments.refreshAttachmentLines(args.ptable,args.pid);
 }
 
-utils.callbacks.openSessionTranslatorModal = function openSessionTranslatorModal(args) {
+acqpa.utils.callbacks.openSessionTranslatorModal = function openSessionTranslatorModal(args) {
 	var modal = new app.ModalFW({
 		name: args.name,
 		content: args.content,
@@ -1317,14 +1316,14 @@ utils.callbacks.openSessionTranslatorModal = function openSessionTranslatorModal
 			// $('.registration_exam_level').trigger('change');
 		},
 		onClose: () => {
-			utils.session.refreshSessionTranslators();
+			acqpa.utils.session.refreshSessionTranslators();
 			modal.destroy();
 		},
 	});
 	modal.open();
 }
 
-utils.callbacks.openSessionExaminerModal = function openSessionExaminerModal(args) {
+acqpa.utils.callbacks.openSessionExaminerModal = function openSessionExaminerModal(args) {
 	var modal = new app.ModalFW({
 		name: args.name,
 		content: args.content,
@@ -1334,14 +1333,14 @@ utils.callbacks.openSessionExaminerModal = function openSessionExaminerModal(arg
 			// $('.registration_exam_level').trigger('change');
 		},
 		onClose: () => {
-			utils.session.refreshSessionExaminers();
+			acqpa.utils.session.refreshSessionExaminers();
 			modal.destroy();
 		},
 	});
 	modal.open();
 }
 
-utils.callbacks.openSendDocumentsModal = function openSendDocumentsModal(args) {
+acqpa.utils.callbacks.openSendDocumentsModal = function openSendDocumentsModal(args) {
 	var modal = new app.ModalFW({
 		name: args.name,
 		content: args.content,
@@ -1351,14 +1350,14 @@ utils.callbacks.openSendDocumentsModal = function openSendDocumentsModal(args) {
 			// $('.registration_exam_level').trigger('change');
 		},
 		onClose: () => {
-			// utils.session.refreshSessionExaminers();
+			// acqpa.utils.session.refreshSessionExaminers();
 			modal.destroy();
 		},
 	});
 	modal.open();
 }
 
-utils.callbacks.openOperatorCompanyModal = function openOperatorCompanyModal(args) {
+acqpa.utils.callbacks.openOperatorCompanyModal = function openOperatorCompanyModal(args) {
 	var modal = new app.ModalFW({
 		name: args.name,
 		content: args.content,
@@ -1374,7 +1373,7 @@ utils.callbacks.openOperatorCompanyModal = function openOperatorCompanyModal(arg
 	modal.open();
 }
 
-utils.callbacks.openOperatorDeduplicationModal = function openOperatorDeduplicationModal(args) {
+acqpa.utils.callbacks.openOperatorDeduplicationModal = function openOperatorDeduplicationModal(args) {
 	var modal = new app.ModalFW({
 		name: args.name,
 		content: args.content,
@@ -1390,7 +1389,7 @@ utils.callbacks.openOperatorDeduplicationModal = function openOperatorDeduplicat
 	modal.open();
 }
 
-utils.callbacks.openCancelExamSessionOperatorModal = function openCancelExamSessionOperatorModal(args) {
+acqpa.utils.callbacks.openCancelExamSessionOperatorModal = function openCancelExamSessionOperatorModal(args) {
 	var modal = new app.ModalFW({
 		name: args.name,
 		content: args.content,
@@ -1406,7 +1405,7 @@ utils.callbacks.openCancelExamSessionOperatorModal = function openCancelExamSess
 	modal.open();
 }
 
-utils.callbacks.openRevokeCertificateModal = function openRevokeCertificateModal(args) {
+acqpa.utils.callbacks.openRevokeCertificateModal = function openRevokeCertificateModal(args) {
 	var modal = new app.ModalFW({
 		name: args.name,
 		content: args.content,
@@ -1422,7 +1421,7 @@ utils.callbacks.openRevokeCertificateModal = function openRevokeCertificateModal
 	modal.open();
 }
 
-utils.callbacks.openSendCertificateModal = function openSendCertificateModal(args) {
+acqpa.utils.callbacks.openSendCertificateModal = function openSendCertificateModal(args) {
 	var modal = new app.ModalFW({
 		name: args.name,
 		content: args.content,
@@ -1438,7 +1437,7 @@ utils.callbacks.openSendCertificateModal = function openSendCertificateModal(arg
 	modal.open();
 }
 
-utils.callbacks.openExamSessionOperatorDetailModal = function openExamSessionOperatorDetailModal(args) {
+acqpa.utils.callbacks.openExamSessionOperatorDetailModal = function openExamSessionOperatorDetailModal(args) {
 	var modal = new app.ModalFW({
 		name: args.name,
 		content: args.content,
@@ -1454,7 +1453,7 @@ utils.callbacks.openExamSessionOperatorDetailModal = function openExamSessionOpe
 	modal.open();
 }
 
-utils.callbacks.openExamQuestionsSummaryModal = function openExamQuestionsSummaryModal(args) {
+acqpa.utils.callbacks.openExamQuestionsSummaryModal = function openExamQuestionsSummaryModal(args) {
 	var modal;
 	modal = new app.ModalFW({
 		name: args.name,
@@ -1468,7 +1467,7 @@ utils.callbacks.openExamQuestionsSummaryModal = function openExamQuestionsSummar
 				'id': args.ajaxParams.id,
 				'action': 'refreshModalSeeExam',
 			};
-			utils.postData(objFields)
+			acqpa.utils.postData(objFields)
 			.then(r => {
 				if("error" == r.status) {
 					console.log(r.msg);
@@ -1496,7 +1495,7 @@ utils.callbacks.openExamQuestionsSummaryModal = function openExamQuestionsSummar
 }
 
 
-utils.callbacks.openPracticalExamModal = function openPracticalExamModal(args) {
+acqpa.utils.callbacks.openPracticalExamModal = function openPracticalExamModal(args) {
 	var modal = new app.ModalFW({
 		name: args.name,
 		content: args.content,
@@ -1512,7 +1511,7 @@ utils.callbacks.openPracticalExamModal = function openPracticalExamModal(args) {
 	modal.open();
 }
 
-utils.callbacks.openChangeOperatorPresentAtModal = function openChangeOperatorPresentAtModal(args) {
+acqpa.utils.callbacks.openChangeOperatorPresentAtModal = function openChangeOperatorPresentAtModal(args) {
 	var modal = new app.ModalFW({
 		name: args.name,
 		content: args.content,
@@ -1528,7 +1527,7 @@ utils.callbacks.openChangeOperatorPresentAtModal = function openChangeOperatorPr
 	modal.open();
 }
 
-utils.callbacks.openCorrectTheoricalExamModal = function openCorrectTheoricalExamModal(args) {
+acqpa.utils.callbacks.openCorrectTheoricalExamModal = function openCorrectTheoricalExamModal(args) {
 	var modal = new app.ModalFW({
 		name: args.name,
 		content: args.content,
@@ -1544,7 +1543,7 @@ utils.callbacks.openCorrectTheoricalExamModal = function openCorrectTheoricalExa
 	modal.open();
 }
 
-utils.callbacks.openApplyFinalCorrectionStatusModal = function openApplyFinalCorrectionStatusModal(args) {
+acqpa.utils.callbacks.openApplyFinalCorrectionStatusModal = function openApplyFinalCorrectionStatusModal(args) {
 	var modal = new app.ModalFW({
 		name: args.name,
 		content: args.content,
@@ -1560,24 +1559,7 @@ utils.callbacks.openApplyFinalCorrectionStatusModal = function openApplyFinalCor
 	modal.open();
 }
 
-utils.callbacks.openManagePracticalExamRedoModal = function openManagePracticalExamRedoModal(args) {
-	var modal = new app.ModalFW({
-		name: args.name,
-		content: args.content,
-		width: args.width,
-		title: args.title ?? '',
-		blnDismiss: false,
-		onOpen: () => {
-			$(window).resize();
-		},
-		onClose: () => {
-			modal.destroy();
-		},
-	});
-	modal.open();
-}
-
-utils.callbacks.openAttachmentsModal = function openAttachmentsModal(args) {
+acqpa.utils.callbacks.openManagePracticalExamRedoModal = function openManagePracticalExamRedoModal(args) {
 	var modal = new app.ModalFW({
 		name: args.name,
 		content: args.content,
@@ -1594,11 +1576,28 @@ utils.callbacks.openAttachmentsModal = function openAttachmentsModal(args) {
 	modal.open();
 }
 
-utils.callbacks.redirectAfterSign = function redirectAfterSign(args) {
-	utils.callbacks.redirect(args.url, args.wait ?? 600);
+acqpa.utils.callbacks.openAttachmentsModal = function openAttachmentsModal(args) {
+	var modal = new app.ModalFW({
+		name: args.name,
+		content: args.content,
+		width: args.width,
+		title: args.title ?? '',
+		blnDismiss: false,
+		onOpen: () => {
+			$(window).resize();
+		},
+		onClose: () => {
+			modal.destroy();
+		},
+	});
+	modal.open();
 }
 
-utils.callbacks.downloadFile = function downloadFile(args) {
+acqpa.utils.callbacks.redirectAfterSign = function redirectAfterSign(args) {
+	acqpa.utils.callbacks.redirect(args.url, args.wait ?? 600);
+}
+
+acqpa.utils.callbacks.downloadFile = function downloadFile(args) {
 	var link=document.createElement('a');
   link.href=args.url;
   link.download=args.filename;
