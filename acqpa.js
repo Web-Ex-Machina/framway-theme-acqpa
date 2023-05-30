@@ -1136,8 +1136,6 @@ acqpa.utils.session.getSessionOperatorsMissingConfigurationsForManage = function
 
 /** attachments */
 acqpa.utils.attachments.refreshAttachmentLines = function refreshAttachmentLines(module,ptable, pid){
-	$('.attachments[data-pid="'+pid+'"][data-ptable="'+ptable+'"] .table-list__line').remove();
-
 	acqpa.utils.attachments.getAttachmentLines(module,ptable,pid)
 	.then(r => {
 		if("error" == r.status) {
@@ -1146,7 +1144,15 @@ acqpa.utils.attachments.refreshAttachmentLines = function refreshAttachmentLines
 			if(r.msg){
 				notif_fade.success(r.msg);
 			}
-			$('.attachments .table-list__container').append(r.html);
+			$('.attachments[data-pid="'+pid+'"][data-ptable="'+ptable+'"] .table-list__line').remove();
+			$('.attachments[data-pid="'+pid+'"][data-ptable="'+ptable+'"] .table-list__container').append(r.html);
+			if(0 == r.html.length){
+				$('.attachments[data-pid="'+pid+'"][data-ptable="'+ptable+'"] .no-item__container').removeClass('hidden');
+				$('.attachments[data-pid="'+pid+'"][data-ptable="'+ptable+'"] .table-list__headline').addClass('hidden');
+			}else{
+				$('.attachments[data-pid="'+pid+'"][data-ptable="'+ptable+'"] .no-item__container').addClass('hidden');
+				$('.attachments[data-pid="'+pid+'"][data-ptable="'+ptable+'"] .table-list__headline').removeClass('hidden');
+			}
 		}
 	})
   .catch(err => {
