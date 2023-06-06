@@ -1135,8 +1135,8 @@ acqpa.utils.session.getSessionOperatorsMissingConfigurationsForManage = function
 }
 
 /** attachments */
-acqpa.utils.attachments.refreshAttachmentLines = function refreshAttachmentLines(module,ptable, pid){
-	acqpa.utils.attachments.getAttachmentLines(module,ptable,pid)
+acqpa.utils.attachments.refreshAttachmentLines = function refreshAttachmentLines(module,ptable, entity, filters){
+	acqpa.utils.attachments.getAttachmentLines(module,ptable,entity, filters)
 	.then(r => {
 		if("error" == r.status) {
 			notif_fade.error(r.msg);
@@ -1144,14 +1144,14 @@ acqpa.utils.attachments.refreshAttachmentLines = function refreshAttachmentLines
 			if(r.msg){
 				notif_fade.success(r.msg);
 			}
-			$('.attachments[data-pid="'+pid+'"][data-ptable="'+ptable+'"] .table-list__line').remove();
-			$('.attachments[data-pid="'+pid+'"][data-ptable="'+ptable+'"] .table-list__container').append(r.html);
+			$('.attachments[data-entity="'+entity+'"][data-ptable="'+ptable+'"] .table-list__line').remove();
+			$('.attachments[data-entity="'+entity+'"][data-ptable="'+ptable+'"] .table-list__container').append(r.html);
 			if(0 == r.html.length){
-				$('.attachments[data-pid="'+pid+'"][data-ptable="'+ptable+'"] .no-item__container').removeClass('hidden');
-				$('.attachments[data-pid="'+pid+'"][data-ptable="'+ptable+'"] .table-list__headline').addClass('hidden');
+				$('.attachments[data-entity="'+entity+'"][data-ptable="'+ptable+'"] .no-item__container').removeClass('hidden');
+				$('.attachments[data-entity="'+entity+'"][data-ptable="'+ptable+'"] .table-list__headline').addClass('hidden');
 			}else{
-				$('.attachments[data-pid="'+pid+'"][data-ptable="'+ptable+'"] .no-item__container').addClass('hidden');
-				$('.attachments[data-pid="'+pid+'"][data-ptable="'+ptable+'"] .table-list__headline').removeClass('hidden');
+				$('.attachments[data-entity="'+entity+'"][data-ptable="'+ptable+'"] .no-item__container').addClass('hidden');
+				$('.attachments[data-entity="'+entity+'"][data-ptable="'+ptable+'"] .table-list__headline').removeClass('hidden');
 			}
 		}
 	})
@@ -1159,15 +1159,20 @@ acqpa.utils.attachments.refreshAttachmentLines = function refreshAttachmentLines
     notif_fade.error(err);
   });
 }
-acqpa.utils.attachments.getAttachmentLines = function getAttachmentLines(module,ptable, pid){
+acqpa.utils.attachments.getAttachmentLines = function getAttachmentLines(module,ptable, entity, filters){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
 		'module-type': 'attachments-service',
 		'ptable': ptable,
-		'pid': pid,
+		'entity': entity,
+		// 'filters': filters,
 		'module': module,
 		'action': 'getAttachmentLines',
 	};
+
+  for (var i in filters) {
+  	objFields['filters['+i+']'] = filters[i];
+  }
 
 	return new Promise(function (resolve, reject) {
 		acqpa.utils.postData(objFields)
