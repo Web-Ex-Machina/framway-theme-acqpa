@@ -1322,7 +1322,7 @@ acqpa.utils.callbacks.refreshSessionOperatorsMissingConfigurationsForManage = fu
 	acqpa.utils.session.refreshSessionOperatorsMissingConfigurationsForManage();
 }
 acqpa.utils.callbacks.refreshAttachmentLines = function refreshAttachmentLines(args) {
-	acqpa.utils.attachments.refreshAttachmentLines(args.module,args.ptable,args.pid);
+	acqpa.utils.attachments.refreshAttachmentLines(args.module,args.ptable,args.entity, args.filters ?? {});
 }
 
 acqpa.utils.callbacks.openSessionTranslatorModal = function openSessionTranslatorModal(args) {
