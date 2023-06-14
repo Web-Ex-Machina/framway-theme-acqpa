@@ -1612,6 +1612,22 @@ acqpa.utils.callbacks.openAttachmentsModal = function openAttachmentsModal(args)
 	modal.open();
 }
 
+acqpa.utils.callbacks.openCertificateDetailModal = function openCertificateDetailModal(args) {
+	var modal = new app.ModalFW({
+		name: args.name,
+		content: args.content,
+		width: args.width,
+		title: args.title ?? '',
+		onOpen: () => {
+			$(window).resize();
+		},
+		onClose: () => {
+			modal.destroy();
+		},
+	});
+	modal.open();
+}
+
 acqpa.utils.callbacks.redirectAfterSign = function redirectAfterSign(args) {
 	acqpa.utils.callbacks.redirect(args.url, args.wait ?? 600);
 }
