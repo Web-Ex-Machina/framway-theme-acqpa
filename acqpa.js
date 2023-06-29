@@ -35,7 +35,9 @@ $(function(){
 			  		.then(r => {
 			  			acqpa.utils.registration.saveCurrentStepIndex();
 			  		});
-			  		notif_fade[r.status](r.msg);
+			  		if('OK' !== r.msg){
+			  			notif_fade[r.status](r.msg);
+			  		}
 			  	})
 			  	.catch(err => {
 			  		notif_fade.error(err);
