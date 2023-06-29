@@ -12,7 +12,6 @@ $(function(){
 		}
 		form.$actions.find('.splitForm__action').off('click');
 		form.$actions.find('.splitForm__action').on('click',function() {
-			
 			// Retrieve the active step
 			var activeStep = form.$sections.filter('.active').attr('data-step');
 
@@ -34,6 +33,7 @@ $(function(){
 			  		form.switchStep($(this).attr('data-dir'))
 			  		.then(r => {
 			  			acqpa.utils.registration.saveCurrentStepIndex();
+							window.dispatchEvent(new Event('resize'));
 			  		});
 			  		if('OK' !== r.msg){
 			  			notif_fade[r.status](r.msg);
