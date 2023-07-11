@@ -363,6 +363,7 @@ acqpa.utils.registration.refreshRegistrationOperatorExamLevels = function refres
 
 			if (null === r.html) {
 				$('.registration_session_no_sessions').show();
+				$('select.registration_session').trigger('change');
 			} else {
 				$('select.registration_session').parent().show();
 				$('select.registration_session').append(r.html);
@@ -441,6 +442,64 @@ acqpa.utils.registration.getRegistrationOperatorExamSessionDatesById = function 
 		'action': 'getExamSessionDatesById',
 		'session': session,
 		'previouslySelectedDate': previouslySelectedDate,
+	};
+
+	return new Promise(function (resolve, reject) {
+		acqpa.utils.postData(objFields)
+		.then(r => {
+			if("error" == r.status) {
+				reject(r.msg);
+			} else {
+				resolve(r);
+			}
+		})
+    .catch(err => {
+        reject(err);
+    });
+	});
+}
+///////////
+acqpa.utils.registration.refreshRegistrationOperatorSubform = function refreshRegistrationOperatorSubform(examType, examCycle, examLevel, registrationOperatorId){
+	$('#registration__form__subform').html('');
+	$('.registration__form__subform.no-item__container').hide();
+
+	return new Promise(function (resolve, reject) {
+		acqpa.utils.registration.getRegistrationOperatorSubform(examType, examCycle, examLevel, registrationOperatorId)
+		.then(r => {
+			if("error" == r.status) {
+				notif_fade.error(r.msg);
+			} else {
+				if(r.msg){
+					notif_fade.success(r.msg);
+				}
+
+				if (null === r.html) {
+					$('.registration__form__subform.no-item__container').show();
+				reject(r.msg);
+				} else {
+					$('#registration__form__subform').append(r.html);
+					window.dispatchEvent(new Event('resize'));
+				resolve(r);
+				}
+			}
+		})
+	  .catch(err => {
+			$('.registration__form__subform.no-item__container').show();
+	    notif_fade.error(err);
+      reject(err);
+	  });
+	});
+}
+
+acqpa.utils.registration.getRegistrationOperatorSubform = function getRegistrationOperatorSubform(examType, examCycle, examLevel, registrationOperatorId){
+	var objFields = {
+		'REQUEST_TOKEN': rt,
+		'module_type': 'acqpa_company_edit_registration',
+		'action': 'getRegistrationOperatorEditSubForm',
+		'exam_type': examType,
+		'exam_cycle': examCycle,
+		'exam_level': examLevel,
+		'id': registrationOperatorId,
 	};
 
 	return new Promise(function (resolve, reject) {
