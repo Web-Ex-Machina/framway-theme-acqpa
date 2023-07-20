@@ -589,6 +589,40 @@ acqpa.utils.registration.saveRegistrationOperator = function saveRegistrationOpe
 			reject('Veuillez sélectionner au moins une option');
 		});
 	}
+
+	// if professional exp are present, check options
+	if($('.registration_professional_experience')){
+		var expOptions = [];
+		for(var i = 0; i < 100; i++){
+			if(objFields['registration[professional_experiences]['+i+'][reference]']){
+				expOptions = expOptions.concat(objFields['registration[professional_experiences]['+i+'][options]']);
+			}else{
+				break;
+			}
+		}
+
+		//now we have exam_options ids to put against ... expOptions letters ...
+		var optionsMissing = [];
+		for(var i in objFields['registration[exam_options]']){
+			var $input = $('[name="registration[exam_options]"][value="'+objFields['registration[exam_options]'][i]+'"]');
+			if(!$input){
+				continue;
+			}
+			var letter = $input.data('letter');
+			if(-1 == expOptions.indexOf(letter)){
+				optionsMissing.push(letter);
+			}
+		}
+
+		if(optionsMissing.length > 0){
+			if(!confirm('Les options "'+optionsMissing.join()+'" ne sont pas couvertes par vos expériences professionnelles. Voulez-vous continuer ?')){
+				return new Promise(function (resolve, reject) {
+					reject('Enregistrement annulé par l\'utilisateur');
+				});
+			}
+		}
+	}
+
 	// operator must be 18+
 	var birthDate = new Date(objFields['operator[date_of_birth]']).getTime(); // Y-m-d format to timestamp
 	var currentDate = new Date();
