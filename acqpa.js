@@ -591,16 +591,20 @@ acqpa.utils.registration.saveRegistrationOperator = function saveRegistrationOpe
 	}
 
 	// if professional exp are present, check options
+	var nbExp = 0;
 	if($('.registration_professional_experience')){
 		var expOptions = [];
 		for(var i = 0; i < 100; i++){
 			if(objFields['registration[professional_experiences]['+i+'][reference]']){
 				expOptions = expOptions.concat(objFields['registration[professional_experiences]['+i+'][options]']);
+				nbExp++;
 			}else{
 				break;
 			}
 		}
-
+	}
+	
+	if(nbExp > 0){
 		//now we have exam_options ids to put against ... expOptions letters ...
 		var optionsMissing = [];
 		for(var i in objFields['registration[exam_options]']){
