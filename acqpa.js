@@ -347,7 +347,8 @@ acqpa.utils.registration.refreshRegistrationOperatorExamLevels = function refres
 	$('.registration_session_no_sessions').hide();
 
 	// If there is no levels or no options, just hide stuff
-	if (!level || ((1 === level || 2 === level) && !options)) {
+	// if (!level || ((1 === level || 2 === level) && !options)) {
+	if (!level || (!options || options.length === 0)) {
 		return;
 	}
 
@@ -459,12 +460,12 @@ acqpa.utils.registration.getRegistrationOperatorExamSessionDatesById = function 
 	});
 }
 ///////////
-acqpa.utils.registration.refreshRegistrationOperatorSubform = function refreshRegistrationOperatorSubform(examType, examCycle, examLevel, registrationOperatorId){
+acqpa.utils.registration.refreshRegistrationOperatorSubform = function refreshRegistrationOperatorSubform(examType, examCycle, examLevel, operatorId, registrationOperatorId){
 	$('#registration__form__subform').html('');
 	$('.registration__form__subform.no-item__container').hide();
 
 	return new Promise(function (resolve, reject) {
-		acqpa.utils.registration.getRegistrationOperatorSubform(examType, examCycle, examLevel, registrationOperatorId)
+		acqpa.utils.registration.getRegistrationOperatorSubform(examType, examCycle, examLevel, operatorId, registrationOperatorId)
 		.then(r => {
 			if("error" == r.status) {
 				notif_fade.error(r.msg);
@@ -491,7 +492,7 @@ acqpa.utils.registration.refreshRegistrationOperatorSubform = function refreshRe
 	});
 }
 
-acqpa.utils.registration.getRegistrationOperatorSubform = function getRegistrationOperatorSubform(examType, examCycle, examLevel, registrationOperatorId){
+acqpa.utils.registration.getRegistrationOperatorSubform = function getRegistrationOperatorSubform(examType, examCycle, examLevel, operatorId, registrationOperatorId){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
 		'module_type': 'acqpa_company_edit_registration',
@@ -499,6 +500,7 @@ acqpa.utils.registration.getRegistrationOperatorSubform = function getRegistrati
 		'exam_type': examType,
 		'exam_cycle': examCycle,
 		'exam_level': examLevel,
+		'operator': operatorId,
 		'id': registrationOperatorId,
 	};
 
