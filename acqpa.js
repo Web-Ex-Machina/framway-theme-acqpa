@@ -1353,7 +1353,8 @@ acqpa.utils.callbacks.openInNewTab = function openInNewTab(url) {
 	a.remove();
 }
 acqpa.utils.callbacks.openModal = function openModal(args) {
-	var modal = new app.ModalFW(args);
+	let obj = {onClose: ()=>{modal.destroy();}};
+	var modal = new app.ModalFW({...args,...obj});
 	modal.open();
 }
 acqpa.utils.callbacks.openRegistrationOperatorModal = function openRegistrationOperatorModal(args) {
