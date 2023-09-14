@@ -211,6 +211,14 @@ $(function(){
       button.closest('.table-list__line').removeClass('loading');
     }
 	});
+
+
+	$('form[data-name="filters"]').each(function(){
+		acqpa.utils.assignFiltersEvents($(this));
+		// form.find('select').on('change',function(){
+		// 	form.submit();
+		// });
+	});
 });
 
 var acqpa = {};
@@ -219,6 +227,15 @@ acqpa.utils.callbacks = {};
 acqpa.utils.registration = {};
 acqpa.utils.session =  {};
 acqpa.utils.attachments = {};
+
+acqpa.utils.assignFiltersEvents = function(form){
+		form.find('select').on('change',function(){
+			form.trigger('submit');
+		});
+		form.find('input[type="checkbox"]').on('change',function(){
+			form.trigger('submit');
+		});
+}
 
 /** REGISTRATION **/
 // acqpa.utils.registration = {};
