@@ -74,3 +74,7 @@ body.exam #container{transform: translateZ(0px);}
 .question__answer__buttons{display: flex; justify-content: space-between; margin-top: 2em; position: fixed; bottom: 1em; white-space: nowrap; left: 0; right: 0; margin: auto; 
 	>div{display: flex;gap: 5px;}
 }
+
+.modalFW .modal__buttons__container{
+	text-align:right;
+}
