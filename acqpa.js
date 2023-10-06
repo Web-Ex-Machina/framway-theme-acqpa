@@ -1360,7 +1360,7 @@ acqpa.utils.callbacks.reload = function reloadPage(wait = 600) {
 acqpa.utils.callbacks.redirect = function redirect(url, wait = 600) {
 	setTimeout(() => { window.location.replace(url) }, wait);
 }
-acqpa.utils.callbacks.openInNewTab = function openInNewTab(url) {
+acqpa.utils.callbacks.openInNewTab = function openInNewTab(args) {
 	// const a = document.createElement('a');
 	// a.style.display = 'none';
 	// a.href = url;
@@ -1370,6 +1370,17 @@ acqpa.utils.callbacks.openInNewTab = function openInNewTab(url) {
 	// a.remove();
 	
 	var win = window.open();
+	var title = "Document";
+	var url = "";
+	
+	if("string" === typeof args){
+		url = args;
+	}else{
+		title = args.title;
+		url = args.url;
+	}
+
+	setTimeout(() => 	win.document.title = title,50); // otherwise doesn't work
   win.document.write('<iframe src="' + url  + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
 }
 acqpa.utils.callbacks.openModal = function openModal(args) {
