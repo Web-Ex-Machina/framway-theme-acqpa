@@ -362,6 +362,8 @@ acqpa.utils.registration.refreshRegistrationOperatorExamLevels = function refres
 	$('select.registration_session option').remove();
 	$('select.registration_session').parent().hide();
 	$('.registration_session_no_sessions').hide();
+	$('#sessionDates').hide();
+	$('.registration_present_at_no_dates').hide();
 
 	// If there is no levels or no options, just hide stuff
 	// if (!level || ((1 === level || 2 === level) && !options)) {
@@ -385,6 +387,7 @@ acqpa.utils.registration.refreshRegistrationOperatorExamLevels = function refres
 			} else {
 				$('select.registration_session').parent().show();
 				$('select.registration_session').append(r.html);
+				$('#sessionDates').show();
 				$('select.registration_session').trigger('change');
 			}
 		}
