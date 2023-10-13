@@ -422,7 +422,7 @@ acqpa.utils.registration.getRegistrationOperatorExamSessionByLevelAndOptions = f
 	});
 }
 ///////////
-acqpa.utils.registration.refreshRegistrationOperatorSessionDates = function refreshRegistrationOperatorSessionDates(session, previouslySelectedDate){
+acqpa.utils.registration.refreshRegistrationOperatorSessionDates = function refreshRegistrationOperatorSessionDates(registrationId, session, previouslySelectedDate){
 	$('.registration_present_at input').remove();
 	$('.registration_present_at label').remove();
 	$('.registration_present_at').parent().hide();
@@ -433,7 +433,7 @@ acqpa.utils.registration.refreshRegistrationOperatorSessionDates = function refr
 		return;
 	}
 
-	acqpa.utils.registration.getRegistrationOperatorExamSessionDatesById(session, previouslySelectedDate)
+	acqpa.utils.registration.getRegistrationOperatorExamSessionDatesById(registrationId, session, previouslySelectedDate)
 	.then(r => {
 		if("error" == r.status) {
 			notif_fade.error(r.msg);
@@ -456,11 +456,12 @@ acqpa.utils.registration.refreshRegistrationOperatorSessionDates = function refr
   });
 }
 
-acqpa.utils.registration.getRegistrationOperatorExamSessionDatesById = function getRegistrationOperatorExamSessionDatesById(session, previouslySelectedDate){
+acqpa.utils.registration.getRegistrationOperatorExamSessionDatesById = function getRegistrationOperatorExamSessionDatesById(registrationId, session, previouslySelectedDate){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
 		'module_type': 'acqpa_company_edit_registration',
 		'action': 'getExamSessionDatesById',
+		'registrationId': registrationId,
 		'session': session,
 		'previouslySelectedDate': previouslySelectedDate,
 	};
