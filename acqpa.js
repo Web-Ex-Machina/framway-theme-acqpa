@@ -554,8 +554,17 @@ acqpa.utils.registration.saveRegistrationOperator = function saveRegistrationOpe
 	};
 
 	var data = {};
+	var expKeys = [];
+	const expKeysRegExp = /registration\[professional_experiences\]\[(.*)\]\[(.*)\]/;
+
 	for (var i in form.inputs) {
 		objFields[form.inputs[i].name] = form.inputs[i].value;
+		if(form.inputs[i].name.indexOf('registration[professional_experiences]') > -1){
+			var found = form.inputs[i].name.match(expKeysRegExp);
+			if(found && "x_x_x" != found[1] && -1 == expKeys.indexOf(found[1])){
+				expKeys.push(found[1]);
+			}
+		}
 	}
 	
 	// retrieve uploaded files if any 
@@ -614,19 +623,27 @@ acqpa.utils.registration.saveRegistrationOperator = function saveRegistrationOpe
 	}
 
 	// if professional exp are present, check options
+	var needExp = 0 != objFields['registration[exam_cycle]'];
 	var nbExp = 0;
 	if($('.registration_professional_experience')){
 		var expOptions = [];
-		for(var i = 0; i < 100; i++){
-			if(objFields['registration[professional_experiences]['+i+'][reference]']){
-				expOptions = expOptions.concat(objFields['registration[professional_experiences]['+i+'][options]']);
+		for(var i = 0; i < expKeys.length; i++){
+			var key = expKeys[i];
+			if(objFields['registration[professional_experiences]['+key+'][reference]']){
+				expOptions = expOptions.concat(objFields['registration[professional_experiences]['+key+'][options]']);
 				nbExp++;
 			}else{
 				break;
 			}
 		}
 	}
-	
+
+	if(needExp && 0 == nbExp){
+		return new Promise(function (resolve, reject) {
+			reject('Veuillez renseigner au moins une expérience professionnelle');
+		});
+	}
+
 	if(nbExp > 0){
 		//now we have exam_options ids to put against ... expOptions letters ...
 		var optionsMissing = [];
