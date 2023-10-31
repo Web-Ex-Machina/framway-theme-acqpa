@@ -358,7 +358,63 @@ acqpa.utils.registration.getOperatorData = function getOperatorData(id){
 	});
 }
 
-acqpa.utils.registration.refreshRegistrationOperatorExamLevels = function refreshRegistrationOperatorExamLevels(level, options, previouslySelectedSession){
+acqpa.utils.registration.refreshRegistrationOperatorValidCertificates = function refreshRegistrationOperatorValidCertificates(operator, level, options, previouslySelectedSession){
+	$('.registration_valid_certificates_same_level_options').removeClass('hidden');
+	$('.registration_valid_certificates_same_level_options').hide();
+	$('.registration_valid_certificates_same_level_options_content').html('');
+
+	// If there is no levels or no options, just hide stuff
+	// if (!level || ((1 === level || 2 === level) && !options)) {
+	if (!level || (!options || options.length === 0) || !operator) {
+		return;
+	}
+	acqpa.utils.registration.getRegistrationOperatorValidCertificatesByLevelAndOptions(operator, level, options)
+	.then(r => {
+		if("error" == r.status) {
+			notif_fade.error(r.msg);
+		} else {
+			if(r.msg){
+				notif_fade.success(r.msg);
+			}
+
+			if (null !== r.html && r.html.length > 0) {
+				$('.registration_valid_certificates_same_level_options').show();
+				$('.registration_valid_certificates_same_level_options_content').html(r.html);
+			}
+		}
+	})
+  .catch(err => {
+    notif_fade.error(err);
+  });
+}
+
+acqpa.utils.registration.getRegistrationOperatorValidCertificatesByLevelAndOptions = function getRegistrationOperatorValidCertificatesByLevelAndOptions(operator, level, options){
+	var objFields = {
+		'REQUEST_TOKEN': rt,
+		'module_type': 'acqpa_company_edit_registration',
+		'action': 'getValidCertificatesByOperatorAndLevelAndOptions',
+		'operator': operator,
+		'level': level,
+		'options': options,
+	};
+
+	return new Promise(function (resolve, reject) {
+		acqpa.utils.postData(objFields)
+		.then(r => {
+			if("error" == r.status) {
+				reject(r.msg);
+			} else {
+				resolve(r);
+			}
+		})
+    .catch(err => {
+        reject(err);
+    });
+	});
+}
+
+
+acqpa.utils.registration.refreshRegistrationOperatorExamSessionByLevelAndOptions = function refreshRegistrationOperatorExamSessionByLevelAndOptions(level, options, previouslySelectedSession){
 	$('select.registration_session option').remove();
 	$('select.registration_session').parent().hide();
 	$('.registration_session_no_sessions').hide();
@@ -372,7 +428,6 @@ acqpa.utils.registration.refreshRegistrationOperatorExamLevels = function refres
 	}
 
 	acqpa.utils.registration.getRegistrationOperatorExamSessionByLevelAndOptions(level, options, previouslySelectedSession)
-
 	.then(r => {
 		if("error" == r.status) {
 			notif_fade.error(r.msg);
@@ -497,11 +552,11 @@ acqpa.utils.registration.refreshRegistrationOperatorSubform = function refreshRe
 
 				if (null === r.html) {
 					$('.registration__form__subform.no-item__container').show();
-				reject(r.msg);
+					reject(r.msg);
 				} else {
 					$('#registration__form__subform').append(r.html);
 					window.dispatchEvent(new Event('resize'));
-				resolve(r);
+					resolve(r);
 				}
 			}
 		})
