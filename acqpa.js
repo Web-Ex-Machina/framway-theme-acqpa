@@ -228,6 +228,13 @@ acqpa.utils.registration = {};
 acqpa.utils.session =  {};
 acqpa.utils.attachments = {};
 
+acqpa.utils.setRowLoading = function(element){
+	element.closest('.table-list__line').addClass('loading');
+}
+acqpa.utils.unsetRowLoading = function(element){
+	element.closest('.table-list__line').removeClass('loading');
+}
+
 acqpa.utils.assignFiltersEvents = function(form){
 		form.find('select').on('change',function(){
 			form.trigger('submit');
