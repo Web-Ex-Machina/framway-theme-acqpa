@@ -242,6 +242,9 @@ acqpa.utils.assignFiltersEvents = function(form){
 		form.find('input[type="checkbox"]').on('change',function(){
 			form.trigger('submit');
 		});
+		form.find('input[type="date"]').on('change',function(){
+			form.trigger('submit');
+		});
 }
 
 /** REGISTRATION **/
