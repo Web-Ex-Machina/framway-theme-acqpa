@@ -242,8 +242,23 @@ acqpa.utils.assignFiltersEvents = function(form){
 		form.find('input[type="checkbox"]').on('change',function(){
 			form.trigger('submit');
 		});
+		var dateFieldTriggerSubmit = null;
+		form.find('input[type="date"]').on('keydown',function(){
+			if(null !== dateFieldTriggerSubmit){
+				clearTimeout(dateFieldTriggerSubmit);
+			}
+			dateFieldTriggerSubmit = setTimeout(function(){
+				form.trigger('submit');
+			}, 2000);
+			
+		});
 		form.find('input[type="date"]').on('change',function(){
-			form.trigger('submit');
+			if(null !== dateFieldTriggerSubmit){
+				clearTimeout(dateFieldTriggerSubmit);
+			}
+			dateFieldTriggerSubmit = setTimeout(function(){
+				form.trigger('submit');
+			}, 2000);
 		});
 }
 
@@ -1447,14 +1462,6 @@ acqpa.utils.callbacks.redirect = function redirect(url, wait = 600) {
 	setTimeout(() => { window.location.replace(url) }, wait);
 }
 acqpa.utils.callbacks.openInNewTab = function openInNewTab(args) {
-	// const a = document.createElement('a');
-	// a.style.display = 'none';
-	// a.href = url;
-	// a.target = "_blank";
-	// document.body.appendChild(a);
-	// a.click();
-	// a.remove();
-	
 	var win = window.open();
 	var title = "Document";
 	var url = "";
@@ -1469,6 +1476,18 @@ acqpa.utils.callbacks.openInNewTab = function openInNewTab(args) {
 	setTimeout(() => 	win.document.title = title,50); // otherwise doesn't work
   win.document.write('<iframe src="' + url  + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
 }
+
+
+acqpa.utils.callbacks.openUrlInNewTab = function openUrlInNewTab(url) {
+	const a = document.createElement('a');
+	a.style.display = 'none';
+	a.href = url;
+	a.target = "_blank";
+	document.body.appendChild(a);
+	a.click();
+	a.remove();
+}
+
 acqpa.utils.callbacks.openModal = function openModal(args) {
 	let obj = {onClose: ()=>{modal.destroy();}};
 	var modal = new app.ModalFW({...args,...obj});
