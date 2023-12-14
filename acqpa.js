@@ -1473,8 +1473,23 @@ acqpa.utils.callbacks.openInNewTab = function openInNewTab(args) {
 		url = args.url;
 	}
 
-	setTimeout(() => 	win.document.title = title,50); // otherwise doesn't work
-  win.document.write('<iframe src="' + url  + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
+	setTimeout(() => 	win.document.title = title,200); // otherwise doesn't work
+  // win.document.write('<iframe src="' + url  + '" frameborder="0" style="background-color:grey;border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
+  
+	var x = url.split(';base64,');
+	var b64 = x[1];
+	var dataType = x[0].replace('data:','');
+
+  const binStr = atob(b64);
+  const len = binStr.length;
+  const arr = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    arr[ i ] = binStr.charCodeAt( i );
+  }
+  // const blob =  new Blob( [ arr ], { type: 'application/pdf' } );
+  const blob =  new Blob( [ arr ], { type: dataType } );
+  const url2 = URL.createObjectURL( blob );
+  win.document.write('<iframe src="' + url2  + '" frameborder="0" style="background-color:grey;border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
 }
 
 
