@@ -228,6 +228,20 @@ acqpa.utils.registration = {};
 acqpa.utils.session =  {};
 acqpa.utils.attachments = {};
 
+acqpa.utils.getExamTypeFromCycleAndLevel = function(examCycle, examLevel){
+	if(0 === parseInt(examCycle)){
+		return "CI"; // initial
+	}
+
+	if(-1 !== [1,2].indexOf(parseInt(examLevel))
+	&& 0 === parseInt(examCycle) % 9
+	){
+		return "RC"; // recertification
+	}
+
+	return "RA"; // renewal
+}
+
 acqpa.utils.setRowLoading = function(element){
 	element.closest('.table-list__line').addClass('loading');
 }
@@ -561,12 +575,70 @@ acqpa.utils.registration.getRegistrationOperatorExamSessionDatesById = function 
 	});
 }
 ///////////
-acqpa.utils.registration.refreshRegistrationOperatorSubform = function refreshRegistrationOperatorSubform(examType, examCycle, examLevel, operatorId, registrationOperatorId){
+
+acqpa.utils.registration.refreshRegistrationOperatorCertificatesSubform = function refreshRegistrationOperatorCertificatesSubform(operatorId, registrationOperatorId){
+	$('#registration__form__subform-certificates').html('');
+	$('.registration__form__subform-certificates.no-item__container').hide();
+
+	return new Promise(function (resolve, reject) {
+		acqpa.utils.registration.getRegistrationOperatorCertificatesSubform(operatorId, registrationOperatorId)
+		.then(r => {
+			if("error" == r.status) {
+				notif_fade.error(r.msg);
+			} else {
+				if(r.msg){
+					notif_fade.success(r.msg);
+				}
+
+				if (null === r.html) {
+					$('.registration__form__subform-certificates.no-item__container').show();
+					reject(r.msg);
+				} else {
+					$('#registration__form__subform-certificates').append(r.html);
+					window.dispatchEvent(new Event('resize'));
+					resolve(r);
+				}
+			}
+		})
+	  .catch(err => {
+			$('.registration__form__subform-certificates.no-item__container').show();
+	    notif_fade.error(err);
+      reject(err);
+	  });
+	});
+}
+
+acqpa.utils.registration.getRegistrationOperatorCertificatesSubform = function getRegistrationOperatorCertificatesSubform(operatorId, registrationOperatorId){
+	var objFields = {
+		'REQUEST_TOKEN': rt,
+		'module_type': 'acqpa_company_edit_registration',
+		'action': 'getRegistrationOperatorEditCertificatesSubForm',
+		'operator': operatorId,
+		'id': registrationOperatorId,
+	};
+
+	return new Promise(function (resolve, reject) {
+		acqpa.utils.postData(objFields)
+		.then(r => {
+			if("error" == r.status) {
+				reject(r.msg);
+			} else {
+				resolve(r);
+			}
+		})
+    .catch(err => {
+        reject(err);
+    });
+	});
+}
+
+///
+acqpa.utils.registration.refreshRegistrationOperatorSubform = function refreshRegistrationOperatorSubform(examType, examCycle, examLevel, operatorId, registrationOperatorId, certificatesIds){
 	$('#registration__form__subform').html('');
 	$('.registration__form__subform.no-item__container').hide();
 
 	return new Promise(function (resolve, reject) {
-		acqpa.utils.registration.getRegistrationOperatorSubform(examType, examCycle, examLevel, operatorId, registrationOperatorId)
+		acqpa.utils.registration.getRegistrationOperatorSubform(examType, examCycle, examLevel, operatorId, registrationOperatorId, certificatesIds)
 		.then(r => {
 			if("error" == r.status) {
 				notif_fade.error(r.msg);
@@ -593,7 +665,8 @@ acqpa.utils.registration.refreshRegistrationOperatorSubform = function refreshRe
 	});
 }
 
-acqpa.utils.registration.getRegistrationOperatorSubform = function getRegistrationOperatorSubform(examType, examCycle, examLevel, operatorId, registrationOperatorId){
+acqpa.utils.registration.getRegistrationOperatorSubform = function getRegistrationOperatorSubform(examType, examCycle, examLevel, operatorId, registrationOperatorId, certificatesIds){
+	// console.log(certificatesIds);
 	var objFields = {
 		'REQUEST_TOKEN': rt,
 		'module_type': 'acqpa_company_edit_registration',
@@ -603,7 +676,9 @@ acqpa.utils.registration.getRegistrationOperatorSubform = function getRegistrati
 		'exam_level': examLevel,
 		'operator': operatorId,
 		'id': registrationOperatorId,
+		'certificatesIds[]': certificatesIds,
 	};
+	// console.log(objFields);
 
 	return new Promise(function (resolve, reject) {
 		acqpa.utils.postData(objFields)
