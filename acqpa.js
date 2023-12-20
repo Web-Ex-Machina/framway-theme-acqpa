@@ -577,8 +577,8 @@ acqpa.utils.registration.getRegistrationOperatorExamSessionDatesById = function 
 ///////////
 
 acqpa.utils.registration.refreshRegistrationOperatorCertificatesSubform = function refreshRegistrationOperatorCertificatesSubform(operatorId, registrationOperatorId){
-	$('#registration__form__subform-certificates').html('');
-	$('.registration__form__subform-certificates.no-item__container').hide();
+	$('#registration__form__subform-certificate_renewal_source').html('');
+	$('.registration__form__subform-certificate_renewal_source.no-item__container').hide();
 
 	return new Promise(function (resolve, reject) {
 		acqpa.utils.registration.getRegistrationOperatorCertificatesSubform(operatorId, registrationOperatorId)
@@ -591,17 +591,17 @@ acqpa.utils.registration.refreshRegistrationOperatorCertificatesSubform = functi
 				}
 
 				if (null === r.html) {
-					$('.registration__form__subform-certificates.no-item__container').show();
+					$('.registration__form__subform-certificate_renewal_source.no-item__container').show();
 					reject(r.msg);
 				} else {
-					$('#registration__form__subform-certificates').append(r.html);
+					$('#registration__form__subform-certificate_renewal_source').append(r.html);
 					window.dispatchEvent(new Event('resize'));
 					resolve(r);
 				}
 			}
 		})
 	  .catch(err => {
-			$('.registration__form__subform-certificates.no-item__container').show();
+			$('.registration__form__subform-certificate_renewal_source.no-item__container').show();
 	    notif_fade.error(err);
       reject(err);
 	  });
@@ -631,14 +631,71 @@ acqpa.utils.registration.getRegistrationOperatorCertificatesSubform = function g
     });
 	});
 }
-
 ///
-acqpa.utils.registration.refreshRegistrationOperatorSubform = function refreshRegistrationOperatorSubform(examType, examCycle, examLevel, operatorId, registrationOperatorId, certificatesIds){
+
+acqpa.utils.registration.refreshRegistrationOperatorCertificatesAdditionnalSubform = function refreshRegistrationOperatorCertificatesAdditionnalSubform(operatorId, registrationOperatorId,certificateSourceId){
+	$('#registration__form__subform-certificate_renewal_additionnal').html('');
+	$('.registration__form__subform-certificate_renewal_additionnal.no-item__container').hide();
+
+	return new Promise(function (resolve, reject) {
+		acqpa.utils.registration.getRegistrationOperatorCertificatesAdditionnalSubform(operatorId, registrationOperatorId,certificateSourceId)
+		.then(r => {
+			if("error" == r.status) {
+				notif_fade.error(r.msg);
+			} else {
+				if(r.msg){
+					notif_fade.success(r.msg);
+				}
+
+				if (null === r.html) {
+					$('.registration__form__subform-certificate_renewal_additionnal.no-item__container').show();
+					reject(r.msg);
+				} else {
+					$('#registration__form__subform-certificate_renewal_additionnal').append(r.html);
+					window.dispatchEvent(new Event('resize'));
+					resolve(r);
+				}
+			}
+		})
+	  .catch(err => {
+			$('.registration__form__subform-certificate_renewal_additionnal.no-item__container').show();
+	    notif_fade.error(err);
+      reject(err);
+	  });
+	});
+}
+
+acqpa.utils.registration.getRegistrationOperatorCertificatesAdditionnalSubform = function getRegistrationOperatorCertificatesAdditionnalSubform(operatorId, registrationOperatorId,certificateSourceId){
+	var objFields = {
+		'REQUEST_TOKEN': rt,
+		'module_type': 'acqpa_company_edit_registration',
+		'action': 'getRegistrationOperatorEditCertificatesAdditionnalSubForm',
+		'operator': operatorId,
+		'id': registrationOperatorId,
+		'certificateSourceId': certificateSourceId,
+	};
+
+	return new Promise(function (resolve, reject) {
+		acqpa.utils.postData(objFields)
+		.then(r => {
+			if("error" == r.status) {
+				reject(r.msg);
+			} else {
+				resolve(r);
+			}
+		})
+    .catch(err => {
+        reject(err);
+    });
+	});
+}
+///
+acqpa.utils.registration.refreshRegistrationOperatorSubform = function refreshRegistrationOperatorSubform(examType, examCycle, examLevel, operatorId, registrationOperatorId, certificateSourceId, certificatesAdditionnalIds){
 	$('#registration__form__subform').html('');
 	$('.registration__form__subform.no-item__container').hide();
 
 	return new Promise(function (resolve, reject) {
-		acqpa.utils.registration.getRegistrationOperatorSubform(examType, examCycle, examLevel, operatorId, registrationOperatorId, certificatesIds)
+		acqpa.utils.registration.getRegistrationOperatorSubform(examType, examCycle, examLevel, operatorId, registrationOperatorId, certificateSourceId, certificatesAdditionnalIds)
 		.then(r => {
 			if("error" == r.status) {
 				notif_fade.error(r.msg);
@@ -665,8 +722,7 @@ acqpa.utils.registration.refreshRegistrationOperatorSubform = function refreshRe
 	});
 }
 
-acqpa.utils.registration.getRegistrationOperatorSubform = function getRegistrationOperatorSubform(examType, examCycle, examLevel, operatorId, registrationOperatorId, certificatesIds){
-	// console.log(certificatesIds);
+acqpa.utils.registration.getRegistrationOperatorSubform = function getRegistrationOperatorSubform(examType, examCycle, examLevel, operatorId, registrationOperatorId, certificateSourceId, certificatesAdditionnalIds){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
 		'module_type': 'acqpa_company_edit_registration',
@@ -676,7 +732,8 @@ acqpa.utils.registration.getRegistrationOperatorSubform = function getRegistrati
 		'exam_level': examLevel,
 		'operator': operatorId,
 		'id': registrationOperatorId,
-		'certificatesIds[]': certificatesIds,
+		'certificateSourceId': certificateSourceId,
+		'certificatesAdditionnalIds[]': certificatesAdditionnalIds,
 	};
 	// console.log(objFields);
 
@@ -775,6 +832,14 @@ acqpa.utils.registration.saveRegistrationOperator = function saveRegistrationOpe
 		return new Promise(function (resolve, reject) {
 			reject('Veuillez sélectionner au moins une option');
 		});
+	}
+
+	if('renewal' === objFields['registration[exam_type_custom]']){
+		if(0 === objFields['registration[certificate_renewal_source]'].length){
+			return new Promise(function (resolve, reject) {
+				reject('Veuillez sélectionner un certificat à renouveler');
+			});
+		}
 	}
 
 	// if professional exp are present, check options
