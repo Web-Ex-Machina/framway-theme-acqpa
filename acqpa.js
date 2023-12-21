@@ -578,7 +578,7 @@ acqpa.utils.registration.getRegistrationOperatorExamSessionDatesById = function 
 
 acqpa.utils.registration.refreshRegistrationOperatorCertificatesSubform = function refreshRegistrationOperatorCertificatesSubform(operatorId, registrationOperatorId){
 	$('#registration__form__subform-certificate_renewal_source').html('');
-	$('.registration__form__subform-certificate_renewal_source.no-item__container').hide();
+	$('.registration_certificate_renewal_source_no_certificates.no-item__container').hide();
 
 	return new Promise(function (resolve, reject) {
 		acqpa.utils.registration.getRegistrationOperatorCertificatesSubform(operatorId, registrationOperatorId)
@@ -591,7 +591,7 @@ acqpa.utils.registration.refreshRegistrationOperatorCertificatesSubform = functi
 				}
 
 				if (null === r.html) {
-					$('.registration__form__subform-certificate_renewal_source.no-item__container').show();
+					$('.registration_certificate_renewal_source_no_certificates.no-item__container').show();
 					reject(r.msg);
 				} else {
 					$('#registration__form__subform-certificate_renewal_source').append(r.html);
@@ -601,7 +601,7 @@ acqpa.utils.registration.refreshRegistrationOperatorCertificatesSubform = functi
 			}
 		})
 	  .catch(err => {
-			$('.registration__form__subform-certificate_renewal_source.no-item__container').show();
+			$('.registration_certificate_renewal_source_no_certificates.no-item__container').show();
 	    notif_fade.error(err);
       reject(err);
 	  });
@@ -635,7 +635,7 @@ acqpa.utils.registration.getRegistrationOperatorCertificatesSubform = function g
 
 acqpa.utils.registration.refreshRegistrationOperatorCertificatesAdditionnalSubform = function refreshRegistrationOperatorCertificatesAdditionnalSubform(operatorId, registrationOperatorId,certificateSourceId){
 	$('#registration__form__subform-certificate_renewal_additionnal').html('');
-	$('.registration__form__subform-certificate_renewal_additionnal.no-item__container').hide();
+	$('.registration_operator_edit_subform_certificate_renewal_additionnal.no-item__container').hide();
 
 	return new Promise(function (resolve, reject) {
 		acqpa.utils.registration.getRegistrationOperatorCertificatesAdditionnalSubform(operatorId, registrationOperatorId,certificateSourceId)
@@ -648,7 +648,7 @@ acqpa.utils.registration.refreshRegistrationOperatorCertificatesAdditionnalSubfo
 				}
 
 				if (null === r.html) {
-					$('.registration__form__subform-certificate_renewal_additionnal.no-item__container').show();
+					$('.registration_operator_edit_subform_certificate_renewal_additionnal.no-item__container').show();
 					reject(r.msg);
 				} else {
 					$('#registration__form__subform-certificate_renewal_additionnal').append(r.html);
@@ -658,7 +658,7 @@ acqpa.utils.registration.refreshRegistrationOperatorCertificatesAdditionnalSubfo
 			}
 		})
 	  .catch(err => {
-			$('.registration__form__subform-certificate_renewal_additionnal.no-item__container').show();
+			$('.registration_operator_edit_subform_certificate_renewal_additionnal.no-item__container').show();
 	    notif_fade.error(err);
       reject(err);
 	  });
