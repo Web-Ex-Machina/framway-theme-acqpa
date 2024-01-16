@@ -2035,6 +2035,22 @@ acqpa.utils.callbacks.openRegistrationOperatorValidateModal = function openRegis
 	});
 	modal.open();
 }
+acqpa.utils.callbacks.openApiSireneModal = function openApiSireneModal(args) {
+	var modal = new app.ModalFW({
+		name: args.name,
+		content: args.content,
+		width: args.width,
+		title: args.title ?? '',
+		onOpen: () => {
+			$(window).resize();
+		},
+		onClose: () => {
+			modal.destroy();
+			window.location.reload();
+		},
+	});
+	modal.open();
+}
 
 acqpa.utils.callbacks.redirectAfterSign = function redirectAfterSign(args) {
 	acqpa.utils.callbacks.redirect(args.url, args.wait ?? 600);
