@@ -2046,7 +2046,6 @@ acqpa.utils.callbacks.openApiSireneModal = function openApiSireneModal(args) {
 		},
 		onClose: () => {
 			modal.destroy();
-			window.location.reload();
 		},
 	});
 	modal.open();
