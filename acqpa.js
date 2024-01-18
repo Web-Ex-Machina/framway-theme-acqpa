@@ -239,7 +239,7 @@ acqpa.utils.getExamTypeFromCycleAndLevel = function(examCycle, examLevel){
 		return "RC"; // recertification
 	}
 
-	return "RA"; // renewal
+	return "RE"; // renewal
 }
 
 acqpa.utils.setRowLoading = function(element){
