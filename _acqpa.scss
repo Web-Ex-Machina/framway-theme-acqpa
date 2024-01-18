@@ -82,3 +82,8 @@ body.exam #container{transform: translateZ(0px);}
 .select2FW-wrapper .select2-container .select2-selection--multiple .select2-search--inline .select2-search__field{
 	color:inherit;
 }
+
+.table-list__line.v1 > td:first-child{
+	// background-color:lightyellow;
+	border-left: 3px solid darkred;
+}
