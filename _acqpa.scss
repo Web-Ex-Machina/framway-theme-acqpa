@@ -34,6 +34,11 @@ h1,.h1{text-transform: none;}
 .table-list__cell{
 	&[data-name*="date_start"],
 	&[data-name*="date_end"]{white-space: nowrap;}
+	&[data-name*="paid"]{
+		width: 50px; 
+		min-width: 50px;
+		text-align: center;
+	}
 	.mode--block &{
 		&[data-name*="no"]{
 			position: absolute;
@@ -54,7 +59,7 @@ h1,.h1{text-transform: none;}
 		&[data-label]:before{grid-row: span 10;}
 	}
 	&[data-name*="copy"]{
-		min-width: 0;
+		min-width: 16px;
 		max-width: 50px;
 		text-align: center;
 	}
