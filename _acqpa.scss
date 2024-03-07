@@ -34,7 +34,9 @@ h1,.h1{text-transform: none;}
 .table-list__cell{
 	&[data-name*="date_start"],
 	&[data-name*="date_end"]{white-space: nowrap;}
-	&[data-name*="paid"]{
+	&[data-name*="paid"],
+	&[data-name*="exam_level"],
+	&[data-name*="exam_cycle"]{
 		width: 50px; 
 		min-width: 50px;
 		text-align: center;
