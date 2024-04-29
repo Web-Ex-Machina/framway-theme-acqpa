@@ -30,6 +30,10 @@ h1,.h1{text-transform: none;}
 }
 .mod_acqpa_edit_submit{text-align: right; margin-top: 1em;}
 
+.table-list__container tbody tr.separator:not(.table-list__headline),
+.table-list__line.separator{
+	color: rgba(color(primary),0.75);
+}
 
 .table-list__cell{
 	&[data-name*="date_start"],
