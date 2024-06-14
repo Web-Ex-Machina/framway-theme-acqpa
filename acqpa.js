@@ -287,7 +287,7 @@ acqpa.utils.registration.saveStep = function saveStep(step){
 	}
 	var objFields = {
 		'REQUEST_TOKEN': rt,
-		'module_type': 'acqpa_company_edit_registration',
+		'module_type': 'acqpa_registration_edit',
 		'action': 'saveRegistration',
 		// 'registration[step]': step.data('step'),
 	};
@@ -316,7 +316,7 @@ acqpa.utils.registration.saveCurrentStepIndex = function saveCurrentStepIndex(){
   var current = form.$sections.toArray().indexOf(form.$sections.filter('.active').get(0));
 	var objFields = {
 		'REQUEST_TOKEN': rt,
-		'module_type': 'acqpa_company_edit_registration',
+		'module_type': 'acqpa_registration_edit',
 		'action': 'saveRegistration',
 		'registration[step]': current,
 	};
@@ -356,7 +356,7 @@ acqpa.utils.registration.refreshRegistrationOperators = function refreshRegistra
 acqpa.utils.registration.getRegistrationOperators = function getRegistrationOperators(){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
-		'module_type': 'acqpa_company_edit_registration',
+		'module_type': 'acqpa_registration_edit',
 		'action': 'getOperators',
 	};
 
@@ -377,7 +377,7 @@ acqpa.utils.registration.getRegistrationOperators = function getRegistrationOper
 acqpa.utils.registration.getOperatorData = function getOperatorData(id){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
-		'module_type': 'acqpa_company_edit_registration',
+		'module_type': 'acqpa_registration_edit',
 		'action': 'getOperatorData',
 		'id': id,
 	};
@@ -430,7 +430,7 @@ acqpa.utils.registration.refreshRegistrationOperatorValidCertificates = function
 acqpa.utils.registration.getRegistrationOperatorValidCertificatesByLevelAndOptions = function getRegistrationOperatorValidCertificatesByLevelAndOptions(operator, level, options){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
-		'module_type': 'acqpa_company_edit_registration',
+		'module_type': 'acqpa_registration_edit',
 		'action': 'getValidCertificatesByOperatorAndLevelAndOptions',
 		'operator': operator,
 		'level': level,
@@ -494,7 +494,7 @@ acqpa.utils.registration.refreshRegistrationOperatorExamSessionByLevelAndOptions
 acqpa.utils.registration.getRegistrationOperatorExamSessionByLevelAndOptions = function getRegistrationOperatorExamSessionByLevelAndOptions(level, options, previouslySelectedSession){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
-		'module_type': 'acqpa_company_edit_registration',
+		'module_type': 'acqpa_registration_edit',
 		'action': 'getExamSessionByLevelAndOptions',
 		'level': level,
 		'options': options,
@@ -553,7 +553,7 @@ acqpa.utils.registration.refreshRegistrationOperatorSessionDates = function refr
 acqpa.utils.registration.getRegistrationOperatorExamSessionDatesById = function getRegistrationOperatorExamSessionDatesById(registrationId, session, previouslySelectedDate){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
-		'module_type': 'acqpa_company_edit_registration',
+		'module_type': 'acqpa_registration_edit',
 		'action': 'getExamSessionDatesById',
 		'registrationId': registrationId,
 		'session': session,
@@ -611,7 +611,7 @@ acqpa.utils.registration.refreshRegistrationOperatorCertificatesSubform = functi
 acqpa.utils.registration.getRegistrationOperatorCertificatesSubform = function getRegistrationOperatorCertificatesSubform(operatorId, registrationOperatorId){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
-		'module_type': 'acqpa_company_edit_registration',
+		'module_type': 'acqpa_registration_edit',
 		'action': 'getRegistrationOperatorEditCertificatesSubForm',
 		'operator': operatorId,
 		'id': registrationOperatorId,
@@ -668,7 +668,7 @@ acqpa.utils.registration.refreshRegistrationOperatorCertificatesAdditionnalSubfo
 acqpa.utils.registration.getRegistrationOperatorCertificatesAdditionnalSubform = function getRegistrationOperatorCertificatesAdditionnalSubform(operatorId, registrationOperatorId,certificateSourceId){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
-		'module_type': 'acqpa_company_edit_registration',
+		'module_type': 'acqpa_registration_edit',
 		'action': 'getRegistrationOperatorEditCertificatesAdditionnalSubForm',
 		'operator': operatorId,
 		'id': registrationOperatorId,
@@ -725,7 +725,7 @@ acqpa.utils.registration.refreshRegistrationOperatorSubform = function refreshRe
 acqpa.utils.registration.getRegistrationOperatorSubform = function getRegistrationOperatorSubform(examType, examCycle, examLevel, operatorId, registrationOperatorId, certificateSourceId, certificatesAdditionnalIds){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
-		'module_type': 'acqpa_company_edit_registration',
+		'module_type': 'acqpa_registration_edit',
 		'action': 'getRegistrationOperatorEditSubForm',
 		'exam_type': examType,
 		'exam_cycle': examCycle,
@@ -761,7 +761,7 @@ acqpa.utils.registration.saveRegistrationOperator = function saveRegistrationOpe
 	}
 	var objFields = {
 		'REQUEST_TOKEN': rt,
-		'module_type': 'acqpa_company_edit_registration',
+		'module_type': 'acqpa_registration_edit',
 		'action': 'saveRegistrationOperator',
 	};
 
@@ -920,7 +920,7 @@ acqpa.utils.registration.saveRegistrationOperator = function saveRegistrationOpe
 acqpa.utils.registration.validateRegistration = function validateRegistration(modal){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
-		'module_type': 'acqpa_company_edit_registration',
+		'module_type': 'acqpa_registration_edit',
 		'action': 'validateRegistration',
 	};
 
@@ -941,7 +941,7 @@ acqpa.utils.registration.validateRegistration = function validateRegistration(mo
 acqpa.utils.registration.confirmRegistration = function confirmRegistration(modal){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
-		'module_type': 'acqpa_company_edit_registration',
+		'module_type': 'acqpa_registration_edit',
 		'action': 'confirmRegistration',
 	};
 
