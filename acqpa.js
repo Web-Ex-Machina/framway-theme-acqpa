@@ -222,6 +222,7 @@ $(function(){
 });
 
 var acqpa = {};
+acqpa.intlTelInputInstances = {};
 acqpa.utils = {};
 acqpa.utils.callbacks = {};
 acqpa.utils.registration = {};
@@ -295,6 +296,10 @@ acqpa.utils.registration.saveStep = function saveStep(step){
 	var data = {};
 	for (var i in form.inputs) {
 		objFields[form.inputs[i].name] = form.inputs[i].value;
+    if("tel" === form.inputs[i].type){
+      objFields[form.inputs[i].name] = acqpa.intlTelInputInstances[form.inputs[i].name+'_'+form.inputs[i].id].getNumber();
+      console.log('Yepa', form.inputs[i].name, objFields[form.inputs[i].name]);
+    }
 	}
 
 	return new Promise(function (resolve, reject) {
@@ -776,7 +781,9 @@ acqpa.utils.registration.saveRegistrationOperator = function saveRegistrationOpe
 			if(found && "x_x_x" != found[1] && -1 == expKeys.indexOf(found[1])){
 				expKeys.push(found[1]);
 			}
-		}
+		}else if("tel" === form.inputs[i].type){
+      objFields[form.inputs[i].name] = acqpa.intlTelInputInstances[form.inputs[i].name+'_'+form.inputs[i].id].getNumber();
+    }
 	}
 	
 	// retrieve uploaded files if any 
@@ -2060,6 +2067,30 @@ acqpa.utils.callbacks.downloadFile = function downloadFile(args) {
   link.href=args.url;
   link.download=args.filename;
   link.click();
+}
+
+acqpa.utils.callbacks.initIntlTelInput = function initIntlTelInput(){
+  const inputs = document.querySelectorAll('[type="tel"]');
+  if(inputs){
+  	for (let i = 0; i < inputs.length; i++) {
+		  acqpa.intlTelInputInstances[inputs[i].name+'_'+inputs[i].id] = window.intlTelInput(inputs[i], {
+		  	hiddenInput:function(telInputName) {
+		  		return {
+			  		phone:-1 != telInputName.indexOf(']') ? telInputName.replace(']','__phone]') : telInputName+'__phone',
+			  		// phone:telInputName+'__phone',
+			  		// country:telInputName+'__country'
+			  	}
+			  }
+		  });
+  	}
+  }
+  // do not Framway Style those buttons 
+  const buttons = document.querySelectorAll('.iti__selected-country');
+  if(buttons){
+  	for (let i = 0; i < buttons.length; i++) {
+  		buttons[i].classList.add('exclude');
+  	}
+  }
 }
 
 global.acqpa = acqpa;
