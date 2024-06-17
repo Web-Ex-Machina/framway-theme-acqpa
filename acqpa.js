@@ -2091,6 +2091,13 @@ acqpa.utils.callbacks.initIntlTelInput = function initIntlTelInput(){
   		buttons[i].classList.add('exclude');
   	}
   }
+  // do not inline-block the containers 
+  const itis = document.querySelectorAll('.iti');
+  if(itis){
+  	for (let i = 0; i < itis.length; i++) {
+  		itis[i].classList.add('iti__override');
+  	}
+  }
 }
 
 global.acqpa = acqpa;
