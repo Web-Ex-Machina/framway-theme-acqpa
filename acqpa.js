@@ -222,12 +222,13 @@ $(function(){
 });
 
 var acqpa = {};
-acqpa.intlTelInputInstances = {};
 acqpa.utils = {};
 acqpa.utils.callbacks = {};
 acqpa.utils.registration = {};
 acqpa.utils.session =  {};
 acqpa.utils.attachments = {};
+acqpa.utils.intltelinput = {};
+acqpa.utils.intltelinput.instances = {};
 
 acqpa.utils.getExamTypeFromCycleAndLevel = function(examCycle, examLevel){
 	if(0 === parseInt(examCycle)){
@@ -297,7 +298,7 @@ acqpa.utils.registration.saveStep = function saveStep(step){
 	for (var i in form.inputs) {
 		objFields[form.inputs[i].name] = form.inputs[i].value;
     if("tel" === form.inputs[i].type){
-      objFields[form.inputs[i].name] = acqpa.intlTelInputInstances[form.inputs[i].name+'_'+form.inputs[i].id].getNumber();
+      objFields[form.inputs[i].name] = acqpa.utils.intltelinput.getInstance(form.inputs[i]).getNumber();
       console.log('Yepa', form.inputs[i].name, objFields[form.inputs[i].name]);
     }
 	}
@@ -782,7 +783,7 @@ acqpa.utils.registration.saveRegistrationOperator = function saveRegistrationOpe
 				expKeys.push(found[1]);
 			}
 		}else if("tel" === form.inputs[i].type){
-      objFields[form.inputs[i].name] = acqpa.intlTelInputInstances[form.inputs[i].name+'_'+form.inputs[i].id].getNumber();
+      objFields[form.inputs[i].name] = acqpa.utils.intltelinput.getInstance(form.inputs[i]).getNumber();
     }
 	}
 	
@@ -2070,10 +2071,14 @@ acqpa.utils.callbacks.downloadFile = function downloadFile(args) {
 }
 
 acqpa.utils.callbacks.initIntlTelInput = function initIntlTelInput(){
+	acqpa.utils.intltelinput.init();
+}
+
+acqpa.utils.intltelinput.init = function(){
   const inputs = document.querySelectorAll('[type="tel"]');
   if(inputs){
   	for (let i = 0; i < inputs.length; i++) {
-		  acqpa.intlTelInputInstances[inputs[i].name+'_'+inputs[i].id] = window.intlTelInput(inputs[i], {
+  		acqpa.utils.intltelinput.addInstance(inputs[i], window.intlTelInput(inputs[i], {
 		  	hiddenInput:function(telInputName) {
 		  		return {
 			  		phone:-1 != telInputName.indexOf(']') ? telInputName.replace(']','__phone]') : telInputName+'__phone',
@@ -2081,7 +2086,16 @@ acqpa.utils.callbacks.initIntlTelInput = function initIntlTelInput(){
 			  		// country:telInputName+'__country'
 			  	}
 			  }
-		  });
+		  }));
+		  // acqpa.utils.intltelinput.instances[inputs[i].name+'_'+inputs[i].id] = window.intlTelInput(inputs[i], {
+		  // 	hiddenInput:function(telInputName) {
+		  // 		return {
+			//   		phone:-1 != telInputName.indexOf(']') ? telInputName.replace(']','__phone]') : telInputName+'__phone',
+			//   		// phone:telInputName+'__phone',
+			//   		// country:telInputName+'__country'
+			//   	}
+			//   }
+		  // });
   	}
   }
   // do not Framway Style those buttons 
@@ -2098,6 +2112,22 @@ acqpa.utils.callbacks.initIntlTelInput = function initIntlTelInput(){
   		itis[i].classList.add('iti__override');
   	}
   }
+}
+
+acqpa.utils.intltelinput.buildIdentifier = function(name, id){
+	return name+'__'+id;
+}
+
+acqpa.utils.intltelinput.getInputIdentifier = function(input){
+	return acqpa.utils.intltelinput.buildIdentifier(input.name, input.id);
+}
+
+acqpa.utils.intltelinput.addInstance = function(input, instance){
+	acqpa.utils.intltelinput.instances[acqpa.utils.intltelinput.getInputIdentifier(input)] = instance;
+}
+
+acqpa.utils.intltelinput.getInstance = function(input){
+	return acqpa.utils.intltelinput.instances[acqpa.utils.intltelinput.getInputIdentifier(input)];
 }
 
 global.acqpa = acqpa;
