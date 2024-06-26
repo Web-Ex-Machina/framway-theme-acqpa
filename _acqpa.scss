@@ -74,6 +74,9 @@ h1,.h1{text-transform: none;}
 		min-width: 0px;
 		text-align: center;
 	}
+	&[data-name*="actions"]{
+		min-width: 50px;
+	}
 }
 .table-list__cell[data-name*="checkbox"] > .form-group > input[type="checkbox"] + label{
 	padding: 0;
