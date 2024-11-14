@@ -783,21 +783,17 @@ acqpa.utils.registration.checkRegistrationOperatorForm = function checkRegistrat
 		if(!input.valid){
 			switch(input.name){
 				case 'registration[present_at]':
-					var label = modal.find('#registration__present_at');
+					var label = modal.find('#registration__present_at').html().replace(':','').trim();
 				break;
 				case 'registration[exam_options]':
-					var label = modal.find('label[for="registration__exam_options"]');
+					var label = modal.find('label[for="registration__exam_options"]').html().replace(':','').trim();
 				break;
 				case 'registration[exam_options_set]':
-					var label = modal.find('#registration__exam_options_set');
+					var label = modal.find('#registration__exam_options_set').html().replace(':','').trim();
 				break;
 				case 'registration[professional_experiences_options]':
-					var label = modal.find('.registration_professional_experience th[data-name="options"]');
+					var label = modal.find('.registration_professional_experience th[data-name="options"]').html().replace(':','').trim();
 				break;
-
-				// case 'registration[exam_options]':
-				// 	var label = modal.find('th[data-name="options"]');
-				// break;
 				default:
 					var arrMatches = input.name.match(expKeysRegExp);
 					if(null !== arrMatches){
@@ -808,7 +804,7 @@ acqpa.utils.registration.checkRegistrationOperatorForm = function checkRegistrat
 						var label = utils.getInputLabel(input.id,input.name.replace('[]', ''));
 					}
 			}
-			missing[input.name] = "undefined" !== typeof label && input.id !== label ? label.html().replace(' : ','') : input.name;
+			missing[input.name] = "undefined" !== typeof label && input.id !== label ? label : input.name;
 		}
 	}
 
@@ -817,12 +813,16 @@ acqpa.utils.registration.checkRegistrationOperatorForm = function checkRegistrat
 	// additionnal AJAX options to provide :  {contentType: false,processData: false}
 	var arrAttachmentsFields = ["operator[identity_picture]","operator[identity_piece]","operator[cv]","registration[employer_certificate]"];
 	for(var i in arrAttachmentsFields){
-		var inputName=arrAttachmentsFields[i];
+		var input = modal.find('[name="'+arrAttachmentsFields[i]+'"]');
+		// var input = result.inputs[i];
+		// var inputName=arrAttachmentsFields[i];
+		var inputName=input.name;
 		if("undefined" != typeof modal.find('input[data-name="'+inputName+'"]').attr('required')
 		&& 0 === modal.find('input[name="'+inputName+'"]').length
 		){
-			var label = modal.find('label[for="'+modal.find('[name="'+inputName+'"]').attr('id')+'"]');
-			missing[inputName] = "undefined" !== typeof label ? label.html().replace(' : ','') : inputName;
+			// var label = modal.find('label[for="'+modal.find('[name="'+inputName+'"]').attr('id')+'"]');
+			var label = utils.getInputLabel(input.id,input.name.replace('[]', ''));
+			missing[inputName] = "undefined" !== typeof label && input.id !== label ? label : inputName;
 		}
 
 		if(0 !== modal.find('input[name="'+inputName+'"]').length){
@@ -833,16 +833,23 @@ acqpa.utils.registration.checkRegistrationOperatorForm = function checkRegistrat
 	if((1 == objFields['registration[exam_level]'] || 2 == objFields['registration[exam_level]'])
 		&& 0 == objFields['registration[exam_options]'].length
 	){
-			var inputName="registration[exam_options]";
-			var label = modal.find('label[for="'+modal.find('[name="'+inputName+'"]').attr('id')+'"]');
-			missing[inputName] = "undefined" !== typeof label ? label.html().replace(' : ','') : inputName;
+			var input = result.inputs["registration[exam_options]"];
+			var inputName=input.name;
+			// var inputName="registration[exam_options]";
+			// var label = modal.find('label[for="'+modal.find('[name="'+inputName+'"]').attr('id')+'"]');
+			var label = utils.getInputLabel("registration__exam_options",input.name.replace('[]', ''));
+			// var label = modal.find('label[for="registration__exam_options"]');
+			missing[inputName] = "undefined" !== typeof label ? label : inputName;
 	}
 
 	if('renewal' === objFields['registration[exam_type_custom]']){
 		if(0 === objFields['registration[certificate_renewal_source]'].length){
-			var inputName="registration[certificate_renewal_source]";
-			var label = modal.find('label[for="'+modal.find('[name="'+inputName+'"]').attr('id')+'"]');
-			missing[inputName] = "undefined" !== typeof label ? label.html().replace(' : ','') : inputName;
+			var input = result.inputs["registration[certificate_renewal_source]"];
+			var inputName=input.name;
+			// var inputName="registration[certificate_renewal_source]";
+			// var label = modal.find('label[for="'+modal.find('[name="'+inputName+'"]').attr('id')+'"]');
+			var label = utils.getInputLabel(input.id,input.name.replace('[]', ''));
+			missing[inputName] = "undefined" !== typeof label && input.id !== label ? label : inputName;
 		}
 	}
 
@@ -910,9 +917,12 @@ acqpa.utils.registration.checkRegistrationOperatorForm = function checkRegistrat
 		// });
 		isAdult = false;
 	}
-	var inputName="operator[date_of_birth]";
-	var label = modal.find('label[for="'+modal.find('[name="'+inputName+'"]').attr('id')+'"]');
-	var isAdultField = "undefined" !== typeof label ? label.html().replace(' : ','') : inputName;
+	var input = result.inputs["operator[date_of_birth]"];
+	var inputName=input.name;
+	// var inputName="operator[date_of_birth]";
+	// var label = modal.find('label[for="'+modal.find('[name="'+inputName+'"]').attr('id')+'"]');
+	var label = utils.getInputLabel(input.id,input.name.replace('[]', ''));
+	var isAdultField = "undefined" !== typeof label && input.id !== label ? label : inputName;
 
 	result['values'] = objFields;
 	result['missing'] = missing;
@@ -945,7 +955,7 @@ acqpa.utils.registration.showRegistrationOperatorMissingInfos = function showReg
 
 	for(var i in result['missing']){
 		var tdLabel = document.createElement('td');
-		tdLabel.innerHTML = result['missing'][i];
+		tdLabel.innerHTML = result['missing'][i];// + '<br />' + i;
 		var tdText = document.createElement('td');
 		tdText.innerHTML = "Ce champ est obligatoire";
 
@@ -957,7 +967,7 @@ acqpa.utils.registration.showRegistrationOperatorMissingInfos = function showReg
 
 	for(var i in result['incomplete']){
 		var tdLabel = document.createElement('td');
-		tdLabel.innerHTML = result['incomplete'][i];
+		tdLabel.innerHTML = result['incomplete'][i];// + '<br />' + i;
 		var tdText = document.createElement('td');
 		tdText.innerHTML = "Ce champ est incomplet";
 
@@ -982,12 +992,13 @@ acqpa.utils.registration.showRegistrationOperatorMissingInfos = function showReg
 	var fakeDiv = document.createElement('div');
 	fakeDiv.appendChild(table);
 	divMissing.append(fakeDiv.innerHTML);
-	console.log(result);
+
+	$('.registration_modal.accordionFW').accordionFW('get').deployItem($('#registration_draft_informations'));
 }
 
 acqpa.utils.registration.saveRegistrationOperator = function saveRegistrationOperator(modal){
 	var result = acqpa.utils.registration.checkRegistrationOperatorForm(modal);
-	var blnIsDraft = !result.valid;
+	var blnIsValid = result.valid;
 	var objFields = {
 		'REQUEST_TOKEN': rt,
 		'module_type': 'acqpa_registration_edit',
@@ -996,19 +1007,68 @@ acqpa.utils.registration.saveRegistrationOperator = function saveRegistrationOpe
 
 	acqpa.utils.registration.showRegistrationOperatorMissingInfos(modal, result);
 
-	// better check
-	if(blnIsDraft){
-		if(!window.confirm('Une ou plusieurs données sont manquantes. Voulez-vous enregistrer cette inscription en tant que brouillon ?')){
-			return new Promise(function (resolve, reject) {
-				reject('Enregistrement annulé par l\'utilisateur');
-			});
-		}
-
-		objFields['isDraft'] = true;
-	}
 
 	for(var i in result['values']){
 		objFields[i] = result['values'][i];
+	}
+
+	// manually check operator data
+	if(0 === objFields['operator[firstname]'].length){
+		return new Promise(function (resolve, reject) {
+			reject('Veuillez renseigner le prénom de l\'opérateur');
+		});
+	}
+	if(0 === objFields['operator[lastname]'].length){
+		return new Promise(function (resolve, reject) {
+			reject('Veuillez renseigner le nom de l\'opérateur');
+		});
+	}
+	if(0 === objFields['operator[email]'].length){
+		return new Promise(function (resolve, reject) {
+			reject('Veuillez renseigner l\'adresse email de l\'opérateur');
+		});
+	}
+	if(0 === objFields['registration[exam_type]'].length){
+		return new Promise(function (resolve, reject) {
+			reject('Veuillez renseigner le type de certification demandée');
+		});
+	}
+	if(0 === objFields['registration[exam_level]'].length){
+		return new Promise(function (resolve, reject) {
+			reject('Veuillez renseigner le niveau de certification demandée');
+		});
+	}
+	if(0 !== $('input[name="operator[identity_picture]"]').length){
+		objFields['operator[identity_picture]'] = $('input[name="operator[identity_picture]"]')[0].value;
+	}
+
+	if(0 !== $('input[name="operator[identity_piece]"]').length){
+		objFields['operator[identity_piece]'] = $('input[name="operator[identity_piece]"]')[0].value;
+	}
+
+	if(0 !== $('input[name="operator[cv]"]').length){
+		objFields['operator[cv]'] = $('input[name="operator[cv]"]')[0].value;
+	}
+
+	if(0 !== $('input[name="registration[employer_certificate]"]').length){
+		objFields['registration[employer_certificate]'] = $('input[name="registration[employer_certificate]"]')[0].value;
+	}
+
+	// better check
+	if(!blnIsValid){
+		if('draft' === $('input[name="registration[start_status]"]').val() || '' === $('input[name="registration[start_status]"]').val()){
+			if(!window.confirm('Une ou plusieurs données sont manquantes. Voulez-vous enregistrer cette inscription en tant que brouillon ?')){
+				return new Promise(function (resolve, reject) {
+					reject('Enregistrement annulé par l\'utilisateur');
+				});
+			}
+		}else{
+				return new Promise(function (resolve, reject) {
+					reject('Des données sont manquantes, et cette inscription ne peut pas redevenir un brouillon');
+				});
+		}
+
+		objFields['registration[isDraft]'] = true;
 	}
 
 	return new Promise(function (resolve, reject) {
@@ -1346,6 +1406,16 @@ acqpa.utils.registration.saveRegistrationOperatorAsDraft = function saveRegistra
 	if(0 === objFields['operator[email]'].length){
 		return new Promise(function (resolve, reject) {
 			reject('Veuillez renseigner l\'adresse email de l\'opérateur');
+		});
+	}
+	if(0 === objFields['registration[exam_type]'].length){
+		return new Promise(function (resolve, reject) {
+			reject('Veuillez renseigner le type de certification demandée');
+		});
+	}
+	if(0 === objFields['registration[exam_level]'].length){
+		return new Promise(function (resolve, reject) {
+			reject('Veuillez renseigner le niveau de certification demandée');
 		});
 	}
 
