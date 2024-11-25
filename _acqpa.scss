@@ -122,3 +122,7 @@ body.exam #container{transform: translateZ(0px);}
 .iti__override{
 	display:block !important;
 }
+
+td > div.input-number__container{
+	margin-bottom: 0;
+}
