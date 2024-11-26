@@ -167,7 +167,7 @@ $(function(){
     button.closest('.table-list__line').addClass('loading');
     
     if (action.indexOf('delete') != -1) {
-      blnRequest = confirm('Voulez vous vraiment supprimer ceci ?');
+      blnRequest = confirm(acqpaLocal.translations.confirm_delete);
     }else if('undefined' !== typeof button.data('confirm')){
       blnRequest = confirm(button.data('confirm'));
     }
@@ -220,8 +220,8 @@ $(function(){
 		// });
 	});
 });
-
-var acqpa = {};
+console.log(acqpaLocal);
+var acqpa = acqpa || {};
 acqpa.utils = {};
 acqpa.utils.callbacks = {};
 acqpa.utils.registration = {};
@@ -284,7 +284,8 @@ acqpa.utils.registration.saveStep = function saveStep(step){
 	var form = utils.checkForm(step);
 	if(!form.valid){
 		return new Promise(function (resolve, reject) {
-			reject('Veuillez remplir le formulaire');
+			// reject(acqpaLocal.translations.please_fill_form);
+			reject(acqpaLocal.translations.please_fill_form);
 		});
 	}
 	var objFields = {
@@ -798,7 +799,7 @@ acqpa.utils.registration.checkRegistrationOperatorForm = function checkRegistrat
 					var arrMatches = input.name.match(expKeysRegExp);
 					if(null !== arrMatches){
 						var field = arrMatches[2];
-						var label = modal.find('.registration_professional_experience th[data-name="'+field+'"]');
+						var label = modal.find('.registration_professional_experience th[data-name="'+field+'"]').html().replace(':','').trim();
 					}else{
 						// var label = modal.find('label[for="'+modal.find('[name="'+input.name+'"]').attr('id')+'"]');
 						var label = utils.getInputLabel(input.id,input.name.replace('[]', ''));
@@ -891,7 +892,8 @@ acqpa.utils.registration.checkRegistrationOperatorForm = function checkRegistrat
 		}
 
 		if(optionsMissing.length > 0){
-			if(!confirm('Les options "'+optionsMissing.join()+'" ne sont pas couvertes par vos expériences professionnelles. Voulez-vous continuer ?')){
+			// if(!confirm('Les options "'+optionsMissing.join()+'" ne sont pas couvertes par vos expériences professionnelles. Voulez-vous continuer ?')){
+			if(!confirm(acqpaLocal.translations.missingOptionsConfirm(optionsMissing.join()))){
 			// 	return new Promise(function (resolve, reject) {
 			// 		reject('Enregistrement annulé par l\'utilisateur');
 			// 	});
@@ -956,8 +958,9 @@ acqpa.utils.registration.showRegistrationOperatorMissingInfos = function showReg
 	for(var i in result['missing']){
 		var tdLabel = document.createElement('td');
 		tdLabel.innerHTML = result['missing'][i];// + '<br />' + i;
+		console.log(result['missing'][i]);
 		var tdText = document.createElement('td');
-		tdText.innerHTML = "Ce champ est obligatoire";
+		tdText.innerHTML = acqpaLocal.translations.field_mandatory;
 
 		var tr = document.createElement('tr');
 		tr.appendChild(tdLabel);
@@ -969,7 +972,7 @@ acqpa.utils.registration.showRegistrationOperatorMissingInfos = function showReg
 		var tdLabel = document.createElement('td');
 		tdLabel.innerHTML = result['incomplete'][i];// + '<br />' + i;
 		var tdText = document.createElement('td');
-		tdText.innerHTML = "Ce champ est incomplet";
+		tdText.innerHTML = acqpaLocal.translations.field_incomplete;
 
 		var tr = document.createElement('tr');
 		tr.appendChild(tdLabel);
@@ -981,7 +984,7 @@ acqpa.utils.registration.showRegistrationOperatorMissingInfos = function showReg
 		var tdLabel = document.createElement('td');
 		tdLabel.innerHTML = result['isAdultField'][i];
 		var tdText = document.createElement('td');
-		tdText.innerHTML = "Ce champ est incomplet";
+		tdText.innerHTML = acqpaLocal.translations.field_incomplete;
 
 		var tr = document.createElement('tr');
 		tr.appendChild(tdLabel);
@@ -1015,27 +1018,27 @@ acqpa.utils.registration.saveRegistrationOperator = function saveRegistrationOpe
 	// manually check operator data
 	if(0 === objFields['operator[firstname]'].length){
 		return new Promise(function (resolve, reject) {
-			reject('Veuillez renseigner le prénom de l\'opérateur');
+			reject(acqpaLocal.translations.please_fill_operator_firstname);
 		});
 	}
 	if(0 === objFields['operator[lastname]'].length){
 		return new Promise(function (resolve, reject) {
-			reject('Veuillez renseigner le nom de l\'opérateur');
+			reject(acqpaLocal.translations.please_fill_operator_lastname);
 		});
 	}
 	if(0 === objFields['operator[email]'].length){
 		return new Promise(function (resolve, reject) {
-			reject('Veuillez renseigner l\'adresse email de l\'opérateur');
+			reject(acqpaLocal.translations.please_fill_operator_email);
 		});
 	}
 	if(0 === objFields['registration[exam_type]'].length){
 		return new Promise(function (resolve, reject) {
-			reject('Veuillez renseigner le type de certification demandée');
+			reject(acqpaLocal.translations.please_fill_exam_type);
 		});
 	}
 	if(0 === objFields['registration[exam_level]'].length){
 		return new Promise(function (resolve, reject) {
-			reject('Veuillez renseigner le niveau de certification demandée');
+			reject(acqpaLocal.translations.please_fill_exam_level);
 		});
 	}
 	if(0 !== $('input[name="operator[identity_picture]"]').length){
@@ -1057,14 +1060,14 @@ acqpa.utils.registration.saveRegistrationOperator = function saveRegistrationOpe
 	// better check
 	if(!blnIsValid){
 		if('draft' === $('input[name="registration[start_status]"]').val() || '' === $('input[name="registration[start_status]"]').val()){
-			if(!window.confirm('Une ou plusieurs données sont manquantes. Voulez-vous enregistrer cette inscription en tant que brouillon ?')){
+			if(!window.confirm(acqpaLocal.translations.registration_draft_confirm)){
 				return new Promise(function (resolve, reject) {
-					reject('Enregistrement annulé par l\'utilisateur');
+					reject(acqpaLocal.translations.registration_save_canceled_user);
 				});
 			}
 		}else{
 				return new Promise(function (resolve, reject) {
-					reject('Des données sont manquantes, et cette inscription ne peut pas redevenir un brouillon');
+					reject(acqpaLocal.translations.registration_save_data_missing_can_t_be_draft_again);
 				});
 		}
 
@@ -1091,7 +1094,7 @@ acqpa.utils.registration.saveRegistrationOperator_old = function saveRegistratio
 	console.log(acqpa.utils.registration.checkRegistrationOperatorForm(modal));
 	if(!form.valid){
 		return new Promise(function (resolve, reject) {
-			reject('Veuillez remplir le formulaire');
+			reject(acqpaLocal.translations.please_fill_form);
 		});
 	}
 	var objFields = {
@@ -1122,7 +1125,7 @@ acqpa.utils.registration.saveRegistrationOperator_old = function saveRegistratio
 	&& 0 === $('input[name="operator[identity_picture]"]').length
 	){
 		return new Promise(function (resolve, reject) {
-			reject('La photo d\'identité n\'a pas été fournie');
+			reject(acqpaLocal.translations.please_fill_operator_identity_picture);
 		});
 	}
 	if(0 !== $('input[name="operator[identity_picture]"]').length){
@@ -1133,7 +1136,7 @@ acqpa.utils.registration.saveRegistrationOperator_old = function saveRegistratio
 	&& 0 === $('input[name="operator[identity_piece]"]').length
 	){
 		return new Promise(function (resolve, reject) {
-			reject('La pièce d\'identité n\'a pas été fournie');
+			reject(acqpaLocal.translations.please_fill_operator_identity_piece);
 		});
 	}
 	if(0 !== $('input[name="operator[identity_piece]"]').length){
@@ -1144,7 +1147,7 @@ acqpa.utils.registration.saveRegistrationOperator_old = function saveRegistratio
 	&& 0 === $('input[name="operator[cv]"]').length
 	){
 		return new Promise(function (resolve, reject) {
-			reject('Le CV n\'a pas été fourni');
+			reject(acqpaLocal.translations.please_fill_operator_cv);
 		});
 	}
 	if(0 !== $('input[name="operator[cv]"]').length){
@@ -1155,7 +1158,7 @@ acqpa.utils.registration.saveRegistrationOperator_old = function saveRegistratio
 	&& 0 === $('input[name="registration[employer_certificate]"]').length
 	){
 		return new Promise(function (resolve, reject) {
-			reject('Le certificat employeur n\'a pas été fourni');
+			reject(acqpaLocal.translations.please_fill_registration_employer_certificate);
 		});
 	}
 	if(0 !== $('input[name="registration[employer_certificate]"]').length){
@@ -1166,14 +1169,14 @@ acqpa.utils.registration.saveRegistrationOperator_old = function saveRegistratio
 		&& 0 == objFields['registration[exam_options]'].length
 	){
 		return new Promise(function (resolve, reject) {
-			reject('Veuillez sélectionner au moins une option');
+			reject(acqpaLocal.translations.please_fill_registration_exam_option);
 		});
 	}
 
 	if('renewal' === objFields['registration[exam_type_custom]']){
 		if(0 === objFields['registration[certificate_renewal_source]'].length){
 			return new Promise(function (resolve, reject) {
-				reject('Veuillez sélectionner un certificat à renouveler');
+				reject(acqpaLocal.translations.please_fill_registration_certificate_to_renew);
 			});
 		}
 	}
@@ -1196,7 +1199,7 @@ acqpa.utils.registration.saveRegistrationOperator_old = function saveRegistratio
 
 	if(needExp && 0 == nbExp){
 		return new Promise(function (resolve, reject) {
-			reject('Veuillez renseigner au moins une expérience professionnelle');
+			reject(acqpaLocal.translations.please_fill_registration_prof_xp);
 		});
 	}
 
@@ -1215,9 +1218,10 @@ acqpa.utils.registration.saveRegistrationOperator_old = function saveRegistratio
 		}
 
 		if(optionsMissing.length > 0){
-			if(!confirm('Les options "'+optionsMissing.join()+'" ne sont pas couvertes par vos expériences professionnelles. Voulez-vous continuer ?')){
+			// if(!confirm('Les options "'+optionsMissing.join()+'" ne sont pas couvertes par vos expériences professionnelles. Voulez-vous continuer ?')){
+			if(!confirm(acqpaLocal.translations.missingOptionsConfirm(optionsMissing.join()))){
 				return new Promise(function (resolve, reject) {
-					reject('Enregistrement annulé par l\'utilisateur');
+					reject(acqpaLocal.translations.registration_save_canceled_user);
 				});
 			}
 		}
@@ -1235,7 +1239,7 @@ acqpa.utils.registration.saveRegistrationOperator_old = function saveRegistratio
 	).getTime();
 	if(birthDate > eighteenYearsFromNowDate){
 		return new Promise(function (resolve, reject) {
-			reject('L \'opérateur doit être majeur pour être inscrit.');
+			reject(acqpaLocal.translations.registration_operator_must_be_18);
 		});
 	}
 
@@ -1254,201 +1258,105 @@ acqpa.utils.registration.saveRegistrationOperator_old = function saveRegistratio
 	});
 }
 
-acqpa.utils.registration.saveRegistrationOperatorAsDraft = function saveRegistrationOperatorAsDraft(modal){
-	var form = utils.checkForm(modal,false);
-	// if(!form.valid){
-	// 	return new Promise(function (resolve, reject) {
-	// 		reject('Veuillez remplir le formulaire');
-	// 	});
-	// }
-	var objFields = {
-		'REQUEST_TOKEN': rt,
-		'module_type': 'acqpa_registration_edit',
-		'action': 'saveRegistrationOperator',
-	};
-	objFields['registration[isDraft]'] = true;
+// acqpa.utils.registration.saveRegistrationOperatorAsDraft = function saveRegistrationOperatorAsDraft(modal){
+// 	var form = utils.checkForm(modal,false);
 
-	var data = {};
-	var expKeys = [];
-	const expKeysRegExp = /registration\[professional_experiences\]\[(.*)\]\[(.*)\]/;
+// 	var objFields = {
+// 		'REQUEST_TOKEN': rt,
+// 		'module_type': 'acqpa_registration_edit',
+// 		'action': 'saveRegistrationOperator',
+// 	};
+// 	objFields['registration[isDraft]'] = true;
 
-	for (var i in form.inputs) {
-		objFields[form.inputs[i].name] = form.inputs[i].value;
-		if(form.inputs[i].name.indexOf('registration[professional_experiences]') > -1){
-			var found = form.inputs[i].name.match(expKeysRegExp);
-			if(found && "x_x_x" != found[1] && -1 == expKeys.indexOf(found[1])){
-				expKeys.push(found[1]);
-			}
-		}else if("tel" === form.inputs[i].type){
-      objFields[form.inputs[i].name] = acqpa.utils.intltelinput.getInstance(form.inputs[i]).getNumber();
-    }
-	}
+// 	var data = {};
+// 	var expKeys = [];
+// 	const expKeysRegExp = /registration\[professional_experiences\]\[(.*)\]\[(.*)\]/;
 
-	// retrieve uploaded files if any
-	// and add them to objFields
-	// additionnal AJAX options to provide :  {contentType: false,processData: false}
-	// if("undefined" != typeof $('input[data-name="operator[identity_picture]"]').attr('required')
-	// && 0 === $('input[name="operator[identity_picture]"]').length
-	// ){
-	// 	return new Promise(function (resolve, reject) {
-	// 		reject('La photo d\'identité n\'a pas été fournie');
-	// 	});
-	// }
-	if(0 !== $('input[name="operator[identity_picture]"]').length){
-		objFields['operator[identity_picture]'] = $('input[name="operator[identity_picture]"]')[0].value;
-	}
+// 	for (var i in form.inputs) {
+// 		objFields[form.inputs[i].name] = form.inputs[i].value;
+// 		if(form.inputs[i].name.indexOf('registration[professional_experiences]') > -1){
+// 			var found = form.inputs[i].name.match(expKeysRegExp);
+// 			if(found && "x_x_x" != found[1] && -1 == expKeys.indexOf(found[1])){
+// 				expKeys.push(found[1]);
+// 			}
+// 		}else if("tel" === form.inputs[i].type){
+//       objFields[form.inputs[i].name] = acqpa.utils.intltelinput.getInstance(form.inputs[i]).getNumber();
+//     }
+// 	}
 
-	// if("undefined" != typeof $('input[data-name="operator[identity_piece]"]').attr('required')
-	// && 0 === $('input[name="operator[identity_piece]"]').length
-	// ){
-	// 	return new Promise(function (resolve, reject) {
-	// 		reject('La pièce d\'identité n\'a pas été fournie');
-	// 	});
-	// }
-	if(0 !== $('input[name="operator[identity_piece]"]').length){
-		objFields['operator[identity_piece]'] = $('input[name="operator[identity_piece]"]')[0].value;
-	}
+// 	if(0 !== $('input[name="operator[identity_picture]"]').length){
+// 		objFields['operator[identity_picture]'] = $('input[name="operator[identity_picture]"]')[0].value;
+// 	}
 
-	// if("undefined" != typeof $('input[data-name="operator[cv]"]').attr('required')
-	// && 0 === $('input[name="operator[cv]"]').length
-	// ){
-	// 	return new Promise(function (resolve, reject) {
-	// 		reject('Le CV n\'a pas été fourni');
-	// 	});
-	// }
-	if(0 !== $('input[name="operator[cv]"]').length){
-		objFields['operator[cv]'] = $('input[name="operator[cv]"]')[0].value;
-	}
+// 	if(0 !== $('input[name="operator[identity_piece]"]').length){
+// 		objFields['operator[identity_piece]'] = $('input[name="operator[identity_piece]"]')[0].value;
+// 	}
 
-	// if("undefined" != typeof $('input[data-name="registration[employer_certificate]"]').attr('required')
-	// && 0 === $('input[name="registration[employer_certificate]"]').length
-	// ){
-	// 	return new Promise(function (resolve, reject) {
-	// 		reject('Le certificat employeur n\'a pas été fourni');
-	// 	});
-	// }
-	if(0 !== $('input[name="registration[employer_certificate]"]').length){
-		objFields['registration[employer_certificate]'] = $('input[name="registration[employer_certificate]"]')[0].value;
-	}
+// 	if(0 !== $('input[name="operator[cv]"]').length){
+// 		objFields['operator[cv]'] = $('input[name="operator[cv]"]')[0].value;
+// 	}
 
-	// if((1 == objFields['registration[exam_level]'] || 2 == objFields['registration[exam_level]'])
-	// 	&& 0 == objFields['registration[exam_options]'].length
-	// ){
-	// 	return new Promise(function (resolve, reject) {
-	// 		reject('Veuillez sélectionner au moins une option');
-	// 	});
-	// }
+// 	if(0 !== $('input[name="registration[employer_certificate]"]').length){
+// 		objFields['registration[employer_certificate]'] = $('input[name="registration[employer_certificate]"]')[0].value;
+// 	}
 
-	// if('renewal' === objFields['registration[exam_type_custom]']){
-	// 	if(0 === objFields['registration[certificate_renewal_source]'].length){
-	// 		return new Promise(function (resolve, reject) {
-	// 			reject('Veuillez sélectionner un certificat à renouveler');
-	// 		});
-	// 	}
-	// }
+// 	// manually check operator data
+// 	if(0 === objFields['operator[firstname]'].length){
+// 		return new Promise(function (resolve, reject) {
+// 			reject('Veuillez renseigner le prénom de l\'opérateur');
+// 		});
+// 	}
+// 	if(0 === objFields['operator[lastname]'].length){
+// 		return new Promise(function (resolve, reject) {
+// 			reject('Veuillez renseigner le nom de l\'opérateur');
+// 		});
+// 	}
+// 	if(0 === objFields['operator[email]'].length){
+// 		return new Promise(function (resolve, reject) {
+// 			reject('Veuillez renseigner l\'adresse email de l\'opérateur');
+// 		});
+// 	}
+// 	if(0 === objFields['registration[exam_type]'].length){
+// 		return new Promise(function (resolve, reject) {
+// 			reject('Veuillez renseigner le type de certification demandée');
+// 		});
+// 	}
+// 	if(0 === objFields['registration[exam_level]'].length){
+// 		return new Promise(function (resolve, reject) {
+// 			reject('Veuillez renseigner le niveau de certification demandée');
+// 		});
+// 	}
 
-	// // if professional exp are present, check options
-	// var needExp = 0 != objFields['registration[exam_cycle]'];
-	// var nbExp = 0;
-	// if($('.registration_professional_experience')){
-	// 	var expOptions = [];
-	// 	for(var i = 0; i < expKeys.length; i++){
-	// 		var key = expKeys[i];
-	// 		if(objFields['registration[professional_experiences]['+key+'][reference]']){
-	// 			expOptions = expOptions.concat(objFields['registration[professional_experiences]['+key+'][options]']);
-	// 			nbExp++;
-	// 		}else{
-	// 			break;
-	// 		}
-	// 	}
-	// }
+// 	// operator must be 18+
+// 	var birthDate = new Date(objFields['operator[date_of_birth]']).getTime(); // Y-m-d format to timestamp
+// 	var currentDate = new Date();
+// 	var eighteenYearsFromNowDate = new Date(
+// 		(currentDate.getFullYear()-18)
+// 		+'-'
+// 		+(currentDate.getMonth() < 10 ? '0'+currentDate.getMonth() : currentDate.getMonth())
+// 		+'-'
+// 		+(currentDate.getDate() < 10 ? '0'+currentDate.getDate() : currentDate.getDate())
+// 	).getTime();
+// 	if(birthDate > eighteenYearsFromNowDate){
+// 		return new Promise(function (resolve, reject) {
+// 			reject('L \'opérateur doit être majeur pour être inscrit.');
+// 		});
+// 	}
 
-	// if(needExp && 0 == nbExp){
-	// 	return new Promise(function (resolve, reject) {
-	// 		reject('Veuillez renseigner au moins une expérience professionnelle');
-	// 	});
-	// }
-
-	// if(nbExp > 0){
-	// 	//now we have exam_options ids to put against ... expOptions letters ...
-	// 	var optionsMissing = [];
-	// 	for(var i in objFields['registration[exam_options]']){
-	// 		var $input = $('[name="registration[exam_options]"][value="'+objFields['registration[exam_options]'][i]+'"]');
-	// 		if(!$input){
-	// 			continue;
-	// 		}
-	// 		var letter = $input.data('letter');
-	// 		if(-1 == expOptions.indexOf(letter)){
-	// 			optionsMissing.push(letter);
-	// 		}
-	// 	}
-
-	// 	if(optionsMissing.length > 0){
-	// 		if(!confirm('Les options "'+optionsMissing.join()+'" ne sont pas couvertes par vos expériences professionnelles. Voulez-vous continuer ?')){
-	// 			return new Promise(function (resolve, reject) {
-	// 				reject('Enregistrement annulé par l\'utilisateur');
-	// 			});
-	// 		}
-	// 	}
-	// }
-
-	// manually check operator data
-	if(0 === objFields['operator[firstname]'].length){
-		return new Promise(function (resolve, reject) {
-			reject('Veuillez renseigner le prénom de l\'opérateur');
-		});
-	}
-	if(0 === objFields['operator[lastname]'].length){
-		return new Promise(function (resolve, reject) {
-			reject('Veuillez renseigner le nom de l\'opérateur');
-		});
-	}
-	if(0 === objFields['operator[email]'].length){
-		return new Promise(function (resolve, reject) {
-			reject('Veuillez renseigner l\'adresse email de l\'opérateur');
-		});
-	}
-	if(0 === objFields['registration[exam_type]'].length){
-		return new Promise(function (resolve, reject) {
-			reject('Veuillez renseigner le type de certification demandée');
-		});
-	}
-	if(0 === objFields['registration[exam_level]'].length){
-		return new Promise(function (resolve, reject) {
-			reject('Veuillez renseigner le niveau de certification demandée');
-		});
-	}
-
-	// operator must be 18+
-	var birthDate = new Date(objFields['operator[date_of_birth]']).getTime(); // Y-m-d format to timestamp
-	var currentDate = new Date();
-	var eighteenYearsFromNowDate = new Date(
-		(currentDate.getFullYear()-18)
-		+'-'
-		+(currentDate.getMonth() < 10 ? '0'+currentDate.getMonth() : currentDate.getMonth())
-		+'-'
-		+(currentDate.getDate() < 10 ? '0'+currentDate.getDate() : currentDate.getDate())
-	).getTime();
-	if(birthDate > eighteenYearsFromNowDate){
-		return new Promise(function (resolve, reject) {
-			reject('L \'opérateur doit être majeur pour être inscrit.');
-		});
-	}
-
-	return new Promise(function (resolve, reject) {
-		acqpa.utils.postData(objFields)
-		.then(r => {
-			if("error" == r.status) {
-				reject(r);
-			} else {
-				resolve(r);
-			}
-		})
-	  .catch(err => {
-	    reject(err);
-	  });
-	});
-}
+// 	return new Promise(function (resolve, reject) {
+// 		acqpa.utils.postData(objFields)
+// 		.then(r => {
+// 			if("error" == r.status) {
+// 				reject(r);
+// 			} else {
+// 				resolve(r);
+// 			}
+// 		})
+// 	  .catch(err => {
+// 	    reject(err);
+// 	  });
+// 	});
+// }
 
 acqpa.utils.registration.validateRegistration = function validateRegistration(modal){
 	var objFields = {
@@ -1546,7 +1454,7 @@ acqpa.utils.session.saveExamSessionTranslator = function saveExamSessionTranslat
 	var form = utils.checkForm(modal);
 	if(!form.valid){
 		return new Promise(function (resolve, reject) {
-			reject('Veuillez remplir le formulaire');
+			reject(acqpaLocal.translations.please_fill_form);
 		});
 	}
 	var objFields = {
@@ -1625,7 +1533,7 @@ acqpa.utils.session.saveExamSessionExaminer = function saveExamSessionExaminer(m
 	var form = utils.checkForm(modal);
 	if(!form.valid){
 		return new Promise(function (resolve, reject) {
-			reject('Veuillez remplir le formulaire');
+			reject(acqpaLocal.translations.please_fill_form);
 		});
 	}
 	var objFields = {
