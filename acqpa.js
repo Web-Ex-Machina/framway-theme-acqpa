@@ -1561,6 +1561,54 @@ acqpa.utils.session.saveExamSessionExaminer = function saveExamSessionExaminer(m
 	  });
 	});
 }
+
+acqpa.utils.session.refreshSessionDocuments = function refreshSessionDocuments(){
+	$('.documents .table-list__line').remove();
+
+	acqpa.utils.session.getSessionDocuments()
+	.then(r => {
+		if("error" == r.status) {
+			notif_fade.error(r.msg);
+		} else {
+			if(r.msg){
+				notif_fade.success(r.msg);
+			}
+			$('.documents .table-list__container').append(r.html);
+			if(0 == r.html.length){
+				$('.documents .no-item__container').removeClass('hidden');
+				$('.documents .table-list__headline').addClass('hidden');
+			}else{
+				$('.documents .no-item__container').addClass('hidden');
+				$('.documents .table-list__headline').removeClass('hidden');
+			}
+			window.dispatchEvent(new Event('resize'));
+		}
+	})
+  .catch(err => {
+    notif_fade.error(err);
+  });
+}
+acqpa.utils.session.getSessionDocuments = function getSessionDocuments(){
+	var objFields = {
+		'REQUEST_TOKEN': rt,
+		'module_type': 'acqpa_exam_session_edit',
+		'action': 'getDocuments',
+	};
+
+	return new Promise(function (resolve, reject) {
+		acqpa.utils.postData(objFields)
+		.then(r => {
+			if("error" == r.status) {
+				reject(r.msg);
+			} else {
+				resolve(r);
+			}
+		})
+    .catch(err => {
+        reject(err);
+    });
+	});
+}
 acqpa.utils.session.refreshSessionOperators = function refreshSessionOperators(){
 	$('.operators .table-list__line').remove();
 
@@ -2133,6 +2181,9 @@ acqpa.utils.callbacks.refreshSessionTranslators = function refreshSessionTransla
 acqpa.utils.callbacks.refreshSessionExaminers = function refreshSessionExaminers() {
 	acqpa.utils.session.refreshSessionExaminers();
 }
+acqpa.utils.callbacks.refreshSessionDocuments = function refreshSessionDocuments() {
+	acqpa.utils.session.refreshSessionDocuments();
+}
 acqpa.utils.callbacks.refreshSessionTranslatorsMissingLanguages = function refreshSessionTranslatorsMissingLanguages() {
 	acqpa.utils.session.refreshSessionTranslatorsMissingLanguages();
 }
@@ -2186,6 +2237,23 @@ acqpa.utils.callbacks.openSessionExaminerModal = function openSessionExaminerMod
 		},
 		onClose: () => {
 			acqpa.utils.session.refreshSessionExaminers();
+			modal.destroy();
+		},
+	});
+	modal.open();
+}
+
+acqpa.utils.callbacks.openSessionDocumentModal = function openSessionDocumentModal(args) {
+	var modal = new app.ModalFW({
+		name: args.name,
+		content: args.content,
+		width: args.width,
+		title: args.title ?? '',
+		onOpen: () => {
+			// $('.registration_exam_level').trigger('change');
+		},
+		onClose: () => {
+			acqpa.utils.session.refreshSessionDocuments();
 			modal.destroy();
 		},
 	});
