@@ -206,6 +206,10 @@ $(function(){
 					}
 				}
 				button.closest('.table-list__line').removeClass('loading');
+      })
+      .catch(function(err){
+      	notif_fade['error'](acqpaLocal.translations.technicalError);
+				button.closest('.table-list__line').removeClass('loading');
       });
     } else {
       button.closest('.table-list__line').removeClass('loading');
