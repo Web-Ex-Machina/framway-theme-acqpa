@@ -2257,7 +2257,11 @@ acqpa.utils.callbacks.openSessionDocumentModal = function openSessionDocumentMod
 			// $('.registration_exam_level').trigger('change');
 		},
 		onClose: () => {
-			acqpa.utils.session.refreshSessionDocuments();
+			if(args.onclose){
+				var callback = new Function (args.onclose);
+				callback();
+			}
+
 			modal.destroy();
 		},
 	});
