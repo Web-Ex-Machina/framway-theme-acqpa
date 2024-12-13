@@ -224,7 +224,6 @@ $(function(){
 		// });
 	});
 });
-console.log(acqpaLocal);
 var acqpa = acqpa || {};
 acqpa.utils = {};
 acqpa.utils.callbacks = {};
