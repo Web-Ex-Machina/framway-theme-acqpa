@@ -463,7 +463,7 @@ acqpa.utils.registration.getRegistrationOperatorValidCertificatesByLevelAndOptio
 }
 
 
-acqpa.utils.registration.refreshRegistrationOperatorExamSessionByLevelAndOptions = function refreshRegistrationOperatorExamSessionByLevelAndOptions(level, options, previouslySelectedSession){
+acqpa.utils.registration.refreshRegistrationOperatorExamSessionByLevelAndOptionsAndCycle = function refreshRegistrationOperatorExamSessionByLevelAndOptionsAndCycle(level, options, cycle, previouslySelectedSession){
 	$('select.registration_session option').remove();
 	$('select.registration_session').parent().hide();
 	$('.registration_session_no_sessions').hide();
@@ -476,7 +476,7 @@ acqpa.utils.registration.refreshRegistrationOperatorExamSessionByLevelAndOptions
 		return;
 	}
 
-	acqpa.utils.registration.getRegistrationOperatorExamSessionByLevelAndOptions(level, options, previouslySelectedSession)
+	acqpa.utils.registration.getRegistrationOperatorExamSessionByLevelAndOptionsAndCycle(level, options, cycle, previouslySelectedSession)
 	.then(r => {
 		if("error" == r.status) {
 			notif_fade.error(r.msg);
@@ -501,13 +501,14 @@ acqpa.utils.registration.refreshRegistrationOperatorExamSessionByLevelAndOptions
   });
 }
 
-acqpa.utils.registration.getRegistrationOperatorExamSessionByLevelAndOptions = function getRegistrationOperatorExamSessionByLevelAndOptions(level, options, previouslySelectedSession){
+acqpa.utils.registration.getRegistrationOperatorExamSessionByLevelAndOptionsAndCycle = function getRegistrationOperatorExamSessionByLevelAndOptionsAndCycle(level, options, cycle, previouslySelectedSession){
 	var objFields = {
 		'REQUEST_TOKEN': rt,
 		'module_type': 'acqpa_registration_edit',
 		'action': 'getExamSessionByLevelAndOptions',
 		'level': level,
 		'options': options,
+		'cycle': cycle,
 		'previouslySelectedSession': previouslySelectedSession,
 	};
 
