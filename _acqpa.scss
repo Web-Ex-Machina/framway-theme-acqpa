@@ -1,9 +1,13 @@
 :root{
 	--bs-gutter-x: #{$spacing};
 }
-
+// Override ModalFW
 .modalFW--headerSticky .modalFW__header{
 	z-index:1;
+}
+// Override fileUploader
+.fileUploader__preview{
+	max-width: 300px;
 }
 
 h1,.h1{text-transform: none;}
