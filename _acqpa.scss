@@ -2,6 +2,10 @@
 	--bs-gutter-x: #{$spacing};
 }
 
+.modalFW--headerSticky .modalFW__header{
+	z-index:1;
+}
+
 h1,.h1{text-transform: none;}
 
 .d-grid{gap: 1em;

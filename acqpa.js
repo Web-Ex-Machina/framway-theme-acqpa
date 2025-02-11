@@ -2137,6 +2137,9 @@ acqpa.utils.callbacks.openUrlInNewTab = function openUrlInNewTab(url) {
 
 acqpa.utils.callbacks.openModal = function openModal(args) {
 	let obj = {onClose: ()=>{modal.destroy();}};
+	if("undefined" === typeof args.headerSticky){
+		args.headerSticky = true;
+	}
 	var modal = new app.ModalFW({...args,...obj});
 	modal.open();
 }
@@ -2146,6 +2149,7 @@ acqpa.utils.callbacks.openRegistrationOperatorModal = function openRegistrationO
 		content: args.content,
 		width: args.width,
 		blnDismiss: args.dismiss,
+		headerSticky:true,
 		onOpen: () => {
 			$('.registration_exam_level').first().trigger('change');
 			// Useful only if the first option isn't "New operator" anymore
@@ -2219,6 +2223,7 @@ acqpa.utils.callbacks.openSessionTranslatorModal = function openSessionTranslato
 		content: args.content,
 		width: args.width,
 		title: args.title ?? '',
+		headerSticky:true,
 		onOpen: () => {
 			// $('.registration_exam_level').trigger('change');
 		},
@@ -2236,6 +2241,7 @@ acqpa.utils.callbacks.openSessionExaminerModal = function openSessionExaminerMod
 		content: args.content,
 		width: args.width,
 		title: args.title ?? '',
+		headerSticky:true,
 		onOpen: () => {
 			// $('.registration_exam_level').trigger('change');
 		},
@@ -2253,6 +2259,7 @@ acqpa.utils.callbacks.openSessionDocumentModal = function openSessionDocumentMod
 		content: args.content,
 		width: args.width,
 		title: args.title ?? '',
+		headerSticky:true,
 		onOpen: () => {
 			// $('.registration_exam_level').trigger('change');
 		},
@@ -2274,6 +2281,7 @@ acqpa.utils.callbacks.openSendDocumentsModal = function openSendDocumentsModal(a
 		content: args.content,
 		width: args.width,
 		title: args.title ?? '',
+		headerSticky:true,
 		onOpen: () => {
 			// $('.registration_exam_level').trigger('change');
 		},
@@ -2291,6 +2299,7 @@ acqpa.utils.callbacks.openOperatorCompanyModal = function openOperatorCompanyMod
 		content: args.content,
 		width: args.width,
 		title: args.title ?? '',
+		headerSticky:true,
 		onOpen: () => {
 			$(window).resize();
 		},
@@ -2307,6 +2316,7 @@ acqpa.utils.callbacks.openOperatorDeduplicationModal = function openOperatorDedu
 		content: args.content,
 		width: args.width,
 		title: args.title ?? '',
+		headerSticky:true,
 		onOpen: () => {
 			$(window).resize();
 		},
@@ -2323,6 +2333,7 @@ acqpa.utils.callbacks.openCancelExamSessionOperatorModal = function openCancelEx
 		content: args.content,
 		width: args.width,
 		title: args.title ?? '',
+		headerSticky:true,
 		onOpen: () => {
 			$(window).resize();
 		},
@@ -2339,6 +2350,7 @@ acqpa.utils.callbacks.openRevokeCertificateModal = function openRevokeCertificat
 		content: args.content,
 		width: args.width,
 		title: args.title ?? '',
+		headerSticky:true,
 		onOpen: () => {
 			$(window).resize();
 		},
@@ -2355,6 +2367,7 @@ acqpa.utils.callbacks.openSendCertificateModal = function openSendCertificateMod
 		content: args.content,
 		width: args.width,
 		title: args.title ?? '',
+		headerSticky:true,
 		onOpen: () => {
 			$(window).resize();
 		},
@@ -2371,6 +2384,7 @@ acqpa.utils.callbacks.openExamSessionOperatorDetailModal = function openExamSess
 		content: args.content,
 		width: args.width,
 		title: args.title ?? '',
+		headerSticky:true,
 		onOpen: () => {
 			$(window).resize();
 		},
@@ -2388,6 +2402,7 @@ acqpa.utils.callbacks.openExamQuestionsSummaryModal = function openExamQuestions
 		content: args.content,
 		width: args.width,
 		title: args.title ?? '',
+		headerSticky:true,
 		intervalRefresh: setInterval(() => {
 			var objFields = {
 				'REQUEST_TOKEN': rt,
@@ -2429,6 +2444,7 @@ acqpa.utils.callbacks.openPracticalExamModal = function openPracticalExamModal(a
 		content: args.content,
 		width: args.width,
 		title: args.title ?? '',
+		headerSticky:true,
 		onOpen: () => {
 			$(window).resize();
 		},
@@ -2445,6 +2461,7 @@ acqpa.utils.callbacks.openChangeOperatorPresentAtModal = function openChangeOper
 		content: args.content,
 		width: args.width,
 		title: args.title ?? '',
+		headerSticky:true,
 		onOpen: () => {
 			$(window).resize();
 		},
@@ -2461,6 +2478,7 @@ acqpa.utils.callbacks.openCorrectTheoricalExamModal = function openCorrectTheori
 		content: args.content,
 		width: args.width,
 		title: args.title ?? '',
+		headerSticky:true,
 		onOpen: () => {
 			$(window).resize();
 		},
@@ -2477,6 +2495,7 @@ acqpa.utils.callbacks.openApplyFinalCorrectionStatusModal = function openApplyFi
 		content: args.content,
 		width: args.width,
 		title: args.title ?? '',
+		headerSticky:true,
 		onOpen: () => {
 			$(window).resize();
 		},
@@ -2493,6 +2512,7 @@ acqpa.utils.callbacks.openManagePracticalExamRedoModal = function openManagePrac
 		content: args.content,
 		width: args.width,
 		title: args.title ?? '',
+		headerSticky:true,
 		blnDismiss: false,
 		onOpen: () => {
 			$(window).resize();
@@ -2510,6 +2530,7 @@ acqpa.utils.callbacks.openAttachmentsModal = function openAttachmentsModal(args)
 		content: args.content,
 		width: args.width,
 		title: args.title ?? '',
+		headerSticky:true,
 		blnDismiss: false,
 		onOpen: () => {
 			$(window).resize();
@@ -2527,6 +2548,7 @@ acqpa.utils.callbacks.openCertificateDetailModal = function openCertificateDetai
 		content: args.content,
 		width: args.width,
 		title: args.title ?? '',
+		headerSticky:true,
 		onOpen: () => {
 			$(window).resize();
 		},
@@ -2543,6 +2565,7 @@ acqpa.utils.callbacks.openRegistrationOperatorValidateModal = function openRegis
 		content: args.content,
 		width: args.width,
 		title: args.title ?? '',
+		headerSticky:true,
 		onOpen: () => {
 			$(window).resize();
 		},
@@ -2558,6 +2581,7 @@ acqpa.utils.callbacks.openApiSireneModal = function openApiSireneModal(args) {
 		content: args.content,
 		width: args.width,
 		title: args.title ?? '',
+		headerSticky:true,
 		onOpen: () => {
 			$(window).resize();
 		},
