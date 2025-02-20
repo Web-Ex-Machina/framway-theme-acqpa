@@ -5,6 +5,11 @@
 .modalFW--headerSticky .modalFW__header{
 	z-index:1;
 }
+
+.modalFW h1{
+	margin-top: 0;
+}
+
 // Override fileUploader
 .fileUploader__preview{
 	max-width: 300px;
