@@ -23,7 +23,7 @@ h1,.h1{text-transform: none;}
 
 .bg-info{ color: contrastFW(color(white),$info);}
 
-.no-item__container{
+.no-item__container,.empty{
 	background-color: $info;
 	color: contrastFW(color(white),$info);
 	padding: 0.65em 1em 0.75em;
