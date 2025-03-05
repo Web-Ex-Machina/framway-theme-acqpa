@@ -1,6 +1,7 @@
 module.exports = {
 	'colors' : {
 		'blue' : '#0073BB',
+		'blue_certificate' : '#3A6ABC',
 	},
 	'primary': 'colors(blue)',
 	'body': {

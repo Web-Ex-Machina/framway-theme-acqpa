@@ -90,12 +90,14 @@ h1,.h1{text-transform: none;}
 	&[data-name*="actions"]{
 		min-width: 50px;
 	}
+	&.sticky{
+		position: sticky;left: 0;background-color: inherit;
+	}
 }
 .table-list__cell[data-name*="checkbox"] > .form-group > input[type="checkbox"] + label{
 	padding: 0;
 	margin: 0;
 }
-
 .splitForm__section{
 	.accordionFW:not([class*=m-bottom]):not([class*=m-y]){margin-bottom: 0;}
 	.error-container:empty{display: none;}
