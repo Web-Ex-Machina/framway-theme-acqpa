@@ -141,3 +141,7 @@ body.exam #container{transform: translateZ(0px);}
 td > div.input-number__container{
 	margin-bottom: 0;
 }
+
+.input-error{
+	border: 1px solid red !important; /* otherwise inputs & others redefine their margins ... */
+}
