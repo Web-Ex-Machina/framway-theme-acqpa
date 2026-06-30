@@ -2,6 +2,7 @@ module.exports = {
 	'colors' : {
 		'blue' : '#0073BB',
 		'blue_certificate' : '#3A6ABC',
+		// 'orange' : '#FD7E14',
 	},
 	'primary': 'colors(blue)',
 	'body': {
@@ -11,7 +12,7 @@ module.exports = {
 	},
 	// 'success': 'colors(green)',
 	'info': 'rgba(colors(blue),0.75)',
-	'warning': 'rgba(colors(yellow),0.65)',
+	// 'warning': 'rgba(colors(orange),0.65)',
 	// 'warning': 'colors(yellow)',
 	// 'error': 'colors(red)',
 	'container':{
